@@ -1,0 +1,88 @@
+.nova-login-page{min-height:100vh;display:grid;place-items:center;padding:24px;background:#f5f2ec;color:#161616}.login-card{width:min(560px,100%);background:#fff;border:1px solid #e3ddd3;border-radius:24px;padding:38px;box-shadow:0 22px 70px #00000010}.login-eyebrow{font-size:11px;letter-spacing:.16em;color:#777}.login-card h1{font-size:34px;margin:9px 0}.login-card>p{color:#666;margin-bottom:26px}.login-form{display:grid;gap:12px}.login-form label{display:grid;gap:7px;font-size:13px;font-weight:700}.login-form input{height:48px;border:1px solid #dcd5ca;border-radius:10px;padding:0 13px;font-size:14px}.login-form button{height:48px;border:0;border-radius:10px;background:#171717;color:#fff;font-weight:800;cursor:pointer}.demo-block{margin-top:28px;padding-top:24px;border-top:1px solid #eee}.demo-block>span{font-size:12px;color:#777}.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.demo-grid button{padding:12px;border:1px solid #e0d9cf;background:#fff;border-radius:10px;text-align:left;cursor:pointer}.demo-grid button:hover{background:#f7f5f1}.demo-grid strong,.demo-grid small{display:block}.demo-grid small{margin-top:4px;color:#888;font-size:11px}.login-message{margin-top:16px;padding:12px 14px;border-radius:10px;background:#f7f5f1;color:#555;font-size:13px}@media(max-width:560px){.login-card{padding:26px}.demo-grid{grid-template-columns:1fr}}
+.login-form input:-webkit-autofill,
+.login-form input:-webkit-autofill:hover,
+.login-form input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--nova-login-input-text, #101827);
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.login-divider{display:flex;align-items:center;gap:12px;color:#888;font-size:12px;margin:20px 0}.login-divider:before,.login-divider:after{content:"";height:1px;background:#e7e1d7;flex:1}
+.kakao-login-button{width:100%;height:48px;border:0;border-radius:10px;background:#fee500;color:#191919;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}.kakao-dot{width:21px;height:21px;border-radius:50%;background:#191919;color:#fee500;display:inline-flex;align-items:center;justify-content:center;font-size:10px}
+.signup-link{width:100%;margin-top:12px;padding:11px;border:1px solid #dcd5ca;border-radius:10px;background:#fff;color:#222;font-weight:700;cursor:pointer}
+
+/* NOVA theme overrides: keep the existing login structure and apply the active global theme. */
+html[data-nova-theme="ivory"] .nova-login-page {
+  background: #f7f4ec;
+  color: #101827;
+}
+html[data-nova-theme="ivory"] .login-card {
+  background: #fff;
+  border-color: #e3ddd3;
+}
+html[data-nova-theme="ivory"] .login-card > p,
+html[data-nova-theme="ivory"] .login-form label,
+html[data-nova-theme="ivory"] .demo-block > span {
+  color: #667085;
+}
+html[data-nova-theme="ivory"] .login-form input,
+html[data-nova-theme="ivory"] .signup-link,
+html[data-nova-theme="ivory"] .demo-grid button {
+  background: #fff;
+  color: #101827;
+  border-color: #dcd5ca;
+}
+html[data-nova-theme="ivory"] .login-form input::placeholder {
+  color: #8a94a6;
+}
+
+html[data-nova-theme="white"] .nova-login-page {
+  background: #f6f7f9;
+  color: #111827;
+}
+html[data-nova-theme="white"] .login-card {
+  background: #fff;
+  border-color: #dfe3e8;
+}
+html[data-nova-theme="white"] .login-card > p,
+html[data-nova-theme="white"] .login-form label,
+html[data-nova-theme="white"] .demo-block > span {
+  color: #667085;
+}
+html[data-nova-theme="white"] .login-form input,
+html[data-nova-theme="white"] .signup-link,
+html[data-nova-theme="white"] .demo-grid button {
+  background: #fff;
+  color: #111827;
+  border-color: #d9dee6;
+}
+html[data-nova-theme="white"] .login-form input::placeholder {
+  color: #98a2b3;
+}
+
+html[data-nova-theme="dark"] .nova-login-page {
+  background: #070a10;
+  color: #f5f7fb;
+}
+html[data-nova-theme="dark"] .login-card {
+  background: #0d121c;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+html[data-nova-theme="dark"] .login-card > p,
+html[data-nova-theme="dark"] .login-form label,
+html[data-nova-theme="dark"] .demo-block > span {
+  color: #b8c1d1;
+}
+html[data-nova-theme="dark"] .login-form input,
+html[data-nova-theme="dark"] .signup-link,
+html[data-nova-theme="dark"] .demo-grid button {
+  background: #090d15;
+  color: #f5f7fb;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+html[data-nova-theme="dark"] .login-form input::placeholder {
+  color: #697386;
+}
+html[data-nova-theme="dark"] .demo-grid button:hover,
+html[data-nova-theme="dark"] .login-message {
+  background: #131a26;
+}

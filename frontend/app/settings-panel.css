@@ -1,0 +1,20 @@
+.nova-settings-backdrop{position:fixed;inset:0;z-index:10000;background:rgba(7,10,16,.28);display:flex;justify-content:flex-end}
+.nova-settings-panel{width:360px;max-width:calc(100vw - 24px);height:100%;box-sizing:border-box;padding:24px;background:#f7f4ec;color:#17202a;box-shadow:-12px 0 30px rgba(0,0,0,.18);font-family:inherit;overflow:auto}
+.nova-settings-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+.nova-settings-head h2{margin:0;font-size:18px}.nova-settings-head button{border:0;background:transparent;color:inherit;font-size:24px;cursor:pointer}
+.nova-settings-panel label{display:block;margin:18px 0 8px;font-size:11px;font-weight:700}
+.nova-settings-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.nova-role-options{grid-template-columns:repeat(2,1fr)}
+.nova-settings-options button{padding:10px 7px;border:1px solid #d8d1c4;border-radius:8px;background:#fffdf8;color:#27303a;cursor:pointer}
+.nova-settings-options button.selected{border-color:#2563eb;background:#eaf1ff;color:#2563eb;font-weight:700}
+.nova-settings-panel[data-theme="white"]{background:#fff;color:#111827}
+.nova-settings-panel[data-theme="white"] .nova-settings-options button{background:#fff;border-color:#dbe1e8;color:#27303a}
+.nova-settings-panel[data-theme="dark"]{background:#0d1420;color:#f3f6fb}
+.nova-settings-panel[data-theme="dark"] .nova-settings-options button{background:#111a28;border-color:#334155;color:#f3f6fb}
+.nova-settings-panel[data-theme="dark"] .nova-settings-options button.selected{background:#172b4d;color:#6ea0ff;border-color:#2563eb}
+@media(max-width:560px){.nova-settings-panel{width:min(360px,100vw);max-width:100vw}}
+
+.nova-account-danger{margin-top:24px;padding:14px;border:1px solid rgba(220,38,38,.28);border-radius:10px;background:rgba(220,38,38,.04);display:flex;align-items:center;justify-content:space-between;gap:14px}
+.nova-account-danger strong{font-size:13px}.nova-account-danger p{margin:5px 0 0;font-size:11px;line-height:1.5;opacity:.7}
+.nova-account-danger button{flex:none;border:1px solid #dc2626;border-radius:7px;background:transparent;color:#dc2626;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer}
+.nova-settings-modal .nova-account-danger{margin-bottom:4px}

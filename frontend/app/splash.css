@@ -1,0 +1,151 @@
+/* NOVA startup splash — root route */
+.nova-splash {
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  background: #f7f4ec;
+  color: #101827;
+}
+
+html[data-nova-theme="white"] .nova-splash {
+  background: #f7f8fa;
+  color: #101827;
+}
+
+html[data-nova-theme="dark"] .nova-splash {
+  background: #020812;
+  color: #f7f9ff;
+}
+
+.nova-splash-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgba(25, 105, 255, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25, 105, 255, .035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 75%, transparent);
+}
+
+html[data-nova-theme="dark"] .nova-splash-grid {
+  background-image:
+    linear-gradient(rgba(45, 120, 255, .065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 120, 255, .055) 1px, transparent 1px);
+}
+
+.nova-splash-glow {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: -34%;
+  width: min(1100px, 120vw);
+  height: 62%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(35, 116, 255, .17) 0%,
+    rgba(35, 116, 255, .07) 38%,
+    transparent 70%
+  );
+  filter: blur(8px);
+}
+
+html[data-nova-theme="dark"] .nova-splash-glow {
+  background: radial-gradient(
+    ellipse,
+    rgba(26, 108, 255, .34) 0%,
+    rgba(26, 108, 255, .12) 40%,
+    transparent 72%
+  );
+}
+
+.nova-splash-content {
+  width: min(820px, calc(100% - 40px));
+  padding: 32px 20px 72px;
+  text-align: center;
+  animation: nova-start-in .7s ease both;
+}
+
+.nova-splash-logo {
+  font-size: clamp(30px, 5vw, 54px);
+  font-weight: 500;
+  letter-spacing: .34em;
+  margin-left: .34em;
+}
+
+.nova-splash-kicker {
+  margin-top: 17px;
+  color: #246cff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .25em;
+}
+
+.nova-splash h1 {
+  margin: 22px 0 0;
+  font-size: clamp(29px, 4.7vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -.035em;
+  font-weight: 650;
+}
+
+.nova-splash p {
+  margin: 14px 0 0;
+  color: #667085;
+  font-size: 13px;
+}
+
+html[data-nova-theme="dark"] .nova-splash p {
+  color: #aab5c7;
+}
+
+.nova-splash-loader {
+  width: 160px;
+  height: 2px;
+  margin: 46px auto 20px;
+  overflow: hidden;
+  background: rgba(36, 108, 255, .14);
+}
+
+.nova-splash-loader span {
+  display: block;
+  width: 42%;
+  height: 100%;
+  background: #246cff;
+  box-shadow: 0 0 16px rgba(36, 108, 255, .8);
+  animation: nova-loader 1.8s ease-in-out infinite;
+}
+
+.nova-splash small {
+  color: #8b95a5;
+  font-size: 8px;
+  letter-spacing: .18em;
+}
+
+html[data-nova-theme="dark"] .nova-splash small {
+  color: #718096;
+}
+
+@keyframes nova-start-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes nova-loader {
+  0% { transform: translateX(-130%); }
+  55% { transform: translateX(120%); }
+  100% { transform: translateX(280%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nova-splash-content,
+  .nova-splash-loader span {
+    animation: none;
+  }
+}

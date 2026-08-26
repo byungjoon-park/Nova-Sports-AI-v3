@@ -1,0 +1,1520 @@
+.camera-ai-page {
+  min-height: 100svh;
+  background: #070a10;
+  color: #f5f7fb;
+}
+
+.camera-ai-header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  border-bottom: 1px solid rgba(25, 35, 50, 0.10);
+  background: var(--nova-surface, #fffaf0);
+  color: var(--nova-text, #101828);
+  box-sizing: border-box;
+}
+
+
+.camera-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+.back-button {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border: 1px solid rgba(20, 30, 45, 0.10);
+  border-radius: 8px;
+  background: #101925;
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background: #1c2a3c;
+}
+
+
+.camera-header-brand {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--nova-text, #101828);
+}
+
+
+.camera-header-left div > span {
+  color: #6d7890;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+
+.camera-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+
+.camera-header-right > button {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  padding: 8px 12px;
+  background: #0d1420;
+  color: #8995a8;
+  font-size: 10px;
+}
+
+.ai-online {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #68d99a;
+  font-size: 9px;
+}
+
+.ai-online i,
+.camera-status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3ed77e;
+}
+
+.chapter-page,
+.camera-workspace {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 60px 28px 50px;
+}
+
+.chapter-intro {
+  position: relative;
+  margin-bottom: 35px;
+}
+
+.chapter-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 82px;
+  height: 38px;
+  margin-bottom: 22px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 9px;
+  background: #0d1420;
+  color: #d9e1ee;
+  font-size: 11px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.chapter-back-button:hover {
+  border-color: #3d84ff;
+  background: #101a2a;
+}
+
+.chapter-intro > span,
+.camera-workspace-header > div:first-child > span {
+  color: #3d84ff;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+
+.chapter-intro h1 {
+  margin: 10px 0 8px;
+  font-size: 32px;
+}
+
+.chapter-intro p,
+.camera-workspace-header p {
+  margin: 0;
+  color: #7b879a;
+  font-size: 12px;
+}
+
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.chapter-card {
+  position: relative;
+  min-height: 205px;
+  display: flex;
+  gap: 18px;
+  padding: 25px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 14px;
+  background: #0c131e;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chapter-card:hover {
+  border-color: rgba(50, 120, 255, 0.5);
+  background: #0d1727;
+}
+
+.chapter-number {
+  color: #3c7df0;
+  font-size: 11px;
+}
+
+.chapter-card-content {
+  flex: 1;
+}
+
+.chapter-card-content > span {
+  color: #66758c;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+.chapter-card-content h2 {
+  margin: 7px 0;
+  font-size: 19px;
+}
+
+.chapter-card-content p {
+  max-width: 470px;
+  margin: 0;
+  color: #8490a2;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.metric-tags,
+.selected-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.metric-tags {
+  margin-top: 18px;
+}
+
+.metric-tags span,
+.selected-metrics span {
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 5px;
+  background: #0a101a;
+  color: #7c899d;
+  font-size: 9px;
+}
+
+.chapter-arrow {
+  position: absolute;
+  right: 22px;
+  bottom: 20px;
+  color: #4185ff;
+}
+
+.analysis-disclaimer {
+  margin-top: 22px;
+  padding: 14px 17px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  color: #697589;
+  font-size: 10px;
+}
+
+.camera-workspace {
+  max-width: 1450px;
+  padding-top: 35px;
+}
+
+.camera-workspace-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 22px;
+}
+
+.camera-workspace-header h1 {
+  margin: 6px 0;
+  font-size: 27px;
+}
+
+.selected-metrics {
+  justify-content: flex-end;
+}
+
+.camera-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 350px;
+  gap: 17px;
+}
+
+.camera-preview-card,
+.camera-info-panel {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 13px;
+  background: #0c131e;
+}
+
+.camera-preview-card {
+  padding: 15px;
+}
+
+.camera-preview {
+  position: relative;
+  height: min(65vh, 650px);
+  min-height: 400px;
+  overflow: hidden;
+  border-radius: 9px;
+  background: #05080d;
+}
+
+.camera-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.camera-placeholder-icon {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 17px;
+  border: 1px solid rgba(70, 132, 255, 0.35);
+  border-radius: 50%;
+  background: #0c2146;
+  color: #5792ff;
+  font-size: 28px;
+}
+
+.camera-placeholder h2 {
+  margin: 0 0 7px;
+  font-size: 16px;
+}
+
+.camera-placeholder p {
+  max-width: 330px;
+  margin: 0 0 20px;
+  color: #717e92;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.start-camera-button,
+.primary-camera-button,
+.capture-button {
+  border: 0;
+  border-radius: 7px;
+  background: #2464ed;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 11px 20px;
+  font-size: 11px;
+}
+
+.camera-video,
+.pose-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  object-fit: cover;
+}
+
+.camera-video.visible,
+.pose-canvas.visible {
+  display: block;
+}
+
+.pose-canvas {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.camera-toolbar {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  gap: 6px;
+  transform: translateX(-50%);
+}
+
+.camera-toolbar button {
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  background: rgba(4, 8, 15, 0.78);
+  color: #9aa7ba;
+  font-size: 9px;
+  cursor: pointer;
+}
+
+.camera-toolbar button.tool-active {
+  border-color: rgba(63, 130, 255, 0.7);
+  background: rgba(22, 67, 143, 0.75);
+  color: #fff;
+}
+
+.camera-status {
+  position: absolute;
+  top: 17px;
+  left: 17px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 9px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 9px;
+}
+
+.camera-status i {
+  background: #ff4f5f;
+}
+
+.pose-detected {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  z-index: 4;
+  padding: 7px 9px;
+  border-radius: 5px;
+  font-size: 9px;
+}
+
+.pose-detected.detected {
+  border: 1px solid rgba(61, 220, 126, 0.35);
+  background: rgba(5, 54, 35, 0.75);
+  color: #68e09b;
+}
+
+.pose-detected.warning {
+  border: 1px solid rgba(255, 177, 70, 0.4);
+  background: rgba(63, 40, 9, 0.8);
+  color: #ffbf69;
+}
+
+.camera-guide {
+  position: absolute;
+  top: 7%;
+  right: 28%;
+  bottom: 7%;
+  left: 28%;
+  z-index: 3;
+  border: 1px dashed rgba(92, 151, 255, 0.55);
+  pointer-events: none;
+}
+
+.camera-guide span {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #4b8cff;
+}
+
+.camera-guide span:nth-child(1) {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.camera-guide span:nth-child(2) {
+  top: -1px;
+  right: -1px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+
+.camera-guide span:nth-child(3) {
+  bottom: -1px;
+  left: -1px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+
+.camera-guide span:nth-child(4) {
+  right: -1px;
+  bottom: -1px;
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+}
+
+.body-message {
+  position: absolute;
+  right: 0;
+  bottom: 17px;
+  left: 0;
+  z-index: 4;
+  text-align: center;
+  color: #ffbf69;
+  font-size: 10px;
+  text-shadow: 0 1px 4px #000;
+}
+
+.body-message.ok {
+  color: #71e7a0;
+}
+
+.camera-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.secondary-camera-button {
+  padding: 10px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  background: #0b121d;
+  color: #8b97aa;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.camera-error {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 76, 91, 0.25);
+  border-radius: 6px;
+  background: rgba(255, 76, 91, 0.06);
+  color: #ff7c88;
+  font-size: 10px;
+}
+
+.camera-info-panel {
+  padding: 20px;
+}
+
+.info-panel-section {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.panel-label {
+  color: #53647d;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+.info-panel-section h2 {
+  margin: 7px 0;
+  font-size: 17px;
+}
+
+.info-panel-section p {
+  margin: 0;
+  color: #778397;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.live-measurement-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.live-metric {
+  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 7px;
+  background: #09101a;
+}
+
+.live-metric span {
+  display: block;
+  margin-bottom: 5px;
+  color: #637188;
+  font-size: 9px;
+}
+
+.live-metric strong {
+  font-size: 14px;
+}
+
+.display-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.display-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 7px;
+  background: #09101a;
+  color: #68758a;
+  cursor: pointer;
+}
+
+.display-control span {
+  font-size: 10px;
+}
+
+.display-control strong {
+  font-size: 9px;
+}
+
+.display-control.active {
+  border-color: rgba(61, 130, 255, 0.35);
+  background: rgba(30, 76, 150, 0.14);
+  color: #6da0ff;
+}
+
+.fatigue-panel {
+  margin-bottom: 18px;
+  padding: 15px;
+  border: 1px solid rgba(111, 78, 222, 0.25);
+  border-radius: 9px;
+  background: rgba(89, 59, 161, 0.08);
+}
+
+.fatigue-panel > span {
+  color: #a67cff;
+  font-size: 9px;
+}
+
+.fatigue-panel h3 {
+  margin: 7px 0;
+  font-size: 13px;
+}
+
+.fatigue-panel p {
+  margin: 0;
+  color: #7d8497;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.fatigue-placeholder {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  margin-top: 15px;
+}
+
+.fatigue-placeholder strong {
+  font-size: 25px;
+}
+
+.fatigue-placeholder span {
+  color: #69758a;
+  font-size: 9px;
+}
+
+.medical-warning {
+  padding: 12px;
+  border: 1px solid rgba(214, 159, 61, 0.2);
+  border-radius: 7px;
+  background: rgba(214, 159, 61, 0.05);
+}
+
+.medical-warning strong {
+  color: #d7aa5c;
+  font-size: 10px;
+}
+
+.medical-warning p {
+  margin: 6px 0 0;
+  color: #777d89;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.analysis-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(3, 7, 13, 0.78);
+}
+
+.analysis-spinner {
+  width: 45px;
+  height: 45px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #3e82ff;
+  border-radius: 50%;
+  animation: nova-spin 0.8s linear infinite;
+}
+
+@keyframes nova-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.analysis-complete {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 8, 14, 0.9);
+  text-align: center;
+}
+
+.analysis-complete > div {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  border-radius: 50%;
+  background: #123d2b;
+  color: #4cdb8a;
+  font-size: 24px;
+}
+
+.analysis-complete button {
+  margin-top: 8px;
+  padding: 9px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: #0d1420;
+  color: #9ba7b9;
+}
+
+@media (max-width: 1000px) {
+  .chapter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .camera-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .camera-ai-header {
+    min-height: 65px;
+    height: auto;
+    padding: 13px 15px;
+  }
+
+  .camera-header-right .ai-online {
+    display: none;
+  }
+
+  .chapter-page,
+  .camera-workspace {
+    padding: 30px 15px;
+  }
+
+  .camera-workspace-header {
+    display: block;
+  }
+
+  .selected-metrics {
+    justify-content: flex-start;
+    margin-top: 15px;
+  }
+
+  .camera-preview {
+    min-height: 330px;
+    height: 58vh;
+  }
+
+  .camera-toolbar {
+    top: 60px;
+  }
+
+  .camera-guide {
+    right: 18%;
+    left: 18%;
+  }
+
+  .camera-info-panel {
+    display: block;
+  }
+
+  .camera-controls {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 450px) {
+  .camera-header-brand {
+    font-size: 15px;
+  }
+
+  .camera-header-left div > span {
+    display: none;
+  }
+
+  .camera-toolbar {
+    left: 10px;
+    right: 10px;
+    justify-content: center;
+    transform: none;
+  }
+
+  .camera-toolbar button {
+    flex: 1;
+    max-width: 130px;
+  }
+
+  .camera-guide {
+    right: 12%;
+    left: 12%;
+  }
+
+  .live-measurement-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The global NOVA header owns navigation on every camera-AI screen. */
+.chapter-back-button {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  .camera-ai-header {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .camera-header-brand {
+    font-size: 14px;
+  }
+
+  .camera-header-left div > span {
+    font-size: 7px;
+  }
+}
+
+
+/* Joint selection and action-specific capture guide */
+.analysis-setup-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+  gap: 14px;
+  margin: 0 0 18px;
+}
+
+.setup-card {
+  border: 1px solid var(--border, #d9d4c8);
+  background: var(--panel, rgba(255,255,255,.72));
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.setup-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.setup-card-header p {
+  margin: 5px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  opacity: .72;
+}
+
+.setup-card-header h3 {
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.setup-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.setup-actions button {
+  border: 1px solid var(--border, #d9d4c8);
+  background: transparent;
+  border-radius: 7px;
+  padding: 6px 9px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.joint-selector {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.joint-option {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 1px solid var(--border, #d9d4c8);
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.joint-option input {
+  accent-color: #246bff;
+}
+
+.joint-option.selected {
+  border-color: #246bff;
+  background: rgba(36,107,255,.07);
+}
+
+.guide-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-bottom: 10px;
+}
+
+.guide-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: rgba(36,107,255,.05);
+}
+
+.guide-summary span {
+  font-size: 10px;
+  opacity: .6;
+}
+
+.guide-summary strong {
+  font-size: 12px;
+}
+
+.capture-guide-card ul {
+  margin: 8px 0 0;
+  padding-left: 17px;
+}
+
+.capture-guide-card li {
+  margin: 5px 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .analysis-setup-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .joint-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .setup-card-header {
+    flex-direction: column;
+  }
+
+  .setup-actions {
+    width: 100%;
+  }
+
+  .setup-actions button {
+    flex: 1;
+  }
+}
+
+/* Camera AI theme layer — existing structure preserved */
+.camera-ai-page.theme-ivory{background:#f7f3e9;color:#111827}
+.camera-ai-page.theme-white{background:#fff;color:#111827}
+.camera-ai-page.theme-dark{background:#070a10;color:#f7f9ff}
+.camera-ai-page.theme-dark .chapter-page,.camera-ai-page.theme-dark .camera-workspace,.camera-ai-page.theme-dark .camera-info-panel,.camera-ai-page.theme-dark .info-panel-section,.camera-ai-page.theme-dark .motion-guide-card{background:#0d1420;color:#f7f9ff;border-color:#243247}
+.camera-ai-page.theme-white .chapter-page,.camera-ai-page.theme-white .camera-workspace,.camera-ai-page.theme-white .camera-info-panel,.camera-ai-page.theme-white .info-panel-section,.camera-ai-page.theme-white .motion-guide-card{background:#fff;color:#111827;border-color:#d9dee7}
+.camera-ai-page.theme-ivory .chapter-page,.camera-ai-page.theme-ivory .camera-workspace,.camera-ai-page.theme-ivory .camera-info-panel,.camera-ai-page.theme-ivory .info-panel-section,.camera-ai-page.theme-ivory .motion-guide-card{background:#fffdf8;color:#111827;border-color:#ddd7ca}
+.gps-panel{margin-top:14px;padding:14px;border:1px solid #ddd7ca;border-radius:10px;background:#fffdf8}
+.gps-panel-header{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.gps-panel h3{margin:3px 0;font-size:13px}.gps-panel p{margin:0;color:#7b879a;font-size:9px}.gps-connect-button{padding:8px 11px;border:1px solid #3d84ff;border-radius:6px;background:#eaf1ff;color:#2563eb;font-size:9px;font-weight:700}.gps-metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}.camera-ai-page.theme-dark .gps-panel{background:#0a101a;border-color:#243247}.camera-ai-page.theme-dark .gps-panel h3{color:#fff}.camera-ai-page.theme-dark .gps-connect-button{background:#102b61;color:#fff}.camera-ai-page.theme-white .gps-panel{background:#fff;border-color:#d9dee7}.camera-ai-page.theme-ivory .gps-panel{background:#fffdf8;border-color:#ddd7ca}
+
+/* Theme-only overrides. No layout/structure changes. */
+.camera-ai-page.theme-ivory{--camera-bg:#f7f3e9;--camera-panel:#fffdf8;--camera-text:#111827;--camera-muted:#64748b;--camera-border:#ddd7ca;background:var(--camera-bg)!important;color:var(--camera-text)!important}
+.camera-ai-page.theme-white{--camera-bg:#ffffff;--camera-panel:#ffffff;--camera-text:#111827;--camera-muted:#64748b;--camera-border:#d9dee7;background:var(--camera-bg)!important;color:var(--camera-text)!important}
+.camera-ai-page.theme-dark{--camera-bg:#070a10;--camera-panel:#0d1420;--camera-text:#f7f9ff;--camera-muted:#94a3b8;--camera-border:#243247;background:var(--camera-bg)!important;color:var(--camera-text)!important}
+.camera-ai-page.theme-ivory .chapter-page,.camera-ai-page.theme-ivory .camera-workspace,.camera-ai-page.theme-ivory .camera-info-panel,.camera-ai-page.theme-ivory .info-panel-section,.camera-ai-page.theme-ivory .motion-guide-card,.camera-ai-page.theme-ivory .gps-panel{background:var(--camera-panel)!important;color:var(--camera-text)!important;border-color:var(--camera-border)!important}
+.camera-ai-page.theme-white .chapter-page,.camera-ai-page.theme-white .camera-workspace,.camera-ai-page.theme-white .camera-info-panel,.camera-ai-page.theme-white .info-panel-section,.camera-ai-page.theme-white .motion-guide-card,.camera-ai-page.theme-white .gps-panel{background:var(--camera-panel)!important;color:var(--camera-text)!important;border-color:var(--camera-border)!important}
+.camera-ai-page.theme-dark .chapter-page,.camera-ai-page.theme-dark .camera-workspace,.camera-ai-page.theme-dark .camera-info-panel,.camera-ai-page.theme-dark .info-panel-section,.camera-ai-page.theme-dark .motion-guide-card,.camera-ai-page.theme-dark .gps-panel{background:var(--camera-panel)!important;color:var(--camera-text)!important;border-color:var(--camera-border)!important}
+.camera-ai-page.theme-ivory h1,.camera-ai-page.theme-ivory h2,.camera-ai-page.theme-ivory h3,.camera-ai-page.theme-ivory h4,.camera-ai-page.theme-white h1,.camera-ai-page.theme-white h2,.camera-ai-page.theme-white h3,.camera-ai-page.theme-white h4{color:#111827}
+.camera-ai-page.theme-dark h1,.camera-ai-page.theme-dark h2,.camera-ai-page.theme-dark h3,.camera-ai-page.theme-dark h4{color:#f7f9ff}
+.camera-ai-page.theme-ivory p,.camera-ai-page.theme-ivory .panel-label,.camera-ai-page.theme-white p,.camera-ai-page.theme-white .panel-label{color:#64748b}
+.camera-ai-page.theme-dark p,.camera-ai-page.theme-dark .panel-label{color:#94a3b8}
+.camera-ai-page.theme-ivory button:not(.guide-badge),.camera-ai-page.theme-white button:not(.guide-badge){color:#334155}
+.camera-ai-page.theme-dark button:not(.guide-badge){color:#e5e7eb}
+.camera-ai-page.theme-dark input,.camera-ai-page.theme-dark select{background:#0a101a!important;color:#f7f9ff!important;border-color:#243247!important}
+.camera-ai-page.theme-ivory input,.camera-ai-page.theme-ivory select,.camera-ai-page.theme-white input,.camera-ai-page.theme-white select{background:#fff!important;color:#111827!important;border-color:var(--camera-border)!important}
+
+
+/* FINAL THEME OVERRIDES: preserve layout, override only visual tokens. */
+.camera-ai-page.theme-ivory { --ca-bg:#f7f3e9; --ca-panel:#fffdf8; --ca-card:#fffdf8; --ca-text:#111827; --ca-muted:#64748b; --ca-border:#ddd7ca; background:var(--ca-bg)!important; color:var(--ca-text)!important; }
+.camera-ai-page.theme-white { --ca-bg:#ffffff; --ca-panel:#ffffff; --ca-card:#ffffff; --ca-text:#111827; --ca-muted:#64748b; --ca-border:#d9dee7; background:var(--ca-bg)!important; color:var(--ca-text)!important; }
+.camera-ai-page.theme-dark { --ca-bg:#070a10; --ca-panel:#0d1420; --ca-card:#0c131e; --ca-text:#f5f7fb; --ca-muted:#94a3b8; --ca-border:#243247; background:var(--ca-bg)!important; color:var(--ca-text)!important; }
+.camera-ai-page.theme-ivory .chapter-card,.camera-ai-page.theme-white .chapter-card,.camera-ai-page.theme-dark .chapter-card,
+.camera-ai-page.theme-ivory .setup-card,.camera-ai-page.theme-white .setup-card,.camera-ai-page.theme-dark .setup-card,
+.camera-ai-page.theme-ivory .camera-workspace,.camera-ai-page.theme-white .camera-workspace,.camera-ai-page.theme-dark .camera-workspace,
+.camera-ai-page.theme-ivory .camera-info-panel,.camera-ai-page.theme-white .camera-info-panel,.camera-ai-page.theme-dark .camera-info-panel,
+.camera-ai-page.theme-ivory .info-panel-section,.camera-ai-page.theme-white .info-panel-section,.camera-ai-page.theme-dark .info-panel-section,
+.camera-ai-page.theme-ivory .motion-guide-card,.camera-ai-page.theme-white .motion-guide-card,.camera-ai-page.theme-dark .motion-guide-card,
+.camera-ai-page.theme-ivory .gps-panel,.camera-ai-page.theme-white .gps-panel,.camera-ai-page.theme-dark .gps-panel { background:var(--ca-card)!important; color:var(--ca-text)!important; border-color:var(--ca-border)!important; }
+.camera-ai-page.theme-ivory .chapter-card,.camera-ai-page.theme-white .chapter-card { color:var(--ca-text)!important; }
+.camera-ai-page.theme-dark .chapter-card { color:var(--ca-text)!important; }
+.camera-ai-page.theme-ivory .chapter-card-content h2,.camera-ai-page.theme-white .chapter-card-content h2,.camera-ai-page.theme-dark .chapter-card-content h2,
+.camera-ai-page.theme-ivory .chapter-intro h1,.camera-ai-page.theme-white .chapter-intro h1,.camera-ai-page.theme-dark .chapter-intro h1,
+.camera-ai-page.theme-ivory .camera-workspace-header h1,.camera-ai-page.theme-white .camera-workspace-header h1,.camera-ai-page.theme-dark .camera-workspace-header h1 { color:var(--ca-text)!important; }
+.camera-ai-page.theme-ivory .chapter-card-content p,.camera-ai-page.theme-white .chapter-card-content p,.camera-ai-page.theme-dark .chapter-card-content p,
+.camera-ai-page.theme-ivory .chapter-intro p,.camera-ai-page.theme-white .chapter-intro p,.camera-ai-page.theme-dark .chapter-intro p { color:var(--ca-muted)!important; }
+.camera-ai-page.theme-ivory .chapter-card-content > span,.camera-ai-page.theme-white .chapter-card-content > span,.camera-ai-page.theme-dark .chapter-card-content > span { color:var(--ca-muted)!important; }
+.camera-ai-page.theme-ivory .metric-tags span,.camera-ai-page.theme-white .metric-tags span { background:#f7f4ed!important; color:#526071!important; border-color:var(--ca-border)!important; }
+.camera-ai-page.theme-dark .metric-tags span { background:#0a101a!important; color:#a9b5c8!important; border-color:#243247!important; }
+.camera-ai-page.theme-ivory .joint-option,.camera-ai-page.theme-white .joint-option { background:transparent!important; color:var(--ca-text)!important; border-color:var(--ca-border)!important; }
+.camera-ai-page.theme-dark .joint-option { background:#0a101a!important; color:var(--ca-text)!important; border-color:#243247!important; }
+.camera-ai-page.theme-ivory .joint-option.selected,.camera-ai-page.theme-white .joint-option.selected { background:rgba(36,107,255,.07)!important; }
+.camera-ai-page.theme-dark .joint-option.selected { background:rgba(36,107,255,.18)!important; }
+.camera-ai-page.theme-dark .analysis-disclaimer { color:#94a3b8!important; border-color:#243247!important; }
+.camera-ai-page.theme-ivory .analysis-disclaimer,.camera-ai-page.theme-white .analysis-disclaimer { color:var(--ca-muted)!important; border-color:var(--ca-border)!important; }
+
+/* Strict theme layer: added without changing the existing layout. */
+.camera-ai-page[data-theme="ivory"],
+.camera-ai-page.theme-ivory {
+  --ca-bg: #f7f3e9 !important;
+  --ca-panel: #fffdf8 !important;
+  --ca-card: #fffdf8 !important;
+  --ca-text: #111827 !important;
+  --ca-muted: #64748b !important;
+  --ca-border: #ddd7ca !important;
+  background: #f7f3e9 !important;
+  color: #111827 !important;
+}
+
+.camera-ai-page[data-theme="white"],
+.camera-ai-page.theme-white {
+  --ca-bg: #ffffff !important;
+  --ca-panel: #ffffff !important;
+  --ca-card: #ffffff !important;
+  --ca-text: #111827 !important;
+  --ca-muted: #64748b !important;
+  --ca-border: #d9dee7 !important;
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+.camera-ai-page[data-theme="dark"],
+.camera-ai-page.theme-dark {
+  --ca-bg: #070a10 !important;
+  --ca-panel: #0d1420 !important;
+  --ca-card: #0c131e !important;
+  --ca-text: #f5f7fb !important;
+  --ca-muted: #94a3b8 !important;
+  --ca-border: #243247 !important;
+  background: #070a10 !important;
+  color: #f5f7fb !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .chapter-card,
+.camera-ai-page[data-theme="ivory"] .setup-card,
+.camera-ai-page[data-theme="ivory"] .camera-preview-card,
+.camera-ai-page[data-theme="ivory"] .camera-info-panel,
+.camera-ai-page[data-theme="ivory"] .info-panel-section,
+.camera-ai-page[data-theme="ivory"] .calibration-panel,
+.camera-ai-page[data-theme="ivory"] .gps-panel,
+.camera-ai-page.theme-ivory .chapter-card,
+.camera-ai-page.theme-ivory .setup-card,
+.camera-ai-page.theme-ivory .camera-preview-card,
+.camera-ai-page.theme-ivory .camera-info-panel,
+.camera-ai-page.theme-ivory .info-panel-section,
+.camera-ai-page.theme-ivory .calibration-panel,
+.camera-ai-page.theme-ivory .gps-panel {
+  background: #fffdf8 !important;
+  color: #111827 !important;
+  border-color: #ddd7ca !important;
+}
+
+.camera-ai-page[data-theme="white"] .chapter-card,
+.camera-ai-page[data-theme="white"] .setup-card,
+.camera-ai-page[data-theme="white"] .camera-preview-card,
+.camera-ai-page[data-theme="white"] .camera-info-panel,
+.camera-ai-page[data-theme="white"] .info-panel-section,
+.camera-ai-page[data-theme="white"] .calibration-panel,
+.camera-ai-page[data-theme="white"] .gps-panel,
+.camera-ai-page.theme-white .chapter-card,
+.camera-ai-page.theme-white .setup-card,
+.camera-ai-page.theme-white .camera-preview-card,
+.camera-ai-page.theme-white .camera-info-panel,
+.camera-ai-page.theme-white .info-panel-section,
+.camera-ai-page.theme-white .calibration-panel,
+.camera-ai-page.theme-white .gps-panel {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-color: #d9dee7 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .chapter-card,
+.camera-ai-page[data-theme="dark"] .setup-card,
+.camera-ai-page[data-theme="dark"] .camera-preview-card,
+.camera-ai-page[data-theme="dark"] .camera-info-panel,
+.camera-ai-page[data-theme="dark"] .info-panel-section,
+.camera-ai-page[data-theme="dark"] .calibration-panel,
+.camera-ai-page[data-theme="dark"] .gps-panel,
+.camera-ai-page.theme-dark .chapter-card,
+.camera-ai-page.theme-dark .setup-card,
+.camera-ai-page.theme-dark .camera-preview-card,
+.camera-ai-page.theme-dark .camera-info-panel,
+.camera-ai-page.theme-dark .info-panel-section,
+.camera-ai-page.theme-dark .calibration-panel,
+.camera-ai-page.theme-dark .gps-panel {
+  background: #0c131e !important;
+  color: #f5f7fb !important;
+  border-color: #243247 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .chapter-card h2,
+.camera-ai-page[data-theme="ivory"] .chapter-card p,
+.camera-ai-page[data-theme="ivory"] .setup-card h3,
+.camera-ai-page[data-theme="ivory"] .setup-card p,
+.camera-ai-page[data-theme="ivory"] .camera-info-panel h2,
+.camera-ai-page[data-theme="ivory"] .camera-info-panel p,
+.camera-ai-page[data-theme="white"] .chapter-card h2,
+.camera-ai-page[data-theme="white"] .chapter-card p,
+.camera-ai-page[data-theme="white"] .setup-card h3,
+.camera-ai-page[data-theme="white"] .setup-card p,
+.camera-ai-page[data-theme="white"] .camera-info-panel h2,
+.camera-ai-page[data-theme="white"] .camera-info-panel p,
+.camera-ai-page.theme-ivory .chapter-card h2,
+.camera-ai-page.theme-ivory .chapter-card p,
+.camera-ai-page.theme-ivory .setup-card h3,
+.camera-ai-page.theme-ivory .setup-card p,
+.camera-ai-page.theme-ivory .camera-info-panel h2,
+.camera-ai-page.theme-ivory .camera-info-panel p,
+.camera-ai-page.theme-white .chapter-card h2,
+.camera-ai-page.theme-white .chapter-card p,
+.camera-ai-page.theme-white .setup-card h3,
+.camera-ai-page.theme-white .setup-card p,
+.camera-ai-page.theme-white .camera-info-panel h2,
+.camera-ai-page.theme-white .camera-info-panel p {
+  color: #111827 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .chapter-card h2,
+.camera-ai-page[data-theme="dark"] .setup-card h3,
+.camera-ai-page[data-theme="dark"] .camera-info-panel h2,
+.camera-ai-page.theme-dark .chapter-card h2,
+.camera-ai-page.theme-dark .setup-card h3,
+.camera-ai-page.theme-dark .camera-info-panel h2 {
+  color: #f5f7fb !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .chapter-card p,
+.camera-ai-page[data-theme="ivory"] .setup-card p,
+.camera-ai-page[data-theme="ivory"] .camera-info-panel p,
+.camera-ai-page[data-theme="white"] .chapter-card p,
+.camera-ai-page[data-theme="white"] .setup-card p,
+.camera-ai-page[data-theme="white"] .camera-info-panel p,
+.camera-ai-page.theme-ivory .chapter-card p,
+.camera-ai-page.theme-ivory .setup-card p,
+.camera-ai-page.theme-ivory .camera-info-panel p,
+.camera-ai-page.theme-white .chapter-card p,
+.camera-ai-page.theme-white .setup-card p,
+.camera-ai-page.theme-white .camera-info-panel p {
+  color: #64748b !important;
+}
+
+.camera-ai-page[data-theme="dark"] .chapter-card p,
+.camera-ai-page[data-theme="dark"] .setup-card p,
+.camera-ai-page[data-theme="dark"] .camera-info-panel p,
+.camera-ai-page.theme-dark .chapter-card p,
+.camera-ai-page.theme-dark .setup-card p,
+.camera-ai-page.theme-dark .camera-info-panel p {
+  color: #94a3b8 !important;
+}
+
+.shooting-selection-card { margin: 0 0 14px; }
+.shooting-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.shooting-select-grid label { display: flex; flex-direction: column; gap: 5px; }
+.shooting-select-grid label > span, .shooting-analysis-targets > span { font-size: 10px; color: var(--ca-muted, #64748b); }
+.shooting-select-grid select { width: 100%; min-height: 38px; padding: 0 10px; border: 1px solid var(--ca-border, #ddd7ca); border-radius: 8px; background: var(--ca-panel, #fffdf8); color: var(--ca-text, #111827); }
+.shooting-analysis-targets { margin-top: 12px; }
+.shooting-analysis-targets > div { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.shooting-analysis-targets b { padding: 5px 8px; border: 1px solid var(--ca-border, #ddd7ca); border-radius: 6px; font-size: 9px; font-weight: 500; }
+.camera-ai-page[data-theme="dark"] .shooting-select-grid select,
+.camera-ai-page.theme-dark .shooting-select-grid select { background: #0a101a !important; color: #f5f7fb !important; border-color: #243247 !important; }
+@media (max-width: 600px) { .shooting-select-grid { grid-template-columns: 1fr; } }
+
+
+/* =========================================================
+   NOVA THEME OVERRIDE
+   Camera AI layout is unchanged. Theme is controlled only by
+   .camera-ai-page[data-theme].
+   ========================================================= */
+.camera-ai-page[data-theme="ivory"] {
+  --ca-bg: #f7f3e9;
+  --ca-panel: #fffdf8;
+  --ca-card: #fffdf8;
+  --ca-text: #111827;
+  --ca-muted: #64748b;
+  --ca-border: #ddd7ca;
+  background: #f7f3e9 !important;
+  color: #111827 !important;
+}
+
+.camera-ai-page[data-theme="white"] {
+  --ca-bg: #ffffff;
+  --ca-panel: #ffffff;
+  --ca-card: #ffffff;
+  --ca-text: #111827;
+  --ca-muted: #64748b;
+  --ca-border: #d9dee7;
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+.camera-ai-page[data-theme="dark"] {
+  --ca-bg: #070a10;
+  --ca-panel: #0d1420;
+  --ca-card: #0c131e;
+  --ca-text: #f5f7fb;
+  --ca-muted: #94a3b8;
+  --ca-border: #243247;
+  background: #070a10 !important;
+  color: #f5f7fb !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .camera-ai-header,
+.camera-ai-page[data-theme="white"] .camera-ai-header {
+  background: var(--ca-panel) !important;
+  color: var(--ca-text) !important;
+  border-bottom-color: var(--ca-border) !important;
+}
+
+.camera-ai-page[data-theme="dark"] .camera-ai-header {
+  background: #0b111b !important;
+  color: #f5f7fb !important;
+  border-bottom-color: #243247 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .camera-header-brand,
+.camera-ai-page[data-theme="white"] .camera-header-brand {
+  color: #111827 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .camera-header-brand {
+  color: #f5f7fb !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .camera-header-left div > span,
+.camera-ai-page[data-theme="white"] .camera-header-left div > span {
+  color: #64748b !important;
+}
+
+.camera-ai-page[data-theme="dark"] .camera-header-left div > span {
+  color: #94a3b8 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .back-button,
+.camera-ai-page[data-theme="white"] .back-button {
+  background: #fffdf8 !important;
+  color: #111827 !important;
+  border-color: #ddd7ca !important;
+}
+
+.camera-ai-page[data-theme="white"] .back-button {
+  background: #ffffff !important;
+  border-color: #d9dee7 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .back-button {
+  background: #101925 !important;
+  color: #ffffff !important;
+  border-color: #243247 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .camera-header-right > button,
+.camera-ai-page[data-theme="white"] .camera-header-right > button {
+  background: #fffdf8 !important;
+  color: #334155 !important;
+  border-color: #ddd7ca !important;
+}
+
+.camera-ai-page[data-theme="white"] .camera-header-right > button {
+  background: #ffffff !important;
+  border-color: #d9dee7 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .camera-header-right > button {
+  background: #0d1420 !important;
+  color: #e5e7eb !important;
+  border-color: #243247 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .chapter-page,
+.camera-ai-page[data-theme="ivory"] .camera-workspace,
+.camera-ai-page[data-theme="ivory"] .camera-info-panel,
+.camera-ai-page[data-theme="ivory"] .info-panel-section,
+.camera-ai-page[data-theme="ivory"] .motion-guide-card,
+.camera-ai-page[data-theme="ivory"] .setup-card,
+.camera-ai-page[data-theme="ivory"] .chapter-card,
+.camera-ai-page[data-theme="ivory"] .gps-panel {
+  background: #fffdf8 !important;
+  color: #111827 !important;
+  border-color: #ddd7ca !important;
+}
+
+.camera-ai-page[data-theme="white"] .chapter-page,
+.camera-ai-page[data-theme="white"] .camera-workspace,
+.camera-ai-page[data-theme="white"] .camera-info-panel,
+.camera-ai-page[data-theme="white"] .info-panel-section,
+.camera-ai-page[data-theme="white"] .motion-guide-card,
+.camera-ai-page[data-theme="white"] .setup-card,
+.camera-ai-page[data-theme="white"] .chapter-card,
+.camera-ai-page[data-theme="white"] .gps-panel {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-color: #d9dee7 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .chapter-page,
+.camera-ai-page[data-theme="dark"] .camera-workspace,
+.camera-ai-page[data-theme="dark"] .camera-info-panel,
+.camera-ai-page[data-theme="dark"] .info-panel-section,
+.camera-ai-page[data-theme="dark"] .motion-guide-card,
+.camera-ai-page[data-theme="dark"] .setup-card,
+.camera-ai-page[data-theme="dark"] .chapter-card,
+.camera-ai-page[data-theme="dark"] .gps-panel {
+  background: #0d1420 !important;
+  color: #f5f7fb !important;
+  border-color: #243247 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] h1,
+.camera-ai-page[data-theme="ivory"] h2,
+.camera-ai-page[data-theme="ivory"] h3,
+.camera-ai-page[data-theme="ivory"] h4,
+.camera-ai-page[data-theme="white"] h1,
+.camera-ai-page[data-theme="white"] h2,
+.camera-ai-page[data-theme="white"] h3,
+.camera-ai-page[data-theme="white"] h4 {
+  color: #111827 !important;
+}
+
+.camera-ai-page[data-theme="dark"] h1,
+.camera-ai-page[data-theme="dark"] h2,
+.camera-ai-page[data-theme="dark"] h3,
+.camera-ai-page[data-theme="dark"] h4 {
+  color: #f5f7fb !important;
+}
+
+.camera-ai-page[data-theme="ivory"] p,
+.camera-ai-page[data-theme="ivory"] .panel-label,
+.camera-ai-page[data-theme="white"] p,
+.camera-ai-page[data-theme="white"] .panel-label {
+  color: #64748b !important;
+}
+
+.camera-ai-page[data-theme="dark"] p,
+.camera-ai-page[data-theme="dark"] .panel-label {
+  color: #94a3b8 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .joint-option,
+.camera-ai-page[data-theme="white"] .joint-option {
+  background: #fffdf8 !important;
+  color: #111827 !important;
+  border-color: #ddd7ca !important;
+}
+
+.camera-ai-page[data-theme="white"] .joint-option {
+  background: #ffffff !important;
+  border-color: #d9dee7 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .joint-option {
+  background: #0a101a !important;
+  color: #f5f7fb !important;
+  border-color: #243247 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .joint-option.selected,
+.camera-ai-page[data-theme="white"] .joint-option.selected {
+  background: rgba(36,107,255,.08) !important;
+  border-color: #246bff !important;
+}
+
+.camera-ai-page[data-theme="dark"] .joint-option.selected {
+  background: rgba(36,107,255,.18) !important;
+  border-color: #246bff !important;
+}
+
+.camera-ai-page[data-theme="ivory"] input,
+.camera-ai-page[data-theme="ivory"] select,
+.camera-ai-page[data-theme="white"] input,
+.camera-ai-page[data-theme="white"] select {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-color: var(--ca-border) !important;
+}
+
+.camera-ai-page[data-theme="dark"] input,
+.camera-ai-page[data-theme="dark"] select {
+  background: #0a101a !important;
+  color: #f5f7fb !important;
+  border-color: #243247 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .metric-tags span,
+.camera-ai-page[data-theme="dark"] .gps-metric,
+.camera-ai-page[data-theme="dark"] .analysis-disclaimer {
+  background: #0a101a !important;
+  color: #a9b5c8 !important;
+  border-color: #243247 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .metric-tags span,
+.camera-ai-page[data-theme="white"] .metric-tags span,
+.camera-ai-page[data-theme="ivory"] .gps-metric,
+.camera-ai-page[data-theme="white"] .gps-metric {
+  background: #f7f4ed !important;
+  color: #526071 !important;
+  border-color: var(--ca-border) !important;
+}
+
+/* Theme fix: right-side measurement/GPS/display boxes only. */
+.camera-ai-page[data-theme="ivory"] .live-metric,
+.camera-ai-page[data-theme="white"] .live-metric,
+.camera-ai-page[data-theme="ivory"] .display-control {
+  background: #fffdf8 !important;
+  color: #111827 !important;
+  border-color: #ddd7ca !important;
+}
+
+.camera-ai-page[data-theme="white"] .live-metric,
+.camera-ai-page[data-theme="white"] .display-control {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-color: #d9dee7 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .live-metric,
+.camera-ai-page[data-theme="dark"] .display-control {
+  background: #09101a !important;
+  color: #f5f7fb !important;
+  border-color: #243247 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .live-metric span,
+.camera-ai-page[data-theme="white"] .live-metric span {
+  color: #64748b !important;
+}
+
+.camera-ai-page[data-theme="dark"] .live-metric span {
+  color: #94a3b8 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .display-control,
+.camera-ai-page[data-theme="white"] .display-control {
+  color: #526071 !important;
+}
+
+.camera-ai-page[data-theme="ivory"] .display-control.active,
+.camera-ai-page[data-theme="white"] .display-control.active {
+  background: rgba(36,107,255,.08) !important;
+  border-color: rgba(36,107,255,.35) !important;
+  color: #2563eb !important;
+}
+
+.camera-ai-page[data-theme="dark"] .display-control.active {
+  background: rgba(30,76,150,.14) !important;
+  border-color: rgba(61,130,255,.35) !important;
+  color: #6da0ff !important;
+}
+/* Targeted fix: top selected analysis metric boxes only.
+   Do not change layout, spacing, sizing, camera, GPS, or other components. */
+.camera-ai-page.theme-ivory .selected-metrics span,
+.camera-ai-page[data-theme="ivory"] .selected-metrics span {
+  background: #f7f4ed !important;
+  color: #526071 !important;
+  border-color: #ddd7ca !important;
+}
+
+.camera-ai-page.theme-white .selected-metrics span,
+.camera-ai-page[data-theme="white"] .selected-metrics span {
+  background: #ffffff !important;
+  color: #334155 !important;
+  border-color: #d9dee7 !important;
+}
+
+.camera-ai-page.theme-dark .selected-metrics span,
+.camera-ai-page[data-theme="dark"] .selected-metrics span {
+  background: #0a101a !important;
+  color: #a9b5c8 !important;
+  border-color: #243247 !important;
+}
+
+
+/* FINAL TARGETED FIX — Shooting "Applied analysis" boxes only.
+   Existing layout, sizing, spacing, camera, GPS and other components unchanged. */
+.camera-ai-page[data-theme="ivory"] .shooting-analysis-targets b,
+.camera-ai-page.theme-ivory .shooting-analysis-targets b {
+  background: #f7f4ed !important;
+  color: #526071 !important;
+  border-color: #ddd7ca !important;
+}
+
+.camera-ai-page[data-theme="white"] .shooting-analysis-targets b,
+.camera-ai-page.theme-white .shooting-analysis-targets b {
+  background: #ffffff !important;
+  color: #334155 !important;
+  border-color: #d9dee7 !important;
+}
+
+.camera-ai-page[data-theme="dark"] .shooting-analysis-targets b,
+.camera-ai-page.theme-dark .shooting-analysis-targets b {
+  background: #0a101a !important;
+  color: #dbe4f2 !important;
+  border-color: #243247 !important;
+}

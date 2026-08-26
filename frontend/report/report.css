@@ -1,0 +1,2901 @@
+.nova-report {
+  min-height: 100vh;
+  background: #f7f4ec;
+  color: #142033;
+}
+
+.report-header {
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  border-bottom: 1px solid #e3ded4;
+  background: rgba(255,255,255,.72);
+}
+
+.report-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.report-back {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #ddd7cc;
+  border-radius: 8px;
+  background: #fffdf9;
+  color: #1b2a3e;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.report-brand {
+  display: grid;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.report-brand strong {
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: 4px;
+  font-weight: 500;
+}
+
+.report-brand span {
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: 1px;
+  color: #687488;
+}
+
+.report-system-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-right: 1px;
+  color: #2fc46b;
+  font-size: 10px;
+}
+
+.report-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2fc46b;
+}
+
+.report-content {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 30px 24px 60px;
+}
+
+.report-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  color: #5c78a3;
+}
+
+.report-heading h1 {
+  margin: 6px 0 5px;
+  font-size: 28px;
+}
+
+.report-heading p {
+  margin: 0;
+  color: #718094;
+  font-size: 12px;
+}
+
+.dashboard-link {
+  padding: 9px 13px;
+}
+
+.report-card {
+  padding: 20px;
+  border: 1px solid #e1dcd2;
+  border-radius: 14px;
+  background: rgba(255,255,255,.72);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.section-title span {
+  font-size: 10px;
+  color: #8490a0;
+}
+
+.score-list {
+  display: grid;
+  gap: 14px;
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: 210px 80px 1fr;
+  align-items: center;
+  gap: 16px;
+}
+
+.score-name {
+  display: grid;
+  gap: 5px;
+}
+
+.score-name strong {
+  font-size: 12px;
+}
+
+.score-name span {
+  font-size: 9px;
+  line-height: 1.5;
+  color: #7b8797;
+}
+
+.score-number {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.score-number small {
+  margin-left: 2px;
+  font-size: 9px;
+  font-weight: 400;
+  color: #8791a0;
+}
+
+.score-bar {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e9e6e0;
+}
+
+.score-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #2869dc;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.trend {
+  height: 220px;
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 12px 8px 0;
+  border-bottom: 1px solid #e5e0d8;
+}
+
+.trend-point {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 7px;
+}
+
+.trend-point span {
+  font-size: 10px;
+  color: #526173;
+}
+
+.trend-point i {
+  width: 24px;
+  max-height: 82%;
+  min-height: 18px;
+  display: block;
+  border-radius: 5px 5px 0 0;
+  background: #2869dc;
+}
+
+.trend-point small {
+  font-size: 8px;
+  color: #9099a6;
+}
+
+.interpretation {
+  display: grid;
+  gap: 12px;
+}
+
+.interpretation p {
+  margin: 0;
+  padding: 12px;
+  border-radius: 9px;
+  background: #f5f3ee;
+  font-size: 11px;
+  color: #657184;
+}
+
+.interpretation b {
+  color: #1d2b3d;
+}
+
+@media (max-width: 760px) {
+  .report-header {
+    padding: 0 16px;
+  }
+
+  .report-content {
+    padding: 22px 14px 40px;
+  }
+
+  .report-heading {
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .score-row {
+    grid-template-columns: 1fr 70px;
+  }
+
+  .score-bar {
+    grid-column: 1 / -1;
+  }
+}
+
+
+.report-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.print-button {
+  padding: 9px 14px;
+  border: 1px solid #ddd7cc;
+  border-radius: 9px;
+  background: #fffdf9;
+  color: #1b2a3e;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.player-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 0 14px;
+  padding: 16px 18px;
+  border: 1px solid #e1dcd2;
+  border-radius: 14px;
+  background: rgba(255,255,255,.72);
+}
+
+.player-avatar {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #142033;
+  color: #fff;
+  font-weight: 700;
+}
+
+.player-main {
+  min-width: 150px;
+  display: grid;
+  gap: 4px;
+}
+
+.player-main strong {
+  font-size: 16px;
+}
+
+.player-main span {
+  font-size: 10px;
+  color: #778397;
+}
+
+.player-meta {
+  margin-left: auto;
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.player-meta div {
+  display: grid;
+  gap: 4px;
+}
+
+.player-meta small {
+  font-size: 9px;
+  color: #8993a1;
+}
+
+.player-meta b {
+  font-size: 11px;
+}
+
+.player-status {
+  color: #238548;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  .report-header,
+  .report-actions,
+  .dashboard-link,
+  button {
+    display: none !important;
+  }
+
+  .nova-report,
+  .report-card,
+  .player-profile {
+    background: #fff !important;
+    border-color: #d8d8d8 !important;
+  }
+
+  .report-content {
+    max-width: none;
+    padding: 0;
+  }
+
+  .report-heading {
+    margin-bottom: 14px;
+  }
+
+  .report-card,
+  .player-profile {
+    break-inside: avoid;
+  }
+}
+
+
+.report-filter {
+  margin: 0 0 14px;
+  padding: 15px 18px;
+  border: 1px solid #e1dcd2;
+  border-radius: 14px;
+  background: rgba(255,255,255,.72);
+}
+
+.report-filter-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.report-filter-title strong {
+  font-size: 12px;
+}
+
+.report-filter-title span {
+  font-size: 9px;
+  color: #7d8795;
+}
+
+.date-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.date-controls label {
+  display: grid;
+  gap: 5px;
+}
+
+.date-controls label > span {
+  font-size: 9px;
+  color: #7d8795;
+}
+
+.date-controls input {
+  height: 34px;
+  padding: 0 9px;
+  border: 1px solid #ddd7cc;
+  border-radius: 8px;
+  background: #fffdf9;
+  color: #1b2a3e;
+  font-size: 11px;
+}
+
+.date-separator {
+  padding-bottom: 9px;
+  color: #7d8795;
+}
+
+.apply-date {
+  height: 34px;
+  margin-left: auto;
+  padding: 0 13px;
+  border: 1px solid #ddd7cc;
+  border-radius: 8px;
+  background: #142033;
+  color: #fff;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+@media (max-width: 760px) {
+  .date-controls {
+    flex-wrap: wrap;
+  }
+
+  .apply-date {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .report-filter-title {
+    display: grid;
+  }
+}
+
+@media print {
+  .report-filter {
+    display: none !important;
+  }
+}
+
+
+.report-platform-title {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+  color: #526b92;
+}
+
+@media print {
+  .report-platform-title {
+    color: #1b2a3e !important;
+  }
+}
+
+
+.report-disclaimer {
+  margin-top: 18px;
+  padding: 13px 15px;
+  border-top: 1px solid #dcd7ce;
+  color: #6f7886;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.report-disclaimer strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #394454;
+  font-size: 10px;
+}
+
+.report-disclaimer p {
+  margin: 0;
+}
+
+@media print {
+  .report-disclaimer {
+    display: block !important;
+    color: #444 !important;
+    border-top-color: #bbb !important;
+    break-inside: avoid;
+  }
+}
+
+
+@media print {
+  .player-meta {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 1000px) {
+  .player-meta {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 760px) {
+  .player-profile {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .player-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 12px 18px;
+  }
+}
+
+
+.section-caption {
+  margin: 4px 0 0;
+  font-size: 9px;
+  color: #7d8795;
+}
+
+.growth-card {
+  margin-bottom: 14px;
+}
+
+.growth-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.growth-summary > div {
+  padding: 12px;
+  border-radius: 10px;
+  background: #f5f3ee;
+}
+
+.growth-summary small,
+.growth-summary strong,
+.growth-summary span {
+  display: block;
+}
+
+.growth-summary small {
+  margin-bottom: 5px;
+  font-size: 9px;
+  color: #7d8795;
+}
+
+.growth-summary strong {
+  font-size: 18px;
+}
+
+.growth-summary em {
+  font-size: 9px;
+  font-style: normal;
+  color: #7d8795;
+}
+
+.growth-summary span {
+  margin-top: 4px;
+  font-size: 9px;
+  color: #238548;
+}
+
+.growth-trend-chart {
+  margin-top: 6px;
+  padding: 2px 2px 0;
+}
+
+.growth-trend-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.growth-axis-title {
+  font-size: 8px;
+  color: #8a93a0;
+}
+
+.growth-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 9px;
+  color: #667181;
+}
+
+.growth-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.growth-legend i {
+  width: 9px;
+  height: 3px;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.legend-height { background: #2d9b58; }
+.legend-weight { background: #f28b1f; }
+.legend-bmi { background: #e63d32; }
+
+.growth-plot {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 7px;
+  height: 210px;
+}
+
+.growth-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 0 1px;
+  font-size: 8px;
+  color: #6e7784;
+  text-align: right;
+}
+
+.growth-plot-area {
+  position: relative;
+  height: 210px;
+  overflow: hidden;
+}
+
+.growth-grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e8e4dc;
+}
+
+.line-100 { top: 0; }
+.line-75 { top: 25%; }
+.line-50 { top: 50%; }
+.line-25 { top: 75%; }
+.line-0 { bottom: 0; }
+
+.growth-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 210px;
+  overflow: visible;
+}
+
+.growth-svg-line {
+  fill: none;
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.height-stroke { stroke: #2d9b58; }
+.weight-stroke { stroke: #f28b1f; }
+.bmi-stroke { stroke: #e63d32; }
+
+.height-points circle {
+  fill: #2d9b58;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.weight-points circle {
+  fill: #f28b1f;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.bmi-points circle {
+  fill: #e63d32;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.growth-value-row {
+  display: none;
+}
+
+.growth-dates {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 7px 0 0 35px;
+  font-size: 8px;
+  color: #747e8c;
+  text-align: center;
+}
+
+.growth-current-values {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 9px;
+  font-size: 9px;
+  color: #7b8593;
+}
+
+.growth-current-values b {
+  color: #263548;
+  margin-left: 3px;
+}
+
+
+@media print {
+  .growth-card {
+    break-inside: avoid;
+  }
+}
+
+@media (max-width: 760px) {
+  .growth-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .growth-legend {
+    gap: 9px;
+  }
+
+  .growth-current-values {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+.growth-svg-line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.growth-card .section-title > span {
+  white-space: nowrap;
+}
+
+
+.report-analysis-card {
+  margin-bottom: 14px;
+}
+
+.analysis-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 13px;
+  margin-bottom: 12px;
+  border-radius: 9px;
+  background: #f5f3ee;
+}
+
+.analysis-status-badge {
+  padding: 4px 7px;
+  border-radius: 5px;
+  font-size: 8px;
+  color: #536274;
+  background: #e9edf2;
+}
+
+.analysis-status strong {
+  font-size: 13px;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.analysis-grid > div {
+  padding: 11px 12px;
+  border: 1px solid #e7e2da;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.analysis-grid h3 {
+  margin: 0 0 5px;
+  font-size: 11px;
+}
+
+.analysis-grid p {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.6;
+  color: #697485;
+}
+
+.analysis-grid b {
+  color: #1f2d3d;
+}
+
+.analysis-note {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f8f6f1;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.analysis-note strong {
+  white-space: nowrap;
+}
+
+@media print {
+  .report-analysis-card {
+    break-inside: avoid;
+  }
+}
+
+@media (max-width: 760px) {
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* STEP 43 visual refinement */
+.report-card {
+  box-shadow: 0 1px 0 rgba(31, 45, 61, 0.02);
+}
+
+.report-card .section-title h2 {
+  letter-spacing: -0.02em;
+}
+
+.report-analysis-card {
+  padding: 18px 20px 20px;
+}
+
+.report-analysis-card .section-title {
+  margin-bottom: 12px;
+}
+
+.analysis-status {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 9px 12px;
+  margin-bottom: 12px;
+  border: 1px solid #e8e3da;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #f7f5f0 0%, #fbfaf7 100%);
+}
+
+.analysis-status-badge {
+  padding: 4px 8px;
+  border: 1px solid #d9e0e8;
+  border-radius: 999px;
+  font-size: 8px;
+  color: #59687a;
+  background: #fff;
+}
+
+.analysis-status strong {
+  font-size: 13px;
+  color: #172334;
+}
+
+.analysis-status-period {
+  margin-left: auto;
+  font-size: 8px;
+  color: #8a94a2;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.analysis-item {
+  min-height: 105px;
+  padding: 12px;
+  border: 1px solid #e8e3da;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.analysis-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.analysis-item h3 {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.analysis-item-head > strong {
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.analysis-item-head > strong small {
+  margin-left: 2px;
+  font-size: 8px;
+  font-weight: 400;
+  color: #8a94a2;
+}
+
+.analysis-meter {
+  height: 5px;
+  margin: 11px 0 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #ece9e3;
+}
+
+.analysis-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #2d6cdf;
+}
+
+.analysis-item:nth-child(2) .analysis-meter span {
+  background: #5d9c78;
+}
+
+.analysis-item:nth-child(3) .analysis-meter span {
+  background: #e59b32;
+}
+
+.analysis-item p {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.55;
+  color: #697485;
+}
+
+.analysis-tag {
+  padding: 4px 7px;
+  border-radius: 999px;
+  font-size: 8px;
+  color: #59687a;
+  background: #f3f5f7;
+}
+
+.analysis-link {
+  margin-top: 9px;
+  padding-top: 7px;
+  border-top: 1px solid #eeeae3;
+  font-size: 8px;
+  color: #2d6cdf;
+}
+
+.analysis-note {
+  align-items: center;
+  padding: 9px 11px;
+  border: 1px solid #eee9e1;
+  background: #faf8f4;
+}
+
+.analysis-note strong {
+  color: #253348;
+}
+
+@media (max-width: 980px) {
+  .analysis-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media print {
+  .report-card {
+    box-shadow: none;
+  }
+
+  .analysis-item {
+    break-inside: avoid;
+  }
+}
+
+@media (max-width: 760px) {
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-status-period {
+    display: none;
+  }
+}
+
+
+/* STEP 45 — print footer: centered brand + right metadata */
+.print-footer {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 14mm 12mm 18mm;
+  }
+
+  .print-footer {
+    position: fixed;
+    display: flex;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 9mm;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #dcd7ce;
+    background: #fff;
+    color: #687384;
+    font-size: 8px;
+    line-height: 1;
+    z-index: 9999;
+  }
+
+  .print-footer-brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    color: #263548;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+  }
+
+  .print-footer-meta {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+
+  .print-footer-meta > span {
+    white-space: nowrap;
+  }
+
+  .print-date,
+  .print-time {
+    color: #263548;
+    font-weight: 600;
+  }
+
+  .report-card,
+  .growth-card,
+  .report-analysis-card {
+    break-inside: avoid;
+  }
+}
+
+
+/* STEP 48 — A4 page fill refinement
+   Screen layout is unchanged. Print-only sizing makes the last A4 page use the available height
+   more effectively instead of leaving a large blank area. */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 8mm 12mm;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .report-content {
+    width: 194mm !important;
+    max-width: 194mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+
+  /* Keep the first two pages compact and readable. */
+  .player-profile {
+    margin-bottom: 4mm !important;
+    padding: 5mm 6mm !important;
+  }
+
+  .growth-card,
+  .report-analysis-card,
+  .report-card {
+    box-sizing: border-box;
+  }
+
+  /* The final page contains the fatigue trend, interpretation and medical notice.
+     Increase only these print elements so the page is visually balanced. */
+  .report-grid {
+    margin-top: 5mm !important;
+    gap: 5mm !important;
+  }
+
+  .report-grid > .report-card {
+    padding: 6mm !important;
+  }
+
+  .report-grid .section-title {
+    margin-bottom: 5mm !important;
+  }
+
+  .report-grid .trend {
+    height: 92mm !important;
+    min-height: 92mm !important;
+    padding: 5mm 3mm 0 !important;
+    gap: 10mm !important;
+  }
+
+  .report-grid .trend-point {
+    gap: 3mm !important;
+  }
+
+  .report-grid .trend-point span {
+    font-size: 11pt !important;
+  }
+
+  .report-grid .trend-point small {
+    font-size: 9pt !important;
+  }
+
+  .report-grid .trend-point i {
+    width: 9mm !important;
+    max-height: 75mm !important;
+    min-height: 8mm !important;
+  }
+
+  .report-grid .interpretation {
+    gap: 5mm !important;
+  }
+
+  .report-grid .interpretation p {
+    min-height: 15mm;
+    display: flex;
+    align-items: center;
+    padding: 5mm !important;
+    font-size: 10pt !important;
+  }
+
+  .report-disclaimer {
+    margin-top: 6mm !important;
+    padding: 6mm 5mm !important;
+    min-height: 25mm;
+    font-size: 9pt !important;
+    line-height: 1.7 !important;
+  }
+
+  .report-disclaimer strong {
+    font-size: 10pt !important;
+    margin-bottom: 3mm !important;
+  }
+
+  .print-footer {
+    left: 8mm !important;
+    right: 8mm !important;
+    bottom: 0 !important;
+    height: 8mm !important;
+  }
+}
+
+
+/* STEP 49 — motion analysis report */
+.motion-analysis-card {
+  margin-bottom: 14px;
+}
+
+.motion-summary-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.motion-summary-item {
+  padding: 12px;
+  border: 1px solid #e8e3da;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.motion-summary-item > span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 9px;
+  color: #7b8795;
+}
+
+.motion-summary-item strong {
+  font-size: 20px;
+  letter-spacing: -0.03em;
+}
+
+.motion-summary-item strong small {
+  margin-left: 2px;
+  font-size: 8px;
+  color: #8a94a2;
+  font-weight: 400;
+}
+
+.motion-summary-item p {
+  margin: 6px 0 0;
+  font-size: 8px;
+  color: #7b8795;
+}
+
+.motion-meter,
+.motion-result-bar {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #ece9e3;
+}
+
+.motion-meter {
+  margin-top: 9px;
+}
+
+.motion-meter i,
+.motion-result-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #2d6cdf;
+}
+
+.motion-results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.motion-result {
+  padding: 11px 12px;
+  border: 1px solid #e8e3da;
+  border-radius: 9px;
+  background: #faf9f6;
+}
+
+.motion-result-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.motion-result h3 {
+  margin: 0 0 3px;
+  font-size: 10px;
+}
+
+.motion-result p {
+  margin: 0;
+  font-size: 8px;
+  line-height: 1.5;
+  color: #7b8795;
+}
+
+.motion-result b {
+  flex: 0 0 auto;
+  padding: 4px 7px;
+  border-radius: 999px;
+  font-size: 8px;
+}
+
+.motion-good {
+  color: #258255;
+  background: #edf8f0;
+}
+
+.motion-watch {
+  color: #c57a14;
+  background: #fff5e5;
+}
+
+.motion-result-bar {
+  margin-top: 8px;
+}
+
+.motion-result:nth-child(2) .motion-result-bar i {
+  background: #e59b32;
+}
+
+.motion-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f7f5f0;
+  font-size: 8.5px;
+  line-height: 1.55;
+}
+
+.motion-note strong {
+  white-space: nowrap;
+  color: #263548;
+}
+
+@media print {
+  .motion-analysis-card {
+    break-inside: avoid;
+  }
+
+  .motion-summary-grid {
+    gap: 3mm;
+  }
+
+  .motion-summary-item,
+  .motion-result {
+    padding: 4mm;
+  }
+
+  .motion-results {
+    gap: 3mm;
+  }
+}
+
+@media (max-width: 760px) {
+  .motion-summary-grid,
+  .motion-results {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* STEP 50 — selected Camera AI result */
+.camera-ai-result-card {
+  margin-bottom: 14px;
+}
+
+.camera-ai-choice-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid #e8e3da;
+  border-radius: 9px;
+  background: #faf9f6;
+}
+
+.camera-ai-choice-label {
+  flex: 0 0 auto;
+  padding-top: 4px;
+  font-size: 8px;
+  font-weight: 600;
+  color: #6f7b8b;
+}
+
+.camera-ai-choice-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.camera-ai-choice {
+  padding: 5px 8px;
+  border: 1px solid #e1ddd5;
+  border-radius: 999px;
+  background: #fff;
+  color: #6c7786;
+  font-size: 8px;
+}
+
+.camera-ai-choice.active {
+  border-color: #2d6cdf;
+  color: #fff;
+  background: #2d6cdf;
+}
+
+.camera-ai-result-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 13px 14px;
+  border: 1px solid #e8e3da;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.camera-ai-category {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 7px;
+  letter-spacing: .12em;
+  color: #2d6cdf;
+}
+
+.camera-ai-result-head h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.camera-ai-result-head p {
+  margin: 0;
+  font-size: 8.5px;
+  color: #748091;
+}
+
+.camera-ai-score {
+  flex: 0 0 auto;
+  min-width: 78px;
+  text-align: right;
+}
+
+.camera-ai-score strong {
+  font-size: 24px;
+  letter-spacing: -.04em;
+}
+
+.camera-ai-score small {
+  margin-left: 2px;
+  font-size: 8px;
+  color: #8b95a2;
+}
+
+.camera-ai-score span {
+  display: block;
+  margin-top: 2px;
+  font-size: 7px;
+  color: #8b95a2;
+}
+
+.camera-ai-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.camera-ai-metric {
+  position: relative;
+  padding: 10px 11px;
+  border: 1px solid #e8e3da;
+  border-radius: 9px;
+  background: #faf9f6;
+}
+
+.camera-ai-metric > span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 8px;
+  color: #7b8795;
+}
+
+.camera-ai-metric strong {
+  font-size: 14px;
+}
+
+.camera-ai-metric strong small {
+  font-size: 7px;
+  color: #8993a0;
+  font-weight: 400;
+}
+
+.camera-ai-metric em {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 3px 5px;
+  border-radius: 999px;
+  font-size: 7px;
+  font-style: normal;
+}
+
+.metric-good {
+  color: #258255;
+  background: #edf8f0;
+}
+
+.metric-watch {
+  color: #b9791a;
+  background: #fff5e5;
+}
+
+.camera-ai-summary {
+  display: flex;
+  gap: 10px;
+  margin-top: 9px;
+  padding: 9px 11px;
+  border-radius: 8px;
+  background: #f7f5f0;
+  font-size: 8.5px;
+  line-height: 1.55;
+}
+
+.camera-ai-summary strong {
+  white-space: nowrap;
+  color: #263548;
+}
+
+@media print {
+  .camera-ai-result-card {
+    break-inside: avoid;
+  }
+
+  .camera-ai-choice-row,
+  .camera-ai-result-head,
+  .camera-ai-metric {
+    padding: 3.5mm;
+  }
+
+  .camera-ai-metric-grid {
+    gap: 3mm;
+  }
+}
+
+@media (max-width: 760px) {
+  .camera-ai-result-head {
+    align-items: flex-start;
+  }
+
+  .camera-ai-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* STEP 51 — print logo cleanup
+   Keep the report header logo on the first page only.
+   Remove duplicated/intermediate and footer logo marks. */
+@media print {
+  .print-footer-brand,
+  .print-footer-logo,
+  .footer-logo,
+  .print-logo {
+    display: none !important;
+  }
+
+  .print-footer {
+    justify-content: flex-end;
+  }
+
+  .print-footer-meta {
+    right: 0;
+  }
+
+  /* Only the first report page may display the header brand/logo. */
+  .report-page:not(:first-child) .report-brand,
+  .report-page:not(:first-child) .report-logo,
+  .report-page:not(:first-child) .brand-logo {
+    display: none !important;
+  }
+}
+
+
+/* STEP 52 — A4 report print composition matching the supplied result sheet */
+.report-print-brand {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 8mm 11mm;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .nova-report {
+    min-height: auto;
+    background: #fff !important;
+  }
+
+  .report-content {
+    width: 194mm !important;
+    max-width: 194mm !important;
+    margin: 0 auto !important;
+    padding: 0 0 10mm !important;
+  }
+
+  /* Controls are screen-only. */
+  .report-actions,
+  .report-filter,
+  .report-back,
+  .dashboard-link,
+  .report-system-status {
+    display: none !important;
+  }
+
+  /* The supplied result sheet starts directly with the report identity. */
+  .report-header {
+    display: none !important;
+  }
+
+  .report-heading {
+    position: relative;
+    display: block !important;
+    min-height: 28mm;
+    margin: 0 0 4mm !important;
+    padding: 1mm 0 2mm !important;
+  }
+
+  .report-heading > div:last-child {
+    padding-top: 1mm;
+  }
+
+  .report-print-brand {
+    display: flex !important;
+    align-items: flex-start;
+    gap: 5mm;
+    height: 23mm;
+    margin-bottom: 1mm;
+  }
+
+  .report-print-logo {
+    display: block !important;
+    width: 18mm;
+    height: 18mm;
+    object-fit: contain;
+  }
+
+  .report-print-platform {
+    display: block !important;
+    padding-top: 1mm;
+    font-size: 10pt;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 1.7px;
+    color: #123b9b !important;
+  }
+
+  .report-heading .eyebrow {
+    display: block;
+    margin-left: 23mm;
+    font-size: 7pt;
+    letter-spacing: 1.5px;
+    color: #64748b !important;
+  }
+
+  .report-heading h1 {
+    margin: 1mm 0 1mm 23mm !important;
+    font-size: 22pt !important;
+    line-height: 1.05;
+    color: #101827 !important;
+  }
+
+  .report-heading p {
+    margin-left: 23mm !important;
+    font-size: 7.5pt !important;
+    color: #667085 !important;
+  }
+
+  .player-profile {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 34mm;
+    margin: 0 0 4mm !important;
+    padding: 5mm 5.5mm !important;
+    border-radius: 5mm !important;
+    background: #fff !important;
+  }
+
+  .player-avatar {
+    width: 14mm;
+    height: 14mm;
+    flex: 0 0 14mm;
+    font-size: 12pt;
+  }
+
+  .player-main {
+    min-width: 35mm;
+  }
+
+  .player-main strong {
+    font-size: 13pt;
+  }
+
+  .player-main span {
+    font-size: 7.5pt;
+  }
+
+  .player-meta {
+    gap: 4mm 9mm;
+  }
+
+  .player-meta small {
+    font-size: 6.5pt;
+  }
+
+  .player-meta b {
+    font-size: 8pt;
+  }
+
+  .report-card {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 4mm !important;
+    padding: 4.5mm !important;
+    background: #fff !important;
+  }
+
+  .section-title {
+    margin-bottom: 3mm !important;
+  }
+
+  .section-title h2 {
+    font-size: 11.5pt !important;
+  }
+
+  .section-title span,
+  .section-caption {
+    font-size: 6.5pt !important;
+  }
+
+  /* Page 1: profile + body growth */
+  .growth-card {
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .growth-summary {
+    gap: 3mm !important;
+  }
+
+  .growth-summary > div {
+    padding: 3.5mm !important;
+  }
+
+  .growth-trend-chart {
+    min-height: 63mm !important;
+  }
+
+  .growth-svg {
+    height: 55mm !important;
+  }
+
+  /* Page 2: overall analysis + score calculation */
+  .report-analysis-card {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .analysis-grid {
+    gap: 3mm !important;
+  }
+
+  .analysis-item {
+    padding: 4mm !important;
+  }
+
+  .analysis-item h3 {
+    font-size: 9pt !important;
+  }
+
+  .analysis-item p {
+    font-size: 7pt !important;
+  }
+
+  .analysis-status {
+    padding: 3.5mm !important;
+    margin-bottom: 3mm !important;
+  }
+
+  .score-list {
+    gap: 4mm !important;
+  }
+
+  .score-row {
+    grid-template-columns: 52mm 18mm 1fr;
+    gap: 4mm;
+  }
+
+  .score-name strong {
+    font-size: 8.5pt;
+  }
+
+  .score-name span {
+    font-size: 6.5pt;
+  }
+
+  .score-number {
+    font-size: 15pt;
+  }
+
+  .score-bar {
+    height: 3mm;
+  }
+
+  /* Page 3: motion + selected Camera AI analysis */
+  .motion-analysis-card {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .motion-summary-grid,
+  .camera-ai-metric-grid {
+    gap: 3mm !important;
+  }
+
+  .motion-results {
+    gap: 3mm !important;
+  }
+
+  .motion-result,
+  .motion-summary-item,
+  .camera-ai-metric {
+    padding: 3.5mm !important;
+  }
+
+  .camera-ai-choice-row {
+    padding: 3.5mm !important;
+  }
+
+  .camera-ai-result-head {
+    padding: 4mm !important;
+  }
+
+  /* Page 4: fatigue trend + interpretation + medical notice */
+  .report-grid {
+    break-before: page;
+    page-break-before: always;
+    margin-top: 0 !important;
+  }
+
+  .trend {
+    height: 70mm !important;
+  }
+
+  .report-disclaimer {
+    margin-top: 4mm !important;
+    padding: 4mm 4.5mm !important;
+  }
+
+  .report-disclaimer p {
+    font-size: 7.2pt !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Footer: no repeated NOVA mark; metadata at right. */
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 7mm !important;
+    padding: 0 2mm;
+    border-top: 0.25mm solid #cfd8e3;
+    background: #fff !important;
+    color: #5f6b7a;
+    font-size: 6.5pt;
+    line-height: 7mm;
+    text-align: right;
+  }
+
+  .print-footer-meta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4mm;
+    white-space: nowrap;
+  }
+
+  .print-page-number::before {
+    content: "페이지 " counter(page) " / " counter(pages);
+    margin-left: 2mm;
+    color: #3f4d60;
+    font-weight: 600;
+  }
+
+  .print-footer .print-date,
+  .print-footer .print-time {
+    color: #263548;
+    font-weight: 600;
+  }
+}
+
+
+/* STEP 53 — single-sheet A4 print
+   The user requested the entire report to print on one A4 sheet.
+   Screen layout is unchanged. */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 4mm;
+  }
+
+  html,
+  body {
+    width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Cancel all explicit page breaks from the multi-page result layout. */
+  .growth-card,
+  .report-analysis-card,
+  .motion-analysis-card,
+  .camera-ai-result-card,
+  .report-grid {
+    break-before: auto !important;
+    break-after: auto !important;
+    page-break-before: auto !important;
+    page-break-after: auto !important;
+  }
+
+  /* One A4 result sheet: compact the complete report while preserving its structure. */
+  .nova-report {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    zoom: 0.25;
+  }
+
+  .report-header {
+    display: none !important;
+  }
+
+  .report-content {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .report-actions,
+  .report-filter,
+  .dashboard-link,
+  .print-button {
+    display: none !important;
+  }
+
+  .report-heading {
+    margin: 0 0 3mm !important;
+  }
+
+  .report-print-brand {
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .report-print-logo {
+    display: block !important;
+    width: 18mm !important;
+    height: 18mm !important;
+    object-fit: contain !important;
+  }
+
+  .report-print-platform {
+    display: block !important;
+    font-size: 8pt !important;
+  }
+
+  .player-profile,
+  .report-card,
+  .report-analysis-card,
+  .motion-analysis-card,
+  .camera-ai-result-card,
+  .report-grid,
+  .report-disclaimer {
+    margin: 0 0 2mm !important;
+    padding: 3mm !important;
+    box-sizing: border-box !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .player-profile {
+    display: grid !important;
+    grid-template-columns: 18mm 1fr !important;
+    gap: 4mm !important;
+  }
+
+  .player-meta {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 2mm 4mm !important;
+  }
+
+  .growth-summary {
+    gap: 2mm !important;
+  }
+
+  .growth-summary > div {
+    padding: 2mm !important;
+  }
+
+  .growth-trend-chart {
+    min-height: 35mm !important;
+  }
+
+  .growth-svg {
+    height: 30mm !important;
+  }
+
+  .analysis-grid,
+  .motion-summary-grid,
+  .camera-ai-metric-grid {
+    gap: 2mm !important;
+  }
+
+  .analysis-item,
+  .motion-result,
+  .motion-summary-item,
+  .camera-ai-metric {
+    padding: 2mm !important;
+  }
+
+  .motion-results {
+    gap: 2mm !important;
+  }
+
+  .camera-ai-choice-row,
+  .camera-ai-result-head {
+    padding: 2mm !important;
+  }
+
+  .report-grid {
+    display: grid !important;
+    grid-template-columns: 1.35fr 1fr !important;
+    gap: 2mm !important;
+  }
+
+  .trend {
+    height: 35mm !important;
+    min-height: 35mm !important;
+  }
+
+  .report-disclaimer p {
+    font-size: 6.5pt !important;
+    line-height: 1.35 !important;
+  }
+
+  .print-footer {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 6mm !important;
+    line-height: 6mm !important;
+    font-size: 6pt !important;
+    background: #fff !important;
+    z-index: 99999 !important;
+  }
+
+  .print-footer-meta {
+    display: inline-flex !important;
+    gap: 3mm !important;
+  }
+}
+
+/* STEP 56 — reference-style A4 result sheet */
+.print-result-sheet { display:none; }
+
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  html, body { width:210mm !important; margin:0 !important; padding:0 !important; background:#fff !important; overflow:visible !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .report-header, .report-content, .print-footer { display:none !important; }
+  .print-result-sheet { display:block !important; width:210mm !important; }
+  .print-result-page { position:relative; width:210mm; height:297mm; box-sizing:border-box; padding:9mm 8mm 17mm; background:#fff; overflow:hidden; break-after:page; page-break-after:always; }
+  .print-result-page:last-child { break-after:auto; page-break-after:auto; }
+  .print-result-header { display:flex; align-items:flex-start; gap:5mm; margin-bottom:4mm; }
+  .print-result-brand { width:32mm; flex:0 0 32mm; text-align:left; }
+  .print-result-brand img { width:18mm; height:18mm; object-fit:contain; display:block; }
+  .print-result-brand strong { display:block; margin-top:1mm; font-size:6.5pt; letter-spacing:.12em; color:#12316a; }
+  .print-result-title span { font-size:6.5pt; letter-spacing:.15em; color:#718096; }
+  .print-result-title h1 { margin:1mm 0; font-size:22pt; line-height:1; }
+  .print-result-title p { margin:0; font-size:6.5pt; color:#667386; }
+  .print-result-card, .print-result-profile { border:1px solid #d8dce3; border-radius:3mm; background:#fff; box-sizing:border-box; }
+  .print-result-profile { display:grid; grid-template-columns:17mm 1fr; gap:3mm; padding:4mm; margin-bottom:4mm; }
+  .print-result-avatar { width:13mm; height:13mm; border-radius:50%; display:grid; place-items:center; background:#152d59; color:#fff; font-size:13pt; font-weight:700; }
+  .print-result-player strong { display:block; font-size:13pt; }.print-result-player span{font-size:7pt;color:#64748b;}
+  .print-result-meta { grid-column:1/-1; display:grid; grid-template-columns:repeat(4,1fr); gap:2.5mm 5mm; margin-top:1mm; }
+  .print-result-meta small { display:block; font-size:5.8pt; color:#7b8797; margin-bottom:1mm; }.print-result-meta b{font-size:7pt;}.print-green{color:#16864a;}
+  .print-result-card { padding:4mm; margin-bottom:4mm; }.print-result-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:4mm;margin-bottom:3mm;}.print-result-card-head h2{margin:0;font-size:10.5pt;}.print-result-card-head p{margin:1mm 0 0;font-size:5.8pt;color:#748093;}.print-result-card-head>span,.print-result-card-head>strong{font-size:6.2pt;color:#667386;}
+  .print-growth-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm;margin-bottom:3mm;}.print-growth-summary>div{padding:3mm;border:1px solid #e4e7eb;border-radius:2.5mm;}.print-growth-summary small{display:block;font-size:5.8pt;color:#7b8797;}.print-growth-summary strong{display:block;font-size:14pt;margin:1mm 0;}.print-growth-summary strong em{font-size:6pt;font-style:normal;font-weight:400;}.print-growth-summary b{font-size:6pt;color:#1c9a55;}
+  .print-growth-graph{display:flex;height:55mm;}.print-growth-axis{width:8mm;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:4mm;font-size:5.5pt;color:#778394;}.print-growth-graph-area{position:relative;flex:1;}.print-growth-grid{position:absolute;inset:0 0 4mm;display:flex;flex-direction:column;justify-content:space-between;}.print-growth-grid i{border-top:1px solid #e7e9ed;}.print-growth-graph svg{position:absolute;inset:0 0 4mm;width:100%;height:calc(100% - 4mm);}.print-growth-dates{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;font-size:5.5pt;color:#667386;}.print-growth-legend{display:flex;justify-content:flex-end;gap:5mm;font-size:5.8pt;color:#667386;}.print-growth-legend i{display:inline-block;width:5mm;border-top:2px solid;margin-right:1mm;vertical-align:middle;}.g-height{border-color:#2d9b58!important}.g-weight{border-color:#f28b1f!important}.g-bmi{border-color:#e63d32!important;}
+  .print-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;}.print-summary-item{padding:3mm;border:1px solid #e4e7eb;border-radius:2.5mm;min-height:24mm;}.print-summary-item strong{display:block;font-size:15pt;}.print-summary-item b{display:block;font-size:6.5pt;margin-top:1mm;}.print-summary-item span{display:block;margin-top:2mm;font-size:5.5pt;color:#667386;line-height:1.35;}.print-summary-item.blue strong{color:#1758d0}.print-summary-item.green strong{color:#16864a}.print-summary-item.orange strong{color:#e67811}.print-summary-item.purple strong{color:#6544bf}.print-overall-status{display:flex;justify-content:center;gap:4mm;margin-top:3mm;padding:2.5mm;border:1px solid #f2c18c;border-radius:2.5mm;font-size:7pt}.print-overall-status strong{font-size:12pt;color:#e66f0d;}
+  .print-score-list{display:grid;gap:3mm}.print-score-row{display:grid;grid-template-columns:65mm 13mm 1fr;gap:3mm;align-items:center;}.print-score-row strong{display:block;font-size:6.8pt}.print-score-row small{display:block;font-size:5.2pt;color:#718094;margin-top:.7mm}.print-score-row>b{font-size:10pt}.print-score-row>b em{font-size:5.5pt;font-style:normal;color:#7b8797;font-weight:400}.print-score-bar{height:1.8mm;background:#e6e6e4;border-radius:99px;overflow:hidden}.print-score-bar i{display:block;height:100%;background:#2869dc;border-radius:inherit;}
+  .print-two-column{display:grid;grid-template-columns:1.15fr 1fr;gap:3mm;}.print-two-column>.print-result-card{margin-bottom:3mm;}.print-motion-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2mm}.print-motion-grid>div{padding:2.5mm;border:1px solid #e4e7eb;border-radius:2.5mm}.print-motion-grid b{display:block;font-size:6.5pt}.print-motion-grid strong{display:block;font-size:10pt;margin:1mm 0}.print-motion-grid span{font-size:5.5pt;color:#258255}.print-motion-grid .print-watch{color:#c57a14}.print-motion-grid i{display:block;height:1.4mm;margin-top:1.5mm;background:#2869dc;border-radius:99px;}
+  .print-camera-result{display:grid;grid-template-columns:36mm 1fr;gap:3mm}.print-camera-placeholder{height:40mm;display:grid;place-items:center;background:#eaf1fb;border-radius:2mm;color:#1758d0;font-size:10pt;font-weight:700;text-align:center}.print-camera-placeholder small{font-size:5pt}.print-camera-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:2mm}.print-camera-metrics>div{padding:2mm;border-bottom:1px solid #e5e8ed}.print-camera-metrics small{display:block;font-size:5pt;color:#7b8797}.print-camera-metrics b{display:block;font-size:7pt;margin-top:1mm}.print-camera-metrics span{font-size:5pt;color:#1758d0;}
+  .print-page3-top{align-items:stretch}.print-fatigue-result{height:82mm}.print-fatigue-chart{display:flex;align-items:flex-end;justify-content:space-around;height:56mm;border-bottom:1px solid #dfe3e8;padding:0 3mm}.print-fatigue-bar{position:relative;width:12mm;height:100%;display:flex;align-items:center;flex-direction:column;justify-content:flex-end}.print-fatigue-bar b{font-size:6pt;margin-bottom:1mm}.print-fatigue-bar i{display:block;width:6mm;background:#2869dc;border-radius:1.5mm 1.5mm 0 0;min-height:2mm}.print-fatigue-bar small{position:absolute;bottom:-7mm;font-size:5pt;text-align:center;color:#667386;}
+  .print-interpretation{display:grid;gap:2mm}.print-interpretation p{margin:0;padding:3mm;border-radius:2.5mm;background:#f6f4ef;display:grid;grid-template-columns:17mm 1fr;gap:1mm}.print-interpretation b{font-size:7.5pt}.print-interpretation strong{font-size:6.5pt}.print-interpretation span{grid-column:2;font-size:5pt;color:#667386}.print-interpretation .good b,.print-interpretation .good strong{color:#16864a}.print-interpretation .watch b,.print-interpretation .watch strong{color:#e78a12}.print-interpretation .high b,.print-interpretation .high strong{color:#df302d}
+  .print-conclusion p{font-size:7pt;line-height:1.6;color:#4f5f73;margin:2mm 0}.print-conclusion p strong{color:#162238}.print-recommendation{display:flex;gap:3mm;align-items:flex-start;margin-top:3mm;padding:3mm;border-radius:2.5mm;background:#eef5ff;border:1px solid #d7e6fb}.print-recommendation strong{font-size:6.5pt;color:#1758d0;white-space:nowrap}.print-recommendation span{font-size:5.8pt;line-height:1.45;color:#40516a}.print-medical-result p{font-size:6pt;line-height:1.5;color:#566477;margin:1.5mm 0}.print-result-footer{position:absolute;left:8mm;right:8mm;bottom:5mm;height:8mm;border-top:1px solid #d6dce5;display:grid;grid-template-columns:18mm 1fr auto;align-items:end;gap:3mm;font-size:5.5pt;color:#667386}.print-result-footer img{width:12mm;height:7mm;object-fit:contain;object-position:left bottom}.print-result-footer-spacer{width:12mm}.print-result-footer-center{text-align:center;font-weight:700;color:#152d59;letter-spacing:.06em}.print-result-footer-meta{display:flex;gap:3mm;justify-content:flex-end;white-space:nowrap;}
+}
+
+
+/* STEP 58 — A4 print scale fix
+   The previous screen-print CSS applied zoom:0.25 to the report root.
+   That also scaled the dedicated A4 result sheet to about 25%.
+   The result sheet must be rendered at native A4 size. */
+@media print {
+  .nova-report {
+    zoom: 1 !important;
+    transform: none !important;
+    width: 210mm !important;
+    max-width: none !important;
+    min-width: 210mm !important;
+  }
+
+  .print-result-sheet {
+    zoom: 1 !important;
+    transform: none !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-width: 210mm !important;
+  }
+
+  .print-result-page {
+    zoom: 1 !important;
+    transform: none !important;
+  }
+
+  body {
+    zoom: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media print {
+  .print-first-summary {
+    margin-bottom: 0 !important;
+    padding: 4mm !important;
+  }
+  .print-first-summary-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:2.5mm;
+  }
+  .print-first-summary-grid > div {
+    min-height:22mm;
+    padding:3mm;
+    border:1px solid #e4e7eb;
+    border-radius:2.5mm;
+    box-sizing:border-box;
+  }
+  .print-first-summary-grid small {
+    display:block;
+    font-size:5.8pt;
+    color:#718096;
+  }
+  .print-first-summary-grid strong {
+    display:block;
+    margin:1mm 0;
+    font-size:13pt;
+  }
+  .print-first-summary-grid strong em {
+    font-size:5.5pt;
+    font-style:normal;
+    font-weight:400;
+    color:#718096;
+  }
+  .print-first-summary-grid span {
+    display:block;
+    font-size:5.2pt;
+    color:#667386;
+  }
+  .first-summary-blue strong { color:#1758d0; }
+  .first-summary-green strong { color:#16864a; }
+  .first-summary-orange strong { color:#e67811; }
+  .first-summary-purple strong { color:#6544bf; font-size:9pt !important; margin-top:2.5mm !important; }
+  .print-first-status {
+    display:flex;
+    align-items:center;
+    gap:3mm;
+    margin-top:2.5mm;
+    padding:2.5mm 3mm;
+    border:1px solid #f2c18c;
+    border-radius:2.5mm;
+    background:#fffaf4;
+  }
+  .print-first-status span { font-size:6.5pt; color:#667386; }
+  .print-first-status strong { font-size:10pt; color:#e66f0d; }
+  .print-first-status small { font-size:5.4pt; color:#667386; margin-left:auto; }
+}
+
+
+/* STEP 60 — A4 page space balancing
+   Fill the printable A4 pages without changing the screen layout. */
+@media print {
+  .print-result-page {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .print-result-footer {
+    margin-top: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* PAGE 1 */
+  .print-result-page-1 .print-result-header {
+    margin-bottom: 5mm !important;
+  }
+  .print-result-page-1 .print-result-profile {
+    padding: 5mm !important;
+    margin-bottom: 5mm !important;
+  }
+  .print-result-page-1 .print-result-meta {
+    gap: 3.5mm 6mm !important;
+    margin-top: 2mm !important;
+  }
+  .print-result-page-1 .print-growth-result {
+    flex: 0 0 auto !important;
+    padding: 5mm !important;
+    margin-bottom: 5mm !important;
+  }
+  .print-result-page-1 .print-growth-summary {
+    gap: 4mm !important;
+    margin-bottom: 4mm !important;
+  }
+  .print-result-page-1 .print-growth-summary > div {
+    min-height: 27mm !important;
+    padding: 4mm !important;
+  }
+  .print-result-page-1 .print-growth-summary strong {
+    font-size: 17pt !important;
+  }
+  .print-result-page-1 .print-growth-graph {
+    height: 70mm !important;
+  }
+  .print-result-page-1 .print-first-summary {
+    flex: 1 1 auto !important;
+    min-height: 60mm !important;
+    padding: 5mm !important;
+  }
+  .print-result-page-1 .print-first-summary-grid > div {
+    min-height: 27mm !important;
+    padding: 4mm !important;
+  }
+  .print-result-page-1 .print-first-summary-grid strong {
+    font-size: 16pt !important;
+  }
+  .print-result-page-1 .print-first-status {
+    min-height: 12mm !important;
+    padding: 3mm 4mm !important;
+  }
+
+  /* PAGE 2 */
+  .print-result-page-2 .print-result-card {
+    padding: 5mm !important;
+    margin-bottom: 5mm !important;
+  }
+  .print-result-page-2 > .print-result-card:first-child {
+    min-height: 48mm !important;
+  }
+  .print-result-page-2 .print-summary-grid {
+    gap: 3mm !important;
+  }
+  .print-result-page-2 .print-summary-item {
+    min-height: 30mm !important;
+    padding: 4mm !important;
+  }
+  .print-result-page-2 .print-summary-item strong {
+    font-size: 18pt !important;
+  }
+  .print-result-page-2 > .print-result-card:nth-child(2) {
+    min-height: 52mm !important;
+  }
+  .print-result-page-2 .print-score-list {
+    gap: 4mm !important;
+  }
+  .print-result-page-2 .print-two-column {
+    flex: 1 1 auto !important;
+    min-height: 95mm !important;
+  }
+  .print-result-page-2 .print-two-column > .print-result-card {
+    min-height: 95mm !important;
+    margin-bottom: 0 !important;
+  }
+  .print-result-page-2 .print-motion-grid {
+    gap: 3mm !important;
+  }
+  .print-result-page-2 .print-motion-grid > div {
+    min-height: 30mm !important;
+    padding: 3.5mm !important;
+  }
+  .print-result-page-2 .print-camera-result {
+    min-height: 65mm !important;
+  }
+  .print-result-page-2 .print-camera-placeholder {
+    height: 58mm !important;
+  }
+
+  /* PAGE 3 */
+  .print-result-page-3 .print-page3-top {
+    min-height: 88mm !important;
+  }
+  .print-result-page-3 .print-page3-top > .print-result-card {
+    min-height: 88mm !important;
+    margin-bottom: 5mm !important;
+    padding: 5mm !important;
+  }
+  .print-result-page-3 .print-fatigue-chart {
+    height: 62mm !important;
+  }
+  .print-result-page-3 .print-conclusion {
+    min-height: 70mm !important;
+    padding: 5mm !important;
+    margin-bottom: 5mm !important;
+  }
+  .print-result-page-3 .print-conclusion p {
+    font-size: 7.5pt !important;
+    line-height: 1.75 !important;
+  }
+  .print-result-page-3 .print-recommendation {
+    min-height: 18mm !important;
+    padding: 4mm !important;
+  }
+  .print-result-page-3 .print-medical-result {
+    min-height: 38mm !important;
+    padding: 5mm !important;
+    margin-bottom: 0 !important;
+  }
+  .print-result-page-3 .print-medical-result p {
+    font-size: 6.5pt !important;
+    line-height: 1.65 !important;
+  }
+}
+
+/* STEP 61 — remove footer/content overlap and move each print block upward */
+@media print {
+  .print-result-page {
+    padding-top: 6mm !important;
+    padding-bottom: 22mm !important;
+  }
+
+  .print-result-footer {
+    z-index: 20 !important;
+    background: #fff !important;
+    margin-top: 0 !important;
+  }
+
+  /* Page 1: move the lower summary into the free area, while keeping it
+     completely above the footer. */
+  .print-result-page-1 .print-result-header { margin-bottom: 3mm !important; }
+  .print-result-page-1 .print-result-profile { padding: 4mm !important; margin-bottom: 3mm !important; }
+  .print-result-page-1 .print-result-meta { gap: 2mm 5mm !important; }
+  .print-result-page-1 .print-growth-result { padding: 4mm !important; margin-bottom: 3mm !important; }
+  .print-result-page-1 .print-growth-summary { gap: 3mm !important; margin-bottom: 3mm !important; }
+  .print-result-page-1 .print-growth-summary > div { min-height: 23mm !important; padding: 3mm !important; }
+  .print-result-page-1 .print-growth-summary strong { font-size: 15pt !important; }
+  .print-result-page-1 .print-growth-graph { height: 58mm !important; }
+  .print-result-page-1 .print-first-summary {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    padding: 3.5mm !important;
+    margin-bottom: 0 !important;
+  }
+  .print-result-page-1 .print-first-summary-grid > div {
+    min-height: 21mm !important;
+    padding: 3mm !important;
+  }
+  .print-result-page-1 .print-first-summary-grid strong { font-size: 13pt !important; }
+  .print-result-page-1 .print-first-status { min-height: 9mm !important; padding: 2mm 3mm !important; }
+
+  /* Page 2: compact each block and shift the complete stack upward. */
+  .print-result-page-2 .print-result-card { padding: 4mm !important; margin-bottom: 3mm !important; }
+  .print-result-page-2 > .print-result-card:first-child { min-height: 42mm !important; }
+  .print-result-page-2 .print-summary-item { min-height: 25mm !important; padding: 3mm !important; }
+  .print-result-page-2 .print-summary-item strong { font-size: 15pt !important; }
+  .print-result-page-2 > .print-result-card:nth-child(2) { min-height: 45mm !important; }
+  .print-result-page-2 .print-score-list { gap: 2.5mm !important; }
+  .print-result-page-2 .print-two-column { min-height: 82mm !important; }
+  .print-result-page-2 .print-two-column > .print-result-card { min-height: 82mm !important; }
+  .print-result-page-2 .print-motion-grid > div { min-height: 25mm !important; padding: 3mm !important; }
+  .print-result-page-2 .print-camera-result { min-height: 55mm !important; }
+  .print-result-page-2 .print-camera-placeholder { height: 48mm !important; }
+
+  /* Page 3: preserve the conclusion and medical notice, but move them upward. */
+  .print-result-page-3 .print-page3-top { min-height: 76mm !important; }
+  .print-result-page-3 .print-page3-top > .print-result-card { min-height: 76mm !important; margin-bottom: 3mm !important; padding: 4mm !important; }
+  .print-result-page-3 .print-fatigue-chart { height: 52mm !important; }
+  .print-result-page-3 .print-conclusion { min-height: 58mm !important; padding: 4mm !important; margin-bottom: 3mm !important; }
+  .print-result-page-3 .print-conclusion p { font-size: 7pt !important; line-height: 1.6 !important; }
+  .print-result-page-3 .print-recommendation { min-height: 14mm !important; padding: 3mm !important; }
+  .print-result-page-3 .print-medical-result { min-height: 31mm !important; padding: 4mm !important; }
+}
+
+/* STEP 62 — Remove duplicate page-2 summary and move remaining content upward */
+@media print {
+  .print-result-page-2 > .print-result-card:first-child {
+    min-height: 45mm !important;
+    margin-top: 0 !important;
+  }
+  .print-result-page-2 .print-two-column {
+    margin-top: 0 !important;
+  }
+  .print-result-page-2 .print-two-column > .print-result-card {
+    min-height: 82mm !important;
+  }
+}
+
+
+/* STEP 63 — move fatigue/interpretation to page 2, keep only conclusion + medical on page 3 */
+@media print {
+  .print-result-page-1 .print-result-footer img {
+    display: block !important;
+  }
+
+  .print-result-page-2 .print-score-card {
+    margin-bottom: 3mm !important;
+  }
+  .print-result-page-2 .print-page2-analysis {
+    margin-bottom: 3mm !important;
+  }
+  .print-result-page-2 .print-page2-analysis > .print-result-card {
+    min-height: 67mm !important;
+    margin-bottom: 0 !important;
+  }
+  .print-result-page-2 .print-page2-analysis .print-camera-result {
+    min-height: 52mm !important;
+  }
+  .print-result-page-2 .print-page2-analysis .print-camera-placeholder {
+    height: 44mm !important;
+  }
+  .print-result-page-2 .print-page2-fatigue {
+    display: grid !important;
+    grid-template-columns: 1.15fr 1fr !important;
+    gap: 3mm !important;
+    margin-top: 0 !important;
+  }
+  .print-result-page-2 .print-page2-fatigue > .print-result-card {
+    min-height: 64mm !important;
+    margin-bottom: 0 !important;
+    padding: 4mm !important;
+  }
+  .print-result-page-2 .print-page2-fatigue .print-fatigue-chart {
+    height: 42mm !important;
+  }
+  .print-result-page-2 .print-page2-fatigue .print-interpretation {
+    gap: 1.5mm !important;
+  }
+  .print-result-page-2 .print-page2-fatigue .print-interpretation p {
+    padding: 2.5mm !important;
+  }
+
+  .print-result-page-3 {
+    padding-top: 9mm !important;
+  }
+  .print-result-page-3 .print-conclusion {
+    min-height: 110mm !important;
+    margin-bottom: 5mm !important;
+    padding: 6mm !important;
+  }
+  .print-result-page-3 .print-conclusion p {
+    font-size: 8pt !important;
+    line-height: 1.8 !important;
+    margin: 3mm 0 !important;
+  }
+  .print-result-page-3 .print-recommendation {
+    min-height: 20mm !important;
+    padding: 4mm !important;
+  }
+  .print-result-page-3 .print-medical-result {
+    min-height: 52mm !important;
+    padding: 6mm !important;
+    margin-bottom: 0 !important;
+  }
+  .print-result-page-3 .print-medical-result p {
+    font-size: 7pt !important;
+    line-height: 1.7 !important;
+    margin: 2mm 0 !important;
+  }
+}
+
+/* STEP 64 — Camera AI 7종 integrated report */
+.camera-ai-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.camera-ai-report-item{border:1px solid #dfe4eb;border-radius:14px;padding:16px;background:#fff}
+.camera-ai-report-item-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.camera-ai-report-item-head span{font-size:11px;color:#718096}.camera-ai-report-item-head h3{margin:3px 0 0;font-size:16px}
+.camera-ai-report-item-head>strong{font-size:24px;color:#1d63d8}.camera-ai-report-item-head>strong small{font-size:10px;font-weight:500;margin-left:2px}
+.camera-ai-report-status{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:12px;line-height:1.55}.camera-ai-report-status b{flex:0 0 auto}.camera-ai-report-status span{color:#526173}
+.camera-ai-report-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:12px}.camera-ai-report-metrics div{background:#f7f8fa;border-radius:8px;padding:8px}
+.camera-ai-report-metrics small,.camera-ai-report-metrics b{display:block}.camera-ai-report-metrics small{color:#718096;font-size:9px}.camera-ai-report-metrics b{margin-top:2px;font-size:11px}
+.camera-ai-report-recommendation{margin:10px 0 0;color:#344054;font-size:11px;line-height:1.5}
+@media print{
+.print-camera-seven{padding:4.5mm!important;margin-bottom:3mm!important}.print-camera-seven-table{border:1px solid #d9dee7;border-radius:7px;overflow:hidden}
+.camera-seven-row{display:grid;grid-template-columns:1.05fr .45fr .45fr 2.05fr 1.55fr;align-items:stretch}
+.camera-seven-row>*{padding:2.3mm 2.2mm;border-right:1px solid #e3e7ed;border-bottom:1px solid #e3e7ed;font-size:6.2pt;line-height:1.35}
+.camera-seven-row>:last-child{border-right:0}.camera-seven-row:last-child>*{border-bottom:0}.camera-seven-row>span:first-child{font-weight:700}
+.camera-seven-row>span:first-child b{display:inline-flex;width:4.5mm;height:4.5mm;align-items:center;justify-content:center;border-radius:50%;background:#1d63d8;color:#fff;margin-right:1.5mm;font-size:6pt}
+.camera-seven-row>span:first-child small{display:block;color:#748092;font-weight:400;margin-left:6mm;font-size:5.2pt}
+.camera-seven-row>strong{font-size:7.5pt;color:#173b76}.camera-seven-head>*{background:#f5f7fa;font-weight:700!important;color:#344054!important}
+.camera-seven-good{color:#168447!important}.camera-seven-watch{color:#e67a00!important}
+.print-camera-seven-summary{display:grid;grid-template-columns:36mm 1fr;gap:3mm;margin-top:3mm;padding:3mm;border:1px solid #b9e0c8;border-radius:7px;background:#f8fcf9}
+.print-camera-seven-summary strong{color:#168447;font-size:7pt}.print-camera-seven-summary span{font-size:6.2pt;line-height:1.55}
+.print-result-page-2 .print-score-card{margin-bottom:3mm!important}.print-result-page-2 .print-score-list{gap:2.5mm!important}.print-result-page-2 .print-score-row{min-height:10mm!important}
+.print-result-page-2 .print-page2-fatigue>.print-result-card{min-height:50mm!important}.print-result-page-2 .print-page2-fatigue .print-fatigue-chart{height:34mm!important}
+}
+@media (max-width:900px){.camera-ai-report-grid{grid-template-columns:1fr}.camera-ai-report-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* STEP 65 — Match the requested 3-page A4 result-sheet composition */
+@media print {
+  .print-result-page-1 .print-first-summary { margin-top: 0 !important; }
+  .print-result-page-2 {
+    padding-top: 7mm !important;
+  }
+  .print-page2-top-grid {
+    display: grid !important;
+    grid-template-columns: 1.22fr .78fr !important;
+    gap: 3mm !important;
+    align-items: stretch !important;
+    margin-bottom: 3mm !important;
+  }
+  .print-page2-top-grid > .print-result-card {
+    margin-bottom: 0 !important;
+    min-height: 61mm !important;
+    padding: 4mm !important;
+  }
+  .print-page2-interpretation .print-interpretation {
+    gap: 2.2mm !important;
+  }
+  .print-page2-interpretation .print-interpretation p {
+    padding: 3mm !important;
+    min-height: 15mm !important;
+  }
+  .print-page2 .print-camera-seven {}
+  .print-result-page-2 .print-camera-seven {
+    margin-bottom: 0 !important;
+    min-height: 123mm !important;
+    padding: 4mm !important;
+  }
+  .print-result-page-2 .print-camera-seven-table {
+    margin-top: 2mm !important;
+  }
+  .print-result-page-2 .camera-seven-row > * {
+    padding: 2.0mm 1.9mm !important;
+    font-size: 5.9pt !important;
+  }
+  .print-result-page-2 .camera-seven-row > strong {
+    font-size: 7pt !important;
+  }
+  .print-result-page-2 .print-camera-seven-summary {
+    margin-top: 2.5mm !important;
+  }
+
+  .print-result-page-3 {
+    padding-top: 7mm !important;
+  }
+  .print-page3-motion-grid {
+    display: grid !important;
+    grid-template-columns: 1.32fr .68fr !important;
+    gap: 3mm !important;
+    margin-bottom: 3mm !important;
+  }
+  .print-page3-motion-grid > .print-result-card {
+    margin-bottom: 0 !important;
+    min-height: 78mm !important;
+  }
+  .print-motion-analysis {
+    padding: 4mm !important;
+  }
+  .motion-analysis-layout {
+    display: grid !important;
+    grid-template-columns: 72mm 1fr !important;
+    gap: 3mm !important;
+    align-items: center !important;
+  }
+  .motion-radar {
+    position: relative !important;
+    width: 68mm !important;
+    height: 58mm !important;
+    margin: 0 auto !important;
+  }
+  .motion-radar svg {
+    position: absolute !important;
+    inset: 2mm 5mm 0 5mm !important;
+    width: 58mm !important;
+    height: 58mm !important;
+  }
+  .motion-radar-ring {
+    position:absolute !important;
+    left:50% !important;
+    top:50% !important;
+    border:1px solid #d9e0ea !important;
+    transform:translate(-50%,-50%) !important;
+    border-radius:50% !important;
+  }
+  .motion-radar-ring.ring-1{width:16mm;height:16mm}.motion-radar-ring.ring-2{width:29mm;height:29mm}.motion-radar-ring.ring-3{width:42mm;height:42mm}.motion-radar-ring.ring-4{width:55mm;height:55mm}
+  .motion-radar-axis{position:absolute !important;left:50% !important;top:50% !important;width:55mm !important;height:1px !important;background:#d9e0ea !important;transform-origin:left center !important}
+  .motion-radar-axis.axis-v{transform:rotate(-90deg)}.motion-radar-axis.axis-h{transform:rotate(0)}.motion-radar-axis.axis-d1{transform:rotate(-36deg)}.motion-radar-axis.axis-d2{transform:rotate(36deg)}
+  .radar-label{position:absolute !important;font-size:5.7pt !important;color:#64748b !important;font-weight:600 !important}
+  .radar-top{top:-1mm;left:50%;transform:translateX(-50%)}.radar-right-top{top:15mm;right:-1mm}.radar-right-bottom{bottom:7mm;right:2mm}.radar-left-bottom{bottom:7mm;left:2mm}.radar-left-top{top:15mm;left:-1mm}
+  .motion-analysis-text { font-size:6.2pt !important; line-height:1.55 !important; }
+  .motion-analysis-text > div:first-child { padding: 3mm !important; background:#f7f9fc !important; border-radius:2.5mm !important; }
+  .motion-analysis-text b { display:block !important; margin-bottom:1.5mm !important; color:#162238 !important; }
+  .motion-analysis-text p { margin:0 !important; color:#566477 !important; }
+  .motion-analysis-points { display:grid !important; grid-template-columns:1fr 1fr !important; gap:1.5mm 3mm !important; margin-top:3mm !important; }
+  .motion-analysis-points span { display:flex !important; align-items:center !important; gap:1.5mm !important; }
+  .motion-analysis-points i { width:2mm;height:2mm;border-radius:50%;background:#2d6cdf;display:inline-block !important; }
+  .motion-analysis-points b { margin:0 !important; font-size:5.8pt !important; color:#16864a !important; }
+  .print-motion-summary { padding:4mm !important; }
+  .print-motion-summary p { font-size:6.3pt !important; line-height:1.6 !important; color:#566477 !important; }
+  .print-motion-summary p strong { color:#162238 !important; }
+  .motion-summary-badge { margin-top:5mm !important; padding:4mm !important; border:1px solid #b9e0c8 !important; background:#f6fbf8 !important; border-radius:2.5mm !important; }
+  .motion-summary-badge b { display:block !important; font-size:5.7pt !important; color:#64748b !important; }
+  .motion-summary-badge strong { display:block !important; margin-top:1mm !important; color:#16864a !important; font-size:9pt !important; }
+
+  .print-result-page-3 .print-fatigue-full {
+    margin-bottom: 3mm !important;
+    padding: 4mm !important;
+    min-height: 53mm !important;
+  }
+  .print-result-page-3 .print-fatigue-full .print-fatigue-chart {
+    height: 35mm !important;
+  }
+  .print-result-page-3 .print-conclusion {
+    min-height: 54mm !important;
+    margin-bottom: 3mm !important;
+    padding: 4mm !important;
+  }
+  .print-result-page-3 .print-conclusion p {
+    font-size: 6.2pt !important;
+    line-height: 1.55 !important;
+    margin: 1.8mm 0 !important;
+  }
+  .print-result-page-3 .print-recommendation {
+    min-height: 12mm !important;
+    padding: 2.8mm !important;
+  }
+  .print-result-page-3 .print-medical-result {
+    min-height: 36mm !important;
+    padding: 4mm !important;
+    margin-bottom: 0 !important;
+  }
+  .print-result-page-3 .print-medical-result p {
+    font-size: 6pt !important;
+    line-height: 1.55 !important;
+    margin: 1.5mm 0 !important;
+  }
+  .print-result-footer { bottom: 4.5mm !important; }
+}
+
+/* STEP 66 — selected Camera AI count responsive A4 density */
+@media print {
+  .print-camera-detail-grid { display:grid; grid-template-columns:1fr; gap:3.5mm; }
+  .print-camera-detail-card { border:1px solid #d9dee7; border-radius:7px; padding:4mm; background:#fff; }
+  .print-camera-detail-head { display:flex; justify-content:space-between; gap:4mm; align-items:flex-start; }
+  .print-camera-detail-head > div { display:flex; align-items:center; gap:2mm; }
+  .print-camera-detail-head > div b { width:7mm; height:7mm; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; background:#1d63d8; color:#fff; font-size:8pt; }
+  .print-camera-detail-head strong { font-size:9pt; }
+  .print-camera-detail-head small { display:block; color:#748092; font-size:6pt; }
+  .print-camera-detail-head em { font-style:normal; font-size:8pt; font-weight:700; }
+  .print-camera-detail-card > p { margin:2.5mm 0; font-size:7pt; line-height:1.5; color:#526173; }
+  .print-camera-detail-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:2mm; }
+  .print-camera-detail-metrics span { padding:2.5mm; background:#f6f8fa; border-radius:5px; }
+  .print-camera-detail-metrics small,.print-camera-detail-metrics b { display:block; }
+  .print-camera-detail-metrics small { font-size:5.5pt; color:#748092; }
+  .print-camera-detail-metrics b { margin-top:1mm; font-size:7pt; }
+  .print-camera-detail-recommendation { margin-top:2.5mm; padding:2.5mm; border-radius:5px; background:#f8fcf9; display:flex; gap:3mm; font-size:6.5pt; line-height:1.45; }
+  .print-camera-detail-recommendation strong { color:#168447; white-space:nowrap; }
+  .print-camera-detail-recommendation span { color:#344054; }
+  .print-camera-empty { min-height:50mm; display:flex; align-items:center; justify-content:center; border:1px dashed #cfd6df; border-radius:7px; color:#748092; font-size:8pt; }
+  .camera-count-1 .print-camera-detail-card { min-height:58mm; padding:5mm; }
+  .camera-count-1 .print-camera-detail-card > p { font-size:8pt; margin:4mm 0; }
+  .camera-count-1 .print-camera-detail-metrics span { padding:3.5mm; }
+  .camera-count-1 .print-camera-detail-recommendation { margin-top:4mm; padding:3.5mm; font-size:7.5pt; }
+  .camera-count-3 .print-camera-detail-card { min-height:42mm; }
+  .camera-count-7 .print-camera-seven-table { margin-bottom:0; }
+  .print-selected-ai-detail { margin-top:3mm !important; }
+  .print-selected-ai-detail-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2.5mm; }
+  .print-selected-ai-detail-grid > div { border:1px solid #e1e6ec; border-radius:6px; padding:3mm; background:#fff; }
+  .print-selected-ai-detail-grid strong { font-size:7.5pt; }
+  .print-selected-ai-detail-grid p { margin:1.5mm 0; font-size:6.3pt; line-height:1.45; color:#526173; }
+  .print-selected-ai-detail-grid span { font-size:6pt; line-height:1.4; color:#344054; }
+  .print-page3-motion-grid { margin-bottom:3mm !important; }
+}
+
+
+/* STEP77: Camera AI 분석 개수별 자동 배치 */
+.print-camera-seven.camera-count-0 .print-camera-empty{
+  min-height: 220px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.print-camera-seven.camera-count-1 .print-camera-detail-grid{
+  grid-template-columns:1fr;
+}
+.print-camera-seven.camera-count-1 .print-camera-detail-card{
+  min-height: 260px;
+}
+.print-camera-seven.camera-count-2 .print-camera-detail-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.print-camera-seven.camera-count-2 .print-camera-detail-card{
+  min-height: 210px;
+}
+.print-camera-seven.camera-count-3 .print-camera-detail-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.print-camera-seven.camera-count-3 .print-camera-detail-card{
+  min-height: 190px;
+}
+.print-camera-seven.camera-count-5 .print-camera-seven-table .camera-seven-row{
+  grid-template-columns:1.35fr .55fr .65fr 1.7fr 1.5fr;
+  font-size:9px;
+}
+.print-camera-seven.camera-count-5 .print-camera-seven-table .camera-seven-row > span,
+.print-camera-seven.camera-count-5 .print-camera-seven-table .camera-seven-row > strong,
+.print-camera-seven.camera-count-5 .print-camera-seven-table .camera-seven-row > b{
+  padding:6px 5px;
+}
+.print-camera-seven.camera-count-7 .print-camera-seven-table .camera-seven-row{
+  grid-template-columns:1.2fr .48fr .6fr 1.55fr 1.35fr;
+  font-size:8.5px;
+}
+.print-camera-seven.camera-count-7 .print-camera-seven-table .camera-seven-row > span,
+.print-camera-seven.camera-count-7 .print-camera-seven-table .camera-seven-row > strong,
+.print-camera-seven.camera-count-7 .print-camera-seven-table .camera-seven-row > b{
+  padding:5px 4px;
+}
+@media print{
+  .print-camera-seven.camera-count-1 .print-camera-detail-card{min-height:245px}
+  .print-camera-seven.camera-count-2 .print-camera-detail-card{min-height:185px}
+  .print-camera-seven.camera-count-3 .print-camera-detail-card{min-height:165px}
+}
+
+
+/* STEP78: 전체 A4 페이지 자동 밀도 조정 */
+@media print{
+  .print-result-page{box-sizing:border-box;overflow:hidden}
+  .print-result-page-1{min-height:270mm}
+  .print-result-page-2{min-height:270mm}
+  .print-result-page-3{min-height:270mm}
+
+  .print-result-page-1.camera-count-1 .print-growth-result,
+  .print-result-page-1.camera-count-1 .print-first-summary{padding-top:12px;padding-bottom:12px}
+  .print-result-page-1.camera-count-2 .print-growth-result,
+  .print-result-page-1.camera-count-2 .print-first-summary{padding-top:10px;padding-bottom:10px}
+  .print-result-page-1.camera-count-3 .print-growth-result,
+  .print-result-page-1.camera-count-3 .print-first-summary{padding-top:8px;padding-bottom:8px}
+
+  .print-result-page-3.camera-count-1 .print-motion-analysis,
+  .print-result-page-3.camera-count-1 .print-motion-summary,
+  .print-result-page-3.camera-count-1 .print-selected-ai-detail{padding-top:12px;padding-bottom:12px}
+  .print-result-page-3.camera-count-2 .print-motion-analysis,
+  .print-result-page-3.camera-count-2 .print-motion-summary,
+  .print-result-page-3.camera-count-2 .print-selected-ai-detail{padding-top:10px;padding-bottom:10px}
+  .print-result-page-3.camera-count-3 .print-motion-analysis,
+  .print-result-page-3.camera-count-3 .print-motion-summary,
+  .print-result-page-3.camera-count-3 .print-selected-ai-detail{padding-top:8px;padding-bottom:8px}
+
+  .print-result-page-3.camera-count-5 .print-selected-ai-detail,
+  .print-result-page-3.camera-count-7 .print-selected-ai-detail{padding-top:6px;padding-bottom:6px}
+
+  .print-result-page-3.camera-count-5 .print-conclusion,
+  .print-result-page-3.camera-count-7 .print-conclusion{margin-top:8px;padding-top:8px;padding-bottom:8px}
+
+  .print-result-page-3.camera-count-5 .print-medical-result,
+  .print-result-page-3.camera-count-7 .print-medical-result{padding-top:7px;padding-bottom:7px}
+
+  .print-result-page-2.camera-count-1 .print-camera-seven{min-height:118mm}
+  .print-result-page-2.camera-count-2 .print-camera-seven{min-height:112mm}
+  .print-result-page-2.camera-count-3 .print-camera-seven{min-height:106mm}
+  .print-result-page-2.camera-count-5 .print-camera-seven{min-height:98mm}
+  .print-result-page-2.camera-count-7 .print-camera-seven{min-height:94mm}
+}
+
+
+/* STEP79: native A4 pagination lock */
+@media print{
+  @page{
+    size:210mm 297mm;
+    margin:0;
+  }
+
+  .print-result-sheet{
+    width:210mm !important;
+    height:auto !important;
+    margin:0 !important;
+    padding:0 !important;
+    display:block !important;
+  }
+
+  .print-result-page{
+    width:210mm !important;
+    height:297mm !important;
+    min-height:297mm !important;
+    max-height:297mm !important;
+    margin:0 !important;
+    padding:9mm 8mm 17mm !important;
+    box-sizing:border-box !important;
+    position:relative !important;
+    overflow:hidden !important;
+    break-inside:avoid !important;
+    -webkit-column-break-inside:avoid !important;
+  }
+
+  .print-result-page-1{
+    break-before:auto !important;
+    page-break-before:auto !important;
+    break-after:page !important;
+    page-break-after:always !important;
+  }
+
+  .print-result-page-2,
+  .print-result-page-3{
+    break-before:page !important;
+    page-break-before:always !important;
+  }
+
+  .print-result-page-2{
+    break-after:page !important;
+    page-break-after:always !important;
+  }
+
+  .print-result-page-3{
+    break-after:auto !important;
+    page-break-after:auto !important;
+  }
+
+  .print-result-header,
+  .print-result-profile,
+  .print-result-card,
+  .print-page2-top-grid,
+  .print-page3-motion-grid{
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+
+  .print-result-footer{
+    position:absolute !important;
+    bottom:5mm !important;
+    left:8mm !important;
+    right:8mm !important;
+    z-index:20 !important;
+    background:#fff !important;
+  }
+
+  /* footer 영역을 침범하지 않도록 마지막 콘텐츠 여백 확보 */
+  .print-result-page-1 > :last-child,
+  .print-result-page-2 > :last-child,
+  .print-result-page-3 > :last-child{
+    margin-bottom:10mm;
+  }
+}

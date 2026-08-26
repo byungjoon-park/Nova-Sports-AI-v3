@@ -1,0 +1,22 @@
+
+.analysis-page { min-height: 100svh; box-sizing: border-box; width: 100%; }
+.analysis-shell { width: calc(100% - 60px); margin: 0 auto; padding: 0 0 48px; box-sizing: border-box; }
+.analysis-header { margin: 0 0 31px; padding-top: 48px; }
+.analysis-eyebrow { display: block; font-size: 14px; line-height: 1.4; letter-spacing: .02em; color: #246bff; }
+.analysis-header h1 { margin: 17px 0 10px; font-size: 36px; line-height: 1.1; font-weight: 600; }
+.analysis-header p { margin: 0; line-height: 1.6; }
+.analysis-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.analysis-card { min-width: 0; height: 138px; box-sizing: border-box; padding: 30px 28px; text-align: left; border: 1px solid; border-radius: 16px; cursor: pointer; font: inherit; transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease; }
+.analysis-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(17, 24, 39, .08); }
+.analysis-card strong { display: block; margin-bottom: 10px; font-size: 22px; line-height: 1.2; font-weight: 600; }
+.analysis-card span { display: block; line-height: 1.6; }
+.analysis-page.theme-ivory { background: #f7f4ec; color: #111827; }
+.analysis-page.theme-ivory .analysis-card { background: #fffdf8; color: #111827; border-color: #ddd7ca; }
+.analysis-page.theme-ivory .analysis-card span, .analysis-page.theme-ivory .analysis-header p { color: #64748b; }
+.analysis-page.theme-white { background: #f8fafc; color: #111827; }
+.analysis-page.theme-white .analysis-card { background: #ffffff; color: #111827; border-color: #d9dee7; }
+.analysis-page.theme-white .analysis-card span, .analysis-page.theme-white .analysis-header p { color: #64748b; }
+.analysis-page.theme-dark { background: #070a10; color: #f5f7fb; }
+.analysis-page.theme-dark .analysis-card { background: #0d1420; color: #f5f7fb; border-color: #243247; }
+.analysis-page.theme-dark .analysis-card span, .analysis-page.theme-dark .analysis-header p { color: #94a3b8; }
+@media (max-width: 700px) { .analysis-shell { width: calc(100% - 32px); padding-bottom: 32px; } .analysis-header { padding-top: 36px; } .analysis-header h1 { font-size: 30px; } .analysis-options { grid-template-columns: 1fr; } }

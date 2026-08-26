@@ -1,0 +1,1037 @@
+@import "tailwindcss";
+
+:root {
+  --nova-blue: #1457ff;
+  --nova-blue-light: #3d78ff;
+  --nova-background: #070a10;
+  --nova-surface: #0d121c;
+  --nova-surface-light: #131a26;
+  --nova-border: rgba(255, 255, 255, 0.1);
+  --nova-text: #f7f9ff;
+  --nova-muted: #929bad;
+  --nova-yellow: #fee500;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--nova-background);
+  color: var(--nova-text);
+  font-family:
+    Arial,
+    "Noto Sans KR",
+    "Malgun Gothic",
+    sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ================================
+   SPLASH
+================================ */
+
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(20, 87, 255, 0.15),
+      transparent 34%
+    ),
+    #05070b;
+
+  opacity: 1;
+  visibility: visible;
+
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s ease;
+}
+
+.splash-screen.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.splash-content {
+  width: min(90%, 800px);
+  text-align: center;
+}
+
+.splash-nova {
+  color: #ffffff;
+
+  font-size: clamp(4.5rem, 13vw, 9rem);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  line-height: 1;
+
+  margin-left: 0.3em;
+
+  animation: novaAppear 1.2s ease-out;
+}
+
+.splash-content p {
+  margin: 28px 0 0;
+
+  color: #8eafff;
+
+  font-size: clamp(0.65rem, 1.5vw, 1rem);
+  letter-spacing: 0.4em;
+
+  animation: subtitleAppear 1.4s ease-out;
+}
+
+.splash-loader {
+  width: 140px;
+  height: 2px;
+
+  margin: 55px auto 0;
+
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.splash-loader span {
+  display: block;
+
+  width: 45%;
+  height: 100%;
+
+  background: var(--nova-blue);
+
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes novaAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+    letter-spacing: 0.45em;
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+    letter-spacing: 0.3em;
+  }
+}
+
+@keyframes subtitleAppear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-130%);
+  }
+
+  50% {
+    transform: translateX(120%);
+  }
+
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+/* ================================
+   LOGIN
+================================ */
+
+.login-page {
+  min-height: 100svh;
+  background: #070a10;
+
+  opacity: 1;
+  transform: translateY(0);
+
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.login-page.login-hidden {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.login-header {
+  height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 5vw;
+
+  border-bottom: 1px solid var(--nova-border);
+
+  background: rgba(7, 10, 16, 0.95);
+}
+
+.nova-wordmark,
+.brand-wordmark,
+.footer-brand strong {
+  letter-spacing: 0.3em;
+  font-weight: 500;
+}
+
+.nova-wordmark {
+  font-size: 1.35rem;
+}
+
+.language-button {
+  border: 1px solid var(--nova-border);
+  border-radius: 999px;
+
+  padding: 9px 16px;
+
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--nova-text);
+}
+
+.language-button span {
+  margin-left: 8px;
+  color: var(--nova-muted);
+}
+
+.login-layout {
+  min-height: 680px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 80px;
+
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      rgba(20, 87, 255, 0.16),
+      transparent 38%
+    ),
+    linear-gradient(145deg, #090d15, #05070b);
+
+  border-right: 1px solid var(--nova-border);
+}
+
+.brand-inner {
+  max-width: 560px;
+}
+
+.brand-wordmark {
+  font-size: clamp(3.2rem, 6vw, 5.5rem);
+  color: #ffffff;
+}
+
+.brand-inner > p {
+  margin: 22px 0 0;
+
+  color: #9eb8ff;
+
+  font-size: 0.9rem;
+  letter-spacing: 0.3em;
+}
+
+.brand-line {
+  width: 70px;
+  height: 2px;
+
+  margin: 45px 0 35px;
+
+  background: var(--nova-blue);
+}
+
+.brand-inner h1 {
+  margin: 0;
+
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.login-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 60px 30px;
+
+  background: #090d15;
+}
+
+.login-card {
+  width: min(100%, 480px);
+
+  padding: 42px;
+
+  border: 1px solid var(--nova-border);
+  border-radius: 18px;
+
+  background: rgba(13, 18, 28, 0.96);
+
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.3);
+}
+
+.login-card-header {
+  text-align: center;
+}
+
+.login-card-header > span {
+  color: #4b82ff;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+}
+
+.login-card-header h2 {
+  margin: 14px 0 8px;
+  font-size: 2rem;
+}
+
+.login-card-header p {
+  margin: 0;
+
+  color: var(--nova-muted);
+
+  font-size: 0.9rem;
+}
+
+.login-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  margin-top: 32px;
+
+  border-bottom: 1px solid var(--nova-border);
+}
+
+.login-tabs button {
+  border: 0;
+  border-bottom: 2px solid transparent;
+
+  padding: 14px 8px;
+
+  background: transparent;
+  color: var(--nova-muted);
+}
+
+.login-tabs button.active {
+  border-bottom-color: var(--nova-blue);
+  color: #ffffff;
+}
+
+.login-form,
+.signup-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form {
+  margin-top: 28px;
+}
+
+.login-form > label,
+.signup-form > label {
+  margin-bottom: 8px;
+
+  color: #dce2ee;
+
+  font-size: 0.85rem;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"],
+.signup-form input[type="email"],
+.signup-form input[type="password"] {
+  width: 100%;
+  height: 50px;
+
+  margin-bottom: 18px;
+  padding: 0 15px;
+
+  border: 1px solid var(--nova-border);
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #090d15;
+  color: #ffffff;
+}
+
+.login-form input:focus,
+.signup-form input:focus {
+  border-color: var(--nova-blue);
+}
+
+.login-form input::placeholder,
+.signup-form input::placeholder {
+  color: #596273;
+}
+
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 22px;
+
+  font-size: 0.8rem;
+}
+
+.remember-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: var(--nova-muted);
+}
+
+.remember-option input {
+  accent-color: var(--nova-blue);
+}
+
+.text-button,
+.signup-text button {
+  border: 0;
+  padding: 0;
+
+  background: transparent;
+  color: #77a0ff;
+}
+
+.login-button,
+.signup-button {
+  height: 52px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: var(--nova-blue);
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+.login-button:hover,
+.signup-button:hover {
+  background: var(--nova-blue-light);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+
+  margin: 24px 0;
+
+  color: #657083;
+
+  font-size: 0.8rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+
+  flex: 1;
+
+  height: 1px;
+
+  background: var(--nova-border);
+}
+
+.kakao-button {
+  width: 100%;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: var(--nova-yellow);
+  color: #191919;
+
+  font-weight: 600;
+}
+
+.kakao-icon {
+  width: 22px;
+  height: 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #191919;
+  color: var(--nova-yellow);
+
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.signup-text {
+  margin: 24px 0 0;
+
+  text-align: center;
+
+  color: var(--nova-muted);
+
+  font-size: 0.85rem;
+}
+
+.signup-text button {
+  margin-left: 6px;
+}
+
+/* ================================
+   AI NOTICE
+================================ */
+
+.medical-notice {
+  margin-top: 25px;
+
+  padding: 16px;
+
+  border: 1px solid rgba(20, 87, 255, 0.22);
+  border-radius: 10px;
+
+  background: rgba(20, 87, 255, 0.05);
+
+  color: #8994a8;
+
+  font-size: 0.72rem;
+  line-height: 1.65;
+}
+
+.medical-notice strong {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #cbd7f7;
+
+  font-size: 0.76rem;
+}
+
+.medical-notice p {
+  margin: 4px 0;
+}
+
+/* ================================
+   FOOTER
+================================ */
+
+.login-footer {
+  display: grid;
+
+  grid-template-columns: 1.4fr repeat(4, 1fr);
+
+  gap: 35px;
+
+  padding: 55px 5vw 45px;
+
+  border-top: 1px solid var(--nova-border);
+
+  background: #05070b;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.footer-brand strong {
+  font-size: 1.3rem;
+}
+
+.footer-brand span {
+  color: var(--nova-muted);
+
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.footer-column h3 {
+  margin: 0 0 7px;
+
+  font-size: 0.9rem;
+}
+
+.footer-column button {
+  width: fit-content;
+
+  border: 0;
+  padding: 0;
+
+  background: transparent;
+  color: #7f8999;
+
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.footer-column button:hover {
+  color: #ffffff;
+}
+
+.footer-company {
+  grid-column: 1 / -1;
+
+  padding-top: 28px;
+
+  border-top: 1px solid var(--nova-border);
+
+  color: #6f7989;
+
+  font-size: 0.78rem;
+  line-height: 1.8;
+}
+
+.footer-company strong {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #dce2ee;
+}
+
+/* ================================
+   SIGNUP MODAL
+================================ */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  z-index: 10000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.78);
+
+  backdrop-filter: blur(8px);
+
+  overflow-y: auto;
+}
+
+.signup-modal {
+  position: relative;
+
+  width: min(100%, 560px);
+
+  max-height: 92svh;
+
+  overflow-y: auto;
+
+  padding: 38px;
+
+  border: 1px solid var(--nova-border);
+  border-radius: 18px;
+
+  background: #0c111a;
+
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55);
+
+  margin: auto;
+}
+
+.modal-close {
+  position: absolute;
+
+  top: 18px;
+  right: 20px;
+
+  width: 34px;
+  height: 34px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #8994a8;
+
+  font-size: 1.7rem;
+}
+
+.signup-header {
+  margin-bottom: 28px;
+
+  text-align: center;
+}
+
+.signup-header h2 {
+  margin: 0 0 8px;
+
+  color: #ffffff;
+
+  font-size: 2rem;
+}
+
+.signup-header p {
+  margin: 0;
+
+  color: var(--nova-muted);
+
+  font-size: 0.9rem;
+}
+
+.signup-form {
+  gap: 0;
+}
+
+.agreement-box {
+  display: flex;
+  flex-direction: column;
+
+  gap: 13px;
+
+  margin-top: 5px;
+  padding: 17px;
+
+  border: 1px solid var(--nova-border);
+  border-radius: 10px;
+
+  background: #090d15;
+}
+
+.agreement-box label {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 10px;
+
+  color: #b4bdce;
+
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.agreement-box input {
+  flex: 0 0 auto;
+
+  margin-top: 3px;
+
+  accent-color: var(--nova-blue);
+}
+
+.agreement-box strong {
+  color: #ffffff;
+}
+
+.research-consent {
+  padding-top: 13px;
+
+  border-top: 1px solid var(--nova-border);
+}
+
+.research-notice,
+.signup-ai-notice {
+  margin-top: 15px;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  font-size: 0.73rem;
+  line-height: 1.65;
+}
+
+.research-notice {
+  border: 1px solid rgba(20, 87, 255, 0.2);
+
+  background: rgba(20, 87, 255, 0.05);
+
+  color: #8994a8;
+}
+
+.signup-ai-notice {
+  margin-bottom: 22px;
+
+  border: 1px solid rgba(255, 180, 80, 0.2);
+
+  background: rgba(255, 180, 80, 0.04);
+
+  color: #9b9284;
+}
+
+.research-notice strong,
+.signup-ai-notice strong {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #dce2ee;
+}
+
+.research-notice p,
+.signup-ai-notice p {
+  margin: 4px 0;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 900px) {
+  .login-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .login-brand {
+    min-height: 360px;
+
+    padding: 55px 30px;
+
+    border-right: 0;
+    border-bottom: 1px solid var(--nova-border);
+  }
+
+  .brand-inner h1 {
+    font-size: 2rem;
+  }
+
+  .login-panel {
+    padding: 40px 20px 60px;
+  }
+
+  .login-footer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .splash-nova {
+    font-size: 4rem;
+  }
+
+  .splash-content p {
+    max-width: 300px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    line-height: 1.8;
+
+    letter-spacing: 0.2em;
+  }
+
+  .login-header {
+    height: 64px;
+
+    padding: 0 20px;
+  }
+
+  .nova-wordmark {
+    font-size: 1.1rem;
+  }
+
+  .language-button {
+    padding: 7px 12px;
+
+    font-size: 0.8rem;
+  }
+
+  .login-brand {
+    min-height: 300px;
+
+    padding: 45px 22px;
+  }
+
+  .brand-wordmark {
+    font-size: 3.2rem;
+  }
+
+  .brand-inner > p {
+    font-size: 0.62rem;
+
+    letter-spacing: 0.2em;
+  }
+
+  .brand-line {
+    margin: 28px 0;
+  }
+
+  .brand-inner h1 {
+    font-size: 1.55rem;
+  }
+
+  .login-panel {
+    padding: 25px 14px 45px;
+  }
+
+  .login-card {
+    padding: 28px 20px;
+
+    border-radius: 14px;
+  }
+
+  .login-card-header h2 {
+    font-size: 1.7rem;
+  }
+
+  .login-options {
+    align-items: flex-start;
+  }
+
+  .login-footer {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 28px 18px;
+
+    padding: 40px 20px;
+  }
+
+  .footer-column h3 {
+    font-size: 0.82rem;
+  }
+
+  .footer-column button {
+    font-size: 0.75rem;
+  }
+
+  .footer-company {
+    font-size: 0.7rem;
+  }
+
+  .signup-modal {
+    width: min(100%, 560px);
+
+    max-height: 94svh;
+
+    padding: 30px 20px;
+
+    border-radius: 14px;
+  }
+
+  .signup-header h2 {
+    font-size: 1.7rem;
+  }
+}
+/* ================================
+   NOVA SETTINGS / GLOBAL THEMES
+================================ */
+
+html[data-nova-theme="ivory"] body { background: #f7f4ec; color: #101827; }
+html[data-nova-theme="white"] body { background: #f6f7f9; color: #111827; }
+html[data-nova-theme="dark"] body { background: #070a10; color: #f5f7fb; }
+
+.nova-settings-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(4, 7, 12, 0.56);
+  backdrop-filter: blur(5px);
+}
+
+.nova-settings-modal {
+  width: min(520px, calc(100vw - 40px));
+  max-height: min(78vh, 720px);
+  overflow-y: auto;
+  margin: auto;
+  padding: 24px;
+  border: 1px solid #d8d4ca;
+  border-radius: 16px;
+  background: #fffdf8;
+  color: #101827;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
+}
+
+.nova-settings-head { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:24px; }
+.nova-settings-head span { font-size:10px; letter-spacing:.16em; color:#2563eb; }
+.nova-settings-head h2 { margin:5px 0 0; font-size:24px; }
+.nova-settings-close { border:0; background:transparent; color:inherit; font-size:28px; cursor:pointer; line-height:1; }
+.nova-settings-group { margin-top:22px; }
+.nova-settings-group > label { display:block; margin-bottom:9px; font-size:12px; font-weight:700; }
+.nova-choice-grid { display:grid; gap:9px; }
+.nova-choice-grid.three { grid-template-columns:repeat(3, 1fr); }
+.nova-choice-grid.two { grid-template-columns:repeat(2, 1fr); }
+.nova-choice-grid button { min-height:56px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:4px; padding:11px 12px; border:1px solid #ddd9cf; border-radius:10px; background:#faf8f2; color:inherit; text-align:left; cursor:pointer; }
+.nova-choice-grid button.selected { border-color:#2563eb; box-shadow:0 0 0 2px rgba(37,99,235,.12); background:#f2f6ff; }
+.nova-choice-grid small { color:#64748b; font-size:10px; }
+.theme-preview { width:100%; height:18px; display:block; border-radius:5px; border:1px solid rgba(0,0,0,.1); }
+.theme-preview.dark { background:#0d1420; }
+.theme-preview.white { background:#fff; }
+.theme-preview.ivory { background:#f7f4ec; }
+.nova-settings-footer { display:flex; align-items:center; justify-content:space-between; gap:15px; margin-top:25px; padding-top:18px; border-top:1px solid #e6e1d7; color:#64748b; font-size:11px; }
+.nova-settings-footer button { height:38px; padding:0 16px; border:0; border-radius:8px; background:#2563eb; color:white; cursor:pointer; }
+
+html[data-nova-theme="dark"] .nova-settings-modal { border-color:#243247; background:#0d1420; color:#f3f6fb; }
+html[data-nova-theme="dark"] .nova-choice-grid button { border-color:#243247; background:#111a28; }
+html[data-nova-theme="dark"] .nova-choice-grid button.selected { background:#15264a; border-color:#3d78ff; }
+html[data-nova-theme="dark"] .nova-choice-grid small, html[data-nova-theme="dark"] .nova-settings-footer { color:#94a3b8; }
+html[data-nova-theme="dark"] .nova-settings-footer { border-color:#243247; }
+
+@media (max-width: 600px) {
+  .nova-choice-grid.three, .nova-choice-grid.two { grid-template-columns:1fr; }
+  .nova-settings-modal { padding:20px; }
+}
