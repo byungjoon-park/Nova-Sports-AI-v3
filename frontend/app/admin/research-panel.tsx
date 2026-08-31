@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { readNovaAthleteData, upsertInjuryEpisode } from "../../lib/nova-data";
 import { getBodyRecordsWithBmi } from "../../lib/player-profile";
-import { descriptiveStats, formatNumber, pearsonCorrelation, qualityStats, reliabilityStats, blandAltman, rmse, mae, normalityTest, independentTTest, oneWayAnova, linearRegression, powerAnalysisTwoGroup, pairedTTest, rehabDailyStats, rehabSummary, injuryRecoverySummary, gPowerSetupLabel } from "../../lib/research-statistics";
+import { descriptiveStats, formatNumber, pearsonCorrelation, qualityStats, reliabilityStats, blandAltman, rmse, mae, normalityTest, independentTTest, oneWayAnova, linearRegression, powerAnalysisTwoGroup, pairedTTest, rehabDailyStats, rehabSummary, injuryRecoverySummary, gPowerSetupLabel, type GPowerPlan } from "../../lib/research-statistics";
 
 function csvCell(value: string | number) {
   const text = String(value ?? "");
@@ -45,7 +45,7 @@ function pseudoParticipantId(id: string) {
 }
 
 export default function ResearchPanel() {
-  const [refresh, setRefresh] = useState(0);
+  const [data, setData] = useState(() => readNovaAthleteData());
   const [powerEffectSize, setPowerEffectSize] = useState(0.5);
   const [powerAlpha, setPowerAlpha] = useState(0.05);
   const [powerTarget, setPowerTarget] = useState(0.8);
@@ -57,7 +57,6 @@ export default function ResearchPanel() {
   const [injuryDate, setInjuryDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [reinjuryDate, setReinjuryDate] = useState("");
-  const data = useMemo(() => readNovaAthleteData(), [refresh]);
   const body = getBodyRecordsWithBmi(data.bodyRecords).sort((a, b) => a.date.localeCompare(b.date));
   const performance = data.performanceRecords.slice().sort((a, b) => a.date.localeCompare(b.date));
   const recovery = data.recoveryRecords.slice().sort((a, b) => a.date.localeCompare(b.date));
@@ -240,7 +239,7 @@ export default function ResearchPanel() {
       { label: "재활 수행률 ↔ 피로", result: build("fatigue") },
     ];
   }, [rehabDays, dateMap]);
-  const gPowerPlan = {
+  const gPowerPlan: GPowerPlan = {
     family: gPowerFamily === "t" ? "t tests" : gPowerFamily === "f" ? "F tests" : "Correlation and Regression",
     test: gPowerTest,
     analysisType: "A priori" as const,
@@ -259,7 +258,7 @@ export default function ResearchPanel() {
     <div className="admin-panel-head">
       <div><span>RESEARCH DATASET</span><h2>논문용 통계 분석</h2><p className="admin-header p">비식별 원자료와 기술통계·상관분석을 함께 생성합니다.</p></div>
       <div className="admin-actions">
-        <button onClick={() => setRefresh((v) => v + 1)}>새로고침</button>
+        <button onClick={() => setData(readNovaAthleteData())}>새로고침</button>
         <button className="primary" disabled={!hasData} onClick={() => downloadCsv(exportRows, `nova-research-dataset-${new Date().toISOString().slice(0, 10)}.csv`)}>원자료 CSV</button>
         <button className="primary" disabled={!variables.length} onClick={() => downloadCsv(exportSummary, `nova-research-statistics-${new Date().toISOString().slice(0, 10)}.csv`)}>통계 CSV</button>
         <button disabled={!variables.length} onClick={() => downloadCsv(codebookRows, `nova-research-codebook-${new Date().toISOString().slice(0, 10)}.csv`)}>코드북 CSV</button>
@@ -326,7 +325,7 @@ export default function ResearchPanel() {
         <label style={{ display: "grid", gap: 5, minWidth: 150 }}><span>부상일</span><input type="date" value={injuryDate} onChange={(e) => setInjuryDate(e.target.value)} /></label>
         <label style={{ display: "grid", gap: 5, minWidth: 150 }}><span>복귀일</span><input type="date" value={returnDate} onChange={(e) => setReturnDate(e.target.value)} /></label>
         <label style={{ display: "grid", gap: 5, minWidth: 150 }}><span>재부상일</span><input type="date" value={reinjuryDate} onChange={(e) => setReinjuryDate(e.target.value)} /></label>
-        <button className="primary" disabled={!injuryArea.trim() || !injuryDate} onClick={() => { upsertInjuryEpisode({ id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${injuryDate}-${injuryArea}-${Date.now()}`, area: injuryArea.trim(), injuryDate, returnDate: returnDate || undefined, reinjuryDate: reinjuryDate || undefined }); setInjuryArea(""); setInjuryDate(""); setReturnDate(""); setReinjuryDate(""); setRefresh((v) => v + 1); }}>부상 사건 저장</button>
+        <button className="primary" disabled={!injuryArea.trim() || !injuryDate} onClick={() => { upsertInjuryEpisode({ id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${injuryDate}-${injuryArea}-${Date.now()}`, area: injuryArea.trim(), injuryDate, returnDate: returnDate || undefined, reinjuryDate: reinjuryDate || undefined }); setInjuryArea(""); setInjuryDate(""); setReturnDate(""); setReinjuryDate(""); setData(readNovaAthleteData()); }}>부상 사건 저장</button>
       </div>
       <div className="admin-note" style={{ marginTop: 10 }}>복귀 후 재부상까지의 평균은 <strong>복귀일 → 재부상일</strong> 차이로 정의합니다. 복귀일이 없거나 재부상일이 없는 사건은 해당 평균에서 제외하며, 임의로 추정하지 않습니다.</div>
     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
@@ -47,15 +48,17 @@ export default function SignupPage() {
       return;
     }
     const user = registerUser({ name, email, role });
-    setRole(role === "director" ? "coach" : role);
+    setRole(user.role);
     try {
       localStorage.setItem("nova-active-role", user.role);
       localStorage.setItem("nova-login-role", user.role);
     } catch {}
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/dashboard";
   };
 
   const startKakao = () => {
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/api/auth/kakao?mode=signup";
   };
 

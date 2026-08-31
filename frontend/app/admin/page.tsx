@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useNovaSettings } from "../settings-context";
 import { getAuthStore } from "../../lib/nova-auth";
@@ -23,7 +23,7 @@ function DataTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
   return <div className="admin-table-wrap"><table><thead><tr>{headers.map((h) => <th key={h}>{h}</th>)}</tr></thead><tbody>{rows.map((row, i) => <tr key={i}>{row.map((cell, j) => <td key={j}>{j === row.length - 1 ? <span className="admin-status">{cell}</span> : cell}</td>)}</tr>)}</tbody></table></div>;
 }
 
-export default function AdminPage() {
+function AdminPageContent() {
   const router = useRouter();
   const params = useSearchParams();
   const { role, theme, openSettings } = useNovaSettings();
@@ -59,7 +59,7 @@ export default function AdminPage() {
       (researchFilters.gender === "all" || a.gender === researchFilters.gender) &&
       (researchFilters.age === "all" || a.ageGroup === researchFilters.age)
     );
-  }, [researchFilters, safeSection]);
+  }, [researchFilters]);
 
   const userRows = useMemo(() => {
     const rows = [["John Kim","관리자","NOVA","활성","오늘 10:01"],["김민수","감독","NOVA Basketball","활성","오늘 09:52"],["박지훈","코치","NOVA Basketball","활성","어제 22:18"],["이서연","선수","NOVA Volleyball","활성","어제 18:04"]];
@@ -103,12 +103,12 @@ export default function AdminPage() {
     store.members.filter((m) => m.role === "athlete").forEach((m) => sports.add(teamSport.get(m.teamId) || "미입력"));
     store.athleteProfiles.forEach((p) => sports.add(p.sport || "미입력"));
     return { sports: Array.from(sports).sort(), genders: ["미입력", "male", "female", "other"], ages: ["미입력", "12세 이하", "13-18세", "19-22세", "23-29세", "30세 이상"], injuries: ["미입력", "무릎", "발목", "어깨", "허리", "고관절", "기타"] };
-  }, [safeSection]);
+  }, []);
 
 
 
 
-  if (role !== "admin") return <main className="admin-page" data-theme={theme}><section className="admin-denied"><span>NOVA ADMIN</span><h1>관리자 모드가 아닙니다.</h1><p>환경설정에서 사용자 모드를 관리자 모드로 변경하세요.</p><div><button onClick={openSettings}>환경설정</button><button onClick={() => router.push("/dashboard")}>대시보드</button></div></section></main>;
+  if (role !== "admin") return <main className="admin-page" data-theme={theme}><section className="admin-denied"><span>NOVA ADMIN</span><h1>관리자 모드가 아닙니다.</h1><p>현재 로그인한 계정에 관리자 권한이 없습니다.</p><div><button onClick={openSettings}>환경설정</button><button onClick={() => router.push("/dashboard")}>대시보드</button></div></section></main>;
 
   const navGroups = [
     { label: "개요", items: [["dashboard", "⌂", "관리자 대시보드"]] },
@@ -147,4 +147,12 @@ export default function AdminPage() {
       {safeSection === "settings" && <section className="admin-panel"><div className="admin-panel-head"><div><span>SYSTEM</span><h2>시스템 설정</h2></div></div><div className="admin-settings-list"><div><span>서비스 상태</span><b>운영 중</b></div><div><span>AI 분석 사용</span><b>활성</b></div><div><span>신규 회원가입</span><b>활성</b></div><div><span>관리자 알림</span><b>활성</b></div></div><button className="admin-primary-button" onClick={openSettings}>기존 환경설정 열기</button></section>}
     </section>
   </main>;
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminPageContent />
+    </Suspense>
+  );
 }

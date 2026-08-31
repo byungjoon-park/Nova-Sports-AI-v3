@@ -31,6 +31,7 @@ export class BrowserGpsProvider implements GpsProvider {
   private adapter: BrowserGpsAdapter | null = null;
 
   async connect(_context?: GpsProviderContext): Promise<void> {
+    void _context;
     this.setState("connecting");
 
     this.adapter = new BrowserGpsAdapter({

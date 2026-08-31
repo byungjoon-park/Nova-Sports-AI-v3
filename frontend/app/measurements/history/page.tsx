@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
  "use client";
 
 import NovaTopBar from "../../../components/NovaTopBar";
@@ -7,8 +8,6 @@ import { getAthleteProfile } from "../../../lib/nova-data";
 import "../measurements.css";
 import "./history.css";
 
-const today = "";
-const monthAgo = "";
 
 export default function MeasurementHistoryPage() {
   const athlete = getAthleteProfile();

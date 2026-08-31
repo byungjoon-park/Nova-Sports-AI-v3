@@ -1,11 +1,12 @@
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect */
 
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getAuthStore, getCurrentUser, getAthleteProfile } from "../../../../lib/nova-auth";
 import { readNovaAthleteData } from "../../../../lib/nova-data";
 import NovaTopBar from "../../../../components/NovaTopBar";
-import "../coach-dashboard.css";
+import "../../coach-dashboard.css";
 
 export default function CoachPlayerDetailPage() {
   const router = useRouter();

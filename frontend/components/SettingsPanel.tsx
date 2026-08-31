@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useNovaSettings, type NovaLanguage, type NovaTheme, type NovaRole, roleLabels } from "../app/settings-context";
+import { useNovaSettings, type NovaLanguage, type NovaTheme, roleLabels } from "../app/settings-context";
 
 const copy = {
-  ko:{title:"환경설정",language:"언어",theme:"테마",role:"사용 모드",close:"닫기",dark:"다크",white:"화이트",ivory:"아이보리"},
-  en:{title:"Settings",language:"Language",theme:"Theme",role:"Mode",close:"Close",dark:"Dark",white:"White",ivory:"Ivory"},
+  ko:{title:"환경설정",language:"언어",theme:"테마",role:"현재 사용자",close:"닫기",dark:"다크",white:"화이트",ivory:"아이보리"},
+  en:{title:"Settings",language:"Language",theme:"Theme",role:"Current account",close:"Close",dark:"Dark",white:"White",ivory:"Ivory"},
 } as const;
 
 export default function SettingsPanel(){
-  const {language,theme,role,setLanguage,setTheme,setRole}=useNovaSettings();
+  const {language,theme,role,setLanguage,setTheme}=useNovaSettings();
   const [open,setOpen]=useState(false);
 
   useEffect(()=>{
@@ -26,13 +26,11 @@ export default function SettingsPanel(){
       <div className="nova-settings-head"><h2>{t.title}</h2><button type="button" onClick={()=>setOpen(false)}>×</button></div>
 
       <label>{t.role}</label>
-      <div className="nova-settings-options nova-role-options">
-        {(["coach","athlete","parent","admin"] as NovaRole[]).map(v=>
-          <button key={v} type="button" className={role===v?"selected":""} onClick={()=>setRole(v)}>
-            {roleLabels[v]}
-          </button>
-        )}
+      <div className="nova-settings-current-role">
+        <strong>{roleLabels[role]}</strong>
+        <small>{language === "en" ? "Assigned to this account at sign-up." : "회원가입 시 지정된 계정 역할입니다."}</small>
       </div>
+
 
       <label>{t.language}</label>
       <div className="nova-settings-options">

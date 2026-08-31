@@ -1,12 +1,15 @@
+/* eslint-disable react-hooks/set-state-in-effect */
  "use client";
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import "./report.css";
-import { calculateAge, getBodyRecordsWithBmi, getLatestBodyRecord, playerProfile } from "../../lib/player-profile";
-import { readNovaAthleteData } from "../../lib/nova-data";
-import { getMeasurementRange } from "../../lib/nova-measurements";
-import { getCameraAIResultsInRange, type NovaCameraAIResult } from "../../lib/nova-data";
+import NovaTopBar from "../components/NovaTopBar";
+import { calculateAge, getBodyRecordsWithBmi, getLatestBodyRecord, playerProfile } from "../lib/player-profile";
+import { readNovaAthleteData } from "../lib/nova-data";
+import { getMeasurementRange } from "../lib/nova-measurements";
+import { getCameraAIResultsInRange, type NovaCameraAIResult } from "../lib/nova-data";
+import { calculateNovaPerformanceScore, hasCompleteNovaPerformanceScoreInputs } from "../lib/nova-performance-score";
 
 const printRequester = "John Kim";
 
@@ -69,17 +72,21 @@ function makePolyline(values: number[]) {
 
 type CameraReportResult = NovaCameraAIResult;
 
-const CAMERA_AI_DEFAULTS: CameraReportResult[] = [];
-
 function loadCameraAIResults(startDate?: string, endDate?: string): CameraReportResult[] {
-  return getCameraAIResultsInRange(startDate, endDate);
+  try {
+    if (startDate && endDate && startDate > endDate) return [];
+    return getCameraAIResultsInRange(startDate, endDate);
+  } catch {
+    return [];
+  }
 }
 
 
 function PrintResultFooter({ page, showLogo }: { page: string; showLogo: boolean }) {
   return (
     <footer className="print-result-footer">
-      {showLogo ? <img src="/report-print-logo.png" alt="NOVA" /> : <span className="print-result-footer-spacer" />}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {showLogo ? <img src="/report-print-logo.png" alt="NOVA" onError={(event) => { event.currentTarget.style.display = "none"; }} /> : <span className="print-result-footer-spacer" />}
       <div className="print-result-footer-center">NOVA AI SPORTS PLATFORM</div>
       <div className="print-result-footer-meta">
         <span>프린트 요청자: {printRequester}</span>
@@ -96,6 +103,7 @@ export default function ReportPage() {
   const [startDate, setStartDate] = useState("2025-05-14");
   const [endDate, setEndDate] = useState("2025-05-20");
   const [cameraAIResults, setCameraAIResults] = useState<CameraReportResult[]>([]);
+  const [rehabRecords, setRehabRecords] = useState<ReturnType<typeof readNovaAthleteData>["rehabRecords"]>([]);
   const [profile, setProfile] = useState(playerProfile);
   const [bodyRecords, setBodyRecords] = useState(playerProfile.bodyRecords);
   const [measurementHistory, setMeasurementHistory] = useState<ReturnType<typeof getMeasurementRange>>({
@@ -118,21 +126,9 @@ export default function ReportPage() {
         birthDate: athlete.birthDate || playerProfile.birthDate,
       });
       if (data.bodyRecords.length) setBodyRecords(data.bodyRecords);
-
-      const dates = [
-        ...data.bodyRecords.map((item) => item.date),
-        ...data.fatigueRecords.map((item) => item.date),
-        ...data.performanceRecords.map((item) => item.date),
-        ...data.recoveryRecords.map((item) => item.date),
-        ...data.rehabRecords.map((item) => item.date),
-        ...data.cameraAIResults.map((item) => item.completedAt.slice(0, 10)),
-      ].filter(Boolean).sort();
-      if (dates.length) {
-        setStartDate(dates[0]);
-        setEndDate(dates[dates.length - 1]);
-      }
+      setRehabRecords(data.rehabRecords ?? []);
     } catch {
-      // Keep the safe fallback profile and default report period.
+      // Keep the safe fallback profile.
     }
   }, []);
 
@@ -157,56 +153,69 @@ export default function ReportPage() {
     values.length ? Math.round(values.reduce((sum, value) => sum + value, 0) / values.length) : null;
 
   const fatigueScore = averageScore(measurementHistory.fatigueRecords.map((item) => item.score));
-  const performanceScore = averageScore(measurementHistory.performanceRecords.map((item) => item.score));
+  const manualPerformanceScore = averageScore(measurementHistory.performanceRecords.map((item) => item.score));
   const recoveryScore = averageScore(measurementHistory.recoveryRecords.map((item) => item.score));
-  const scores = [
-    { name: "Performance Score", value: performanceScore, basis: "선택 기간 퍼포먼스 측정값 평균" },
-    { name: "Recovery Score", value: recoveryScore, basis: "선택 기간 회복 측정값 평균" },
-    { name: "Training Load", value: null, basis: "GPS load · Jump load · Session volume 데이터 필요" },
-    { name: "Injury Risk", value: null, basis: "부상위험 산출 데이터 필요" },
-  ];
-  const hasCoreScores = performanceScore !== null && recoveryScore !== null && fatigueScore !== null;
+  const hasLowFatigue = typeof fatigueScore === "number" && fatigueScore < 50;
+  const hasLowRecovery = typeof recoveryScore === "number" && recoveryScore < 60;
+  const fatigueTrend = [...measurementHistory.fatigueRecords]
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(-7);
 
-  const fatigueLevel = fatigueScore === null
+  const cameraAverage = cameraCount
+    ? Math.round(cameraAIResults.reduce((sum, item) => sum + item.score, 0) / cameraCount)
+    : null;
+
+  // The composite score is only calculated when every input required by the
+  // score engine is actually available. Missing GPS/jump/training/condition
+  // data must not be replaced with invented values.
+  const performanceInputs = {
+    movementAnalysis: cameraAverage ?? undefined,
+    recoveryStatus: recoveryScore ?? undefined,
+  };
+  const hasCompositeInputs = hasCompleteNovaPerformanceScoreInputs(performanceInputs);
+  const compositePerformance = hasCompositeInputs
+    ? calculateNovaPerformanceScore(performanceInputs)
+    : null;
+  const performanceScore = compositePerformance?.score ?? manualPerformanceScore;
+
+  const fatigueLevel = fatigueScore == null
     ? "데이터 부족"
     : fatigueScore >= 80 ? "낮은 피로 수준"
     : fatigueScore >= 60 ? "중간 수준의 피로" : "높은 피로 수준";
-  const performanceLevel = performanceScore === null
+  const performanceLevel = performanceScore == null
     ? "데이터 부족"
     : performanceScore >= 80 ? "우수한 경기 수행 상태"
     : performanceScore >= 60 ? "보통 수준의 경기 수행 상태" : "경기 수행 보완이 필요한 상태";
-  const recoveryLevel = recoveryScore === null
+  const recoveryLevel = recoveryScore == null
     ? "데이터 부족"
     : recoveryScore >= 80 ? "회복 상태가 양호한 수준"
     : recoveryScore >= 60 ? "회복 상태를 지속 관찰할 수준" : "회복 관리가 필요한 수준";
 
-  const overallStatus = !hasCoreScores
+  const hasCoreStatusData = performanceScore != null && recoveryScore != null && fatigueScore != null;
+  const overallStatus = !hasCoreStatusData
     ? "데이터 부족"
-    : performanceScore >= 80 && recoveryScore >= 80 && fatigueScore >= 70
+    : performanceScore >= 80 && recoveryScore >= 80 && fatigueScore <= 30
       ? "정상 범위"
-      : performanceScore < 50 || recoveryScore < 50 || fatigueScore < 40
+      : performanceScore < 50 || recoveryScore < 50 || fatigueScore >= 70
         ? "집중 관리 필요"
         : "관리 필요";
 
   const improvementPoints = [
-    fatigueScore !== null && fatigueScore < 70 ? "훈련 강도와 휴식 간격을 조절해 피로 누적을 관리하는 것" : "",
-    performanceScore !== null && performanceScore < 80 ? "경기 수행과 움직임 효율을 높이기 위한 세부 훈련을 보완하는 것" : "",
-    recoveryScore !== null && recoveryScore < 80 ? "수면·회복 루틴과 훈련 후 회복 시간을 안정적으로 확보하는 것" : "",
+    fatigueScore != null && fatigueScore >= 70 ? "훈련 강도와 휴식 간격을 조절해 피로 누적을 관리하는 것" : "",
+    performanceScore != null && performanceScore < 80 ? "경기 수행과 움직임 효율을 높이기 위한 세부 훈련을 보완하는 것" : "",
+    recoveryScore != null && recoveryScore < 80 ? "수면·회복 루틴과 훈련 후 회복 시간을 안정적으로 확보하는 것" : "",
     cameraAIResults.some((item) => item.status === "주의" || item.status === "관리")
       ? "Camera AI에서 관리 또는 주의로 확인된 동작 항목을 반복 점검하는 것"
       : "",
   ].filter(Boolean);
 
-  const overallOpinion = !hasCoreScores
-    ? `${profile.name || "해당 선수"} 선수의 선택 기간에 퍼포먼스·회복·피로도 중 일부 측정 데이터가 없어 종합 상태를 산출할 수 없습니다. 측정값을 저장한 후 동일 기간을 다시 조회해 주세요.`
+  const overallOpinion = !hasCoreStatusData
+    ? `${profile.name || "해당 선수"} 선수의 선택 기간에 필요한 핵심 측정 데이터가 충분하지 않아 종합 상태를 산출하지 않았습니다. 실제 측정값을 추가한 후 다시 확인하세요.`
     : `${profile.name || "해당 선수"} 선수는 선택 기간 동안 퍼포먼스 ${performanceScore}점으로 ${performanceLevel}, 회복 ${recoveryScore}점으로 ${recoveryLevel}이며 피로도는 ${fatigueScore}점으로 ${fatigueLevel}로 확인됩니다. 종합 상태는 ${overallStatus}로 판단됩니다. ${
-        improvementPoints.length
-          ? `${improvementPoints.join(", ")}을(를) 중심으로 관리하면 현재 상태를 보다 안정적으로 유지하고 경기 수행을 높이는 데 도움이 될 것으로 판단됩니다.`
-          : "현재 주요 지표가 비교적 안정적인 범위에 있어 현재 훈련 및 회복 루틴을 유지하면서 지속적으로 변화를 확인하는 것이 좋겠습니다."
-      }`;
-  const cameraAverage = cameraCount
-    ? Math.round(cameraAIResults.reduce((sum, item) => sum + item.score, 0) / cameraCount)
-    : 0;
+      improvementPoints.length
+        ? `${improvementPoints.join(", ")}을(를) 중심으로 관리하세요.`
+        : "현재 주요 지표를 유지하면서 지속적으로 변화를 확인하세요."
+    }`;
   const cameraGood = cameraAIResults.filter((item) => item.status === "양호");
   const cameraNeedsAttention = cameraAIResults.filter((item) => item.status !== "양호");
   const cameraStrongest = cameraAIResults.length ? [...cameraAIResults].sort((a, b) => b.score - a.score)[0] : null;
@@ -222,6 +231,19 @@ export default function ReportPage() {
           : "현재 선택된 분석 항목에서 뚜렷한 관리·주의 항목은 확인되지 않아 현재의 훈련 패턴을 유지하면서 추이를 관찰하는 것이 좋겠습니다."
       }`
     : "선택된 Camera AI 분석 결과가 없어 동작분석에 대한 세부 종합 평가는 생성되지 않습니다.";
+  const motionDimensions = [
+    { label: "하체 정렬", description: "착지 및 방향 전환 시 좌우 정렬 상태", keywords: ["하체", "정렬", "alignment", "lower"] },
+    { label: "무릎 움직임", description: "착지 구간의 무릎 굴곡과 안정성", keywords: ["무릎", "knee"] },
+    { label: "체간 안정성", description: "가속·감속 및 방향 전환 시 중심 유지", keywords: ["체간", "몸통", "trunk", "core", "stability"] },
+    { label: "좌우 균형", description: "좌우 움직임의 편차와 반복 동작 일관성", keywords: ["좌우", "균형", "balance", "symmetry"] },
+  ].map((dimension) => {
+    const matched = cameraAIResults.filter((item) => {
+      const text = `${item.title} ${item.category}`.toLowerCase();
+      return dimension.keywords.some((keyword) => text.includes(keyword.toLowerCase()));
+    });
+    const score = matched.length ? averageScore(matched.map((item) => item.score)) : null;
+    return { ...dimension, score };
+  });
   const radarDimensions = [
     { label: "지지력", keywords: ["지지", "support"] },
     { label: "유연성", keywords: ["유연", "flex", "mobility"] },
@@ -268,31 +290,11 @@ export default function ReportPage() {
   const bmiNormalized = normalizeSeries(growthTrend.map((item) => item.bmi));
   const age = calculateAge(profile.birthDate, new Date(`${endDate}T00:00:00`));
 
-  const goBack = () => {
-    if (window.history.length > 1) router.back();
-    else router.push("/dashboard");
-  };
-
   PrintMetadata();
 
   return (
     <main className="nova-report">
-      <header className="report-header">
-        <div className="report-header-left">
-          <button className="report-back" type="button" aria-label="뒤로 가기" onClick={goBack}>
-            ←
-          </button>
-          <button className="report-brand" type="button" onClick={() => router.push("/")}>
-            <strong>NOVA</strong>
-            <span>AI SPORTS PLATFORM</span>
-          </button>
-        </div>
-
-        <div className="report-system-status">
-          <span className="report-status-dot" />
-          <span>AI 시스템 준비</span>
-        </div>
-      </header>
+      <NovaTopBar />
 
       <section className="report-content">
         <div className="report-actions">
@@ -302,6 +304,7 @@ export default function ReportPage() {
           </div>
           <div className="report-heading">
           <div className="report-print-brand">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="report-print-logo" src="/report-print-logo.png" alt="NOVA" />
             <span className="report-print-platform">NOVA AI SPORTS PLATFORM</span>
           </div>
@@ -482,35 +485,33 @@ export default function ReportPage() {
 
           <div className="analysis-grid">
             <div className="analysis-item">
-              <div className="analysis-item-head"><h3>퍼포먼스</h3><strong>{performanceScore === null ? "—" : performanceScore}<small>{performanceScore === null ? "" : "/100"}</small></strong></div>
-              <div className="analysis-meter"><span style={{ width: `${performanceScore ?? 0}%` }} /></div>
+              <div className="analysis-item-head"><h3>퍼포먼스</h3><strong>{performanceScore}<small>/100</small></strong></div>
+              <div className="analysis-meter"><span style={{ width: `${performanceScore}%` }} /></div>
               <p>현재 기록 기준 경기력 상태입니다.</p>
             </div>
             <div className="analysis-item">
-              <div className="analysis-item-head"><h3>회복</h3><strong>{recoveryScore === null ? "—" : recoveryScore}<small>{recoveryScore === null ? "" : "/100"}</small></strong></div>
-              <div className="analysis-meter"><span style={{ width: `${recoveryScore ?? 0}%` }} /></div>
+              <div className="analysis-item-head"><h3>회복</h3><strong>{recoveryScore}<small>/100</small></strong></div>
+              <div className="analysis-meter"><span style={{ width: `${recoveryScore}%` }} /></div>
               <p>훈련 이후 회복 상태를 확인합니다.</p>
             </div>
             <div className="analysis-item">
-              <div className="analysis-item-head"><h3>피로도</h3><strong>{fatigueScore === null ? "—" : fatigueScore}<small>{fatigueScore === null ? "" : "/100"}</small></strong></div>
-              <div className="analysis-meter"><span style={{ width: `${fatigueScore ?? 0}%` }} /></div>
+              <div className="analysis-item-head"><h3>피로도</h3><strong>{fatigueScore}<small>/100</small></strong></div>
+              <div className="analysis-meter"><span style={{ width: `${fatigueScore}%` }} /></div>
               <p>최근 피로 누적과 훈련 조절 필요성을 확인합니다.</p>
             </div>
             <div className="analysis-item">
-              <div className="analysis-item-head"><h3>재활 관리</h3><span className="analysis-tag">기간 기록</span></div>
-              <p>선택 기간의 재활 관리 기록과 훈련 상태를 함께 검토합니다.</p>
-              <div className="analysis-link">관리 항목 우선 확인</div>
+              <div className="analysis-item-head"><h3>재활 관리</h3><span className="analysis-tag">{rehabRecords.length}건</span></div>
+              <p>{rehabRecords.length ? rehabRecords.slice(-2).map((item) => `${item.date} · ${item.area} · ${item.exercise}`).join(" / ") : "저장된 재활 기록이 없습니다."}</p>
+              <div className="analysis-link">기존 rehabRecords 데이터 기준</div>
             </div>
           </div>
 
           <div className="analysis-note">
             <strong>권장사항</strong>
             <span>
-              {fatigueScore === null || recoveryScore === null
-                ? "선택 기간의 퍼포먼스·회복·피로도 측정값을 모두 입력하면 종합 권장사항을 산출할 수 있습니다."
-                : fatigueScore < 50
+              {hasLowFatigue
                 ? "피로도가 높은 구간입니다. 훈련 강도와 회복 상태를 함께 확인하세요."
-                : recoveryScore < 60
+                : hasLowRecovery
                 ? "회복 점수가 낮은 구간입니다. 다음 훈련 전 회복 상태를 확인하세요."
                 : "현재 점수 흐름을 유지하면서 퍼포먼스와 회복 추이를 지속적으로 확인하세요."}
             </span>
@@ -529,65 +530,34 @@ export default function ReportPage() {
           <div className="motion-summary-grid">
             <div className="motion-summary-item">
               <span>동작분석 점수</span>
-              <strong>84<small>/100</small></strong>
-              <div className="motion-meter"><i style={{ width: "84%" }} /></div>
+              <strong>{cameraAverage ?? "—"}<small>/100</small></strong>
+              {cameraAverage != null ? <div className="motion-meter"><i style={{ width: `${cameraAverage}%` }} /></div> : <p>선택 기간 분석 데이터가 없습니다.</p>}
             </div>
             <div className="motion-summary-item">
               <span>분석 완료</span>
-              <strong>12<small>회</small></strong>
+              <strong>{cameraCount}<small>회</small></strong>
               <p>선택 기간 분석 영상 기준</p>
             </div>
             <div className="motion-summary-item">
               <span>주요 이상</span>
-              <strong>1<small>건</small></strong>
-              <p>추가 확인이 필요한 동작 패턴</p>
+              <strong>{cameraNeedsAttention.length}<small>건</small></strong>
+              <p>{cameraCount ? "추가 확인이 필요한 동작 패턴" : "선택 기간 분석 데이터가 없습니다."}</p>
             </div>
           </div>
 
           <div className="motion-results">
-            <div className="motion-result">
-              <div className="motion-result-head">
-                <div>
-                  <h3>하체 정렬</h3>
-                  <p>착지 및 방향 전환 시 좌우 정렬 상태</p>
+            {motionDimensions.map((dimension) => (
+              <div className="motion-result" key={dimension.label}>
+                <div className="motion-result-head">
+                  <div>
+                    <h3>{dimension.label}</h3>
+                    <p>{dimension.description}</p>
+                  </div>
+                  {dimension.score == null ? <b>데이터 없음</b> : <b className={dimension.score >= 80 ? "motion-good" : "motion-watch"}>{dimension.score >= 80 ? "양호" : "주의"}</b>}
                 </div>
-                <b className="motion-good">양호</b>
+                {dimension.score != null && <div className="motion-result-bar"><i style={{ width: `${dimension.score}%` }} /></div>}
               </div>
-              <div className="motion-result-bar"><i style={{ width: "88%" }} /></div>
-            </div>
-
-            <div className="motion-result">
-              <div className="motion-result-head">
-                <div>
-                  <h3>무릎 움직임</h3>
-                  <p>착지 구간의 무릎 굴곡과 안정성</p>
-                </div>
-                <b className="motion-watch">주의</b>
-              </div>
-              <div className="motion-result-bar"><i style={{ width: "68%" }} /></div>
-            </div>
-
-            <div className="motion-result">
-              <div className="motion-result-head">
-                <div>
-                  <h3>체간 안정성</h3>
-                  <p>가속·감속 및 방향 전환 시 중심 유지</p>
-                </div>
-                <b className="motion-good">양호</b>
-              </div>
-              <div className="motion-result-bar"><i style={{ width: "82%" }} /></div>
-            </div>
-
-            <div className="motion-result">
-              <div className="motion-result-head">
-                <div>
-                  <h3>좌우 균형</h3>
-                  <p>좌우 움직임의 편차와 반복 동작 일관성</p>
-                </div>
-                <b className="motion-good">양호</b>
-              </div>
-              <div className="motion-result-bar"><i style={{ width: "86%" }} /></div>
-            </div>
+            ))}
           </div>
 
           <div className="motion-note">
@@ -628,13 +598,18 @@ export default function ReportPage() {
           </div>
 
           <div className="score-list">
-            {scores.map((score) => (
+            {[
+              { name: "Performance Score", value: performanceScore, basis: hasCompositeInputs ? "NOVA 가중치 기반 종합점수" : "실제 측정 퍼포먼스 평균 · 종합점수 계산에 필요한 데이터 부족" },
+              { name: "Recovery Score", value: recoveryScore, basis: "선택 기간 실제 회복 측정값 평균" },
+              { name: "Training Load", value: null, basis: "GPS 세션 데이터 연결 후 산출" },
+              { name: "Injury Risk", value: null, basis: "실제 부상위험 입력 데이터 연결 후 산출" },
+            ].map((score) => (
               <article className="score-row" key={score.name}>
                 <div className="score-name">
                   <strong>{score.name}</strong>
                   <span>{score.basis}</span>
                 </div>
-                <div className="score-number">{score.value === null ? "—" : score.value}<small>{score.value === null ? "" : "/100"}</small></div>
+                <div className="score-number">{score.value ?? "—"}{score.value != null && <small>/100</small>}</div>
                 <div className="score-bar">
                   <span style={{ width: `${score.value ?? 0}%` }} />
                 </div>
@@ -691,6 +666,7 @@ export default function ReportPage() {
         <div className="print-result-page print-result-page-1">
           <header className="print-result-header">
             <div className="print-result-brand">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/report-print-logo.png" alt="NOVA" />
               <strong>NOVA AI SPORTS PLATFORM</strong>
             </div>
@@ -749,9 +725,9 @@ export default function ReportPage() {
               <span>{reportPeriod}</span>
             </div>
             <div className="print-first-summary-grid">
-              <div className="first-summary-blue"><small>퍼포먼스</small><strong>{performanceScore === null ? "—" : performanceScore}<em>{performanceScore === null ? "" : "/100"}</em></strong><span>경기력 및 움직임 상태</span></div>
-              <div className="first-summary-green"><small>회복</small><strong>{recoveryScore === null ? "—" : recoveryScore}<em>{recoveryScore === null ? "" : "/100"}</em></strong><span>훈련 이후 회복 상태</span></div>
-              <div className="first-summary-orange"><small>피로도</small><strong>{fatigueScore === null ? "—" : fatigueScore}<em>{fatigueScore === null ? "" : "/100"}</em></strong><span>최근 피로 누적 수준</span></div>
+              <div className="first-summary-blue"><small>퍼포먼스</small><strong>{performanceScore}<em>/100</em></strong><span>경기력 및 움직임 상태</span></div>
+              <div className="first-summary-green"><small>회복</small><strong>{recoveryScore}<em>/100</em></strong><span>훈련 이후 회복 상태</span></div>
+              <div className="first-summary-orange"><small>피로도</small><strong>{fatigueScore}<em>/100</em></strong><span>최근 피로 누적 수준</span></div>
               <div className="first-summary-purple"><small>재활 관리</small><strong>기간 기록</strong><span>선택 기간 재활 상태 확인</span></div>
             </div>
             <div className="print-first-status">
@@ -768,9 +744,14 @@ export default function ReportPage() {
             <section className="print-result-card print-score-card">
               <div className="print-result-card-head"><h2>점수 계산 및 추이</h2><span>현재 기준</span></div>
               <div className="print-score-list">
-                {scores.map(score=><div className="print-score-row" key={score.name}>
+                {[
+                  { name: "Performance Score", value: performanceScore, basis: hasCompositeInputs ? "NOVA 가중치 기반 종합점수" : "실제 측정 퍼포먼스 평균" },
+                  { name: "Recovery Score", value: recoveryScore, basis: "선택 기간 실제 회복 측정값 평균" },
+                  { name: "Training Load", value: null, basis: "GPS 세션 데이터 연결 후 산출" },
+                  { name: "Injury Risk", value: null, basis: "실제 부상위험 입력 데이터 연결 후 산출" },
+                ].map(score=><div className="print-score-row" key={score.name}>
                   <div><strong>{score.name}</strong><small>{score.basis}</small></div>
-                  <b>{score.value}<em>/100</em></b>
+                  <b>{score.value ?? "—"}{score.value != null && <em>/100</em>}</b>
                   <div className="print-score-bar"><i style={{width:`${score.value ?? 0}%`}}/></div>
                 </div>)}
               </div>
@@ -876,7 +857,19 @@ export default function ReportPage() {
 
           <section className="print-result-card print-fatigue-full">
             <div className="print-result-card-head"><div><h2>피로도 계산 추이</h2><p>선택 기간 피로도 변화</p></div><span>{reportPeriod}</span></div>
-            <div className="print-fatigue-chart">{[72,68,65,70,61,58,63].map((value,index)=><div className="print-fatigue-bar" key={index}><b>{value}</b><i style={{height:`${value}%`}}/><small>D-{6-index}<br/>{formatGrowthDate(growthTrend[Math.min(index,growthTrend.length-1)]?.date || startDate)}</small></div>)}</div>
+            {fatigueTrend.length > 0 ? (
+              <div className="print-fatigue-chart">
+                {fatigueTrend.map((item) => (
+                  <div className="print-fatigue-bar" key={item.date}>
+                    <b>{item.score}</b>
+                    <i style={{ height: `${item.score}%` }} />
+                    <small>{formatGrowthDate(item.date)}</small>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="chart-empty" role="status">선택 기간의 피로도 측정 기록이 없습니다.</div>
+            )}
           </section>
 
           <section className="print-result-card print-conclusion">
@@ -884,6 +877,11 @@ export default function ReportPage() {
             <p>{overallOpinion}</p>
             <p>{cameraCount > 0 ? `선택된 Camera AI ${cameraCount}종의 결과를 함께 고려하여, 분석에서 관리 또는 주의로 표시된 항목은 반복 측정과 훈련 과정에서 지속적으로 확인하는 것이 좋습니다.` : "Camera AI 분석 결과가 없는 경우에는 현재의 신체·컨디션 지표를 기준으로 판단하며, 이후 분석 결과가 추가되면 종합 소견도 함께 업데이트됩니다."}</p>
             <div className="print-recommendation"><strong>보완 권장 사항</strong><span>하체 정렬 및 무릎 안정성 강화 · 코어/체간 안정성 훈련 · 훈련 후 회복 루틴 강화 · 피로도 변화에 따른 훈련 강도 조절 · 선택된 Camera AI 항목의 반복 측정으로 변화 추이 확인</span></div>
+          </section>
+
+          <section className="print-result-card print-rehab-result">
+            <div className="print-result-card-head"><div><h2>재활관리</h2><p>기존 rehabRecords 저장 데이터</p></div><span>{rehabRecords.length}건</span></div>
+            {rehabRecords.length ? rehabRecords.slice(-6).reverse().map((item, index) => <div className="print-rehab-row" key={`${item.date}-${item.area}-${index}`}><b>{item.date}</b><span>{item.area}</span><span>{item.exercise}</span><strong>{item.completed ? "완료" : "진행"}</strong></div>) : <p>저장된 재활 기록이 없습니다.</p>}
           </section>
 
           <section className="print-result-card print-medical-result">

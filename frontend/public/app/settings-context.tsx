@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect */
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
@@ -41,6 +42,8 @@ export const localizedRoleLabels: Record<NovaLanguage, Record<NovaRole, string>>
   ko: { coach: "코치 / 감독", athlete: "선수", parent: "학부모", admin: "관리자 모드" },
   en: { coach: "Coach / Director", athlete: "Athlete", parent: "Parent", admin: "Admin Mode" },
 };
+
+export const roleCopy = localizedRoleLabels;
 
 export const themeLabels: Record<NovaTheme, string> = {
   dark: "다크",

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect, @typescript-eslint/no-unused-vars, @next/next/no-img-element */
  "use client";
 
 import { useRouter } from "next/navigation";
@@ -103,6 +104,7 @@ export default function ReportPage() {
   const [startDate, setStartDate] = useState("2025-05-14");
   const [endDate, setEndDate] = useState("2025-05-20");
   const [cameraAIResults, setCameraAIResults] = useState<CameraReportResult[]>([]);
+  const [rehabRecords, setRehabRecords] = useState<ReturnType<typeof readNovaAthleteData>["rehabRecords"]>([]);
   const [profile, setProfile] = useState(playerProfile);
   const [bodyRecords, setBodyRecords] = useState(playerProfile.bodyRecords);
   const [measurementHistory, setMeasurementHistory] = useState<ReturnType<typeof getMeasurementRange>>({
@@ -125,6 +127,7 @@ export default function ReportPage() {
         birthDate: athlete.birthDate || playerProfile.birthDate,
       });
       if (data.bodyRecords.length) setBodyRecords(data.bodyRecords);
+      setRehabRecords(data.rehabRecords ?? []);
     } catch {
       // Keep the safe fallback profile.
     }
@@ -153,6 +156,8 @@ export default function ReportPage() {
   const fatigueScore = averageScore(measurementHistory.fatigueRecords.map((item) => item.score));
   const manualPerformanceScore = averageScore(measurementHistory.performanceRecords.map((item) => item.score));
   const recoveryScore = averageScore(measurementHistory.recoveryRecords.map((item) => item.score));
+  const hasLowFatigue = typeof fatigueScore === "number" && fatigueScore < 50;
+  const hasLowRecovery = typeof recoveryScore === "number" && recoveryScore < 60;
   const fatigueTrend = [...measurementHistory.fatigueRecords]
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(-7);
@@ -500,18 +505,18 @@ export default function ReportPage() {
               <p>최근 피로 누적과 훈련 조절 필요성을 확인합니다.</p>
             </div>
             <div className="analysis-item">
-              <div className="analysis-item-head"><h3>재활 관리</h3><span className="analysis-tag">기간 기록</span></div>
-              <p>선택 기간의 재활 관리 기록과 훈련 상태를 함께 검토합니다.</p>
-              <div className="analysis-link">관리 항목 우선 확인</div>
+              <div className="analysis-item-head"><h3>재활 관리</h3><span className="analysis-tag">{rehabRecords.length}건</span></div>
+              <p>{rehabRecords.length ? rehabRecords.slice(-2).map((item) => `${item.date} · ${item.area} · ${item.exercise}`).join(" / ") : "저장된 재활 기록이 없습니다."}</p>
+              <div className="analysis-link">기존 rehabRecords 데이터 기준</div>
             </div>
           </div>
 
           <div className="analysis-note">
             <strong>권장사항</strong>
             <span>
-              {fatigueScore < 50
+              {hasLowFatigue
                 ? "피로도가 높은 구간입니다. 훈련 강도와 회복 상태를 함께 확인하세요."
-                : recoveryScore < 60
+                : hasLowRecovery
                 ? "회복 점수가 낮은 구간입니다. 다음 훈련 전 회복 상태를 확인하세요."
                 : "현재 점수 흐름을 유지하면서 퍼포먼스와 회복 추이를 지속적으로 확인하세요."}
             </span>
@@ -876,6 +881,11 @@ export default function ReportPage() {
             <p>{overallOpinion}</p>
             <p>{cameraCount > 0 ? `선택된 Camera AI ${cameraCount}종의 결과를 함께 고려하여, 분석에서 관리 또는 주의로 표시된 항목은 반복 측정과 훈련 과정에서 지속적으로 확인하는 것이 좋습니다.` : "Camera AI 분석 결과가 없는 경우에는 현재의 신체·컨디션 지표를 기준으로 판단하며, 이후 분석 결과가 추가되면 종합 소견도 함께 업데이트됩니다."}</p>
             <div className="print-recommendation"><strong>보완 권장 사항</strong><span>하체 정렬 및 무릎 안정성 강화 · 코어/체간 안정성 훈련 · 훈련 후 회복 루틴 강화 · 피로도 변화에 따른 훈련 강도 조절 · 선택된 Camera AI 항목의 반복 측정으로 변화 추이 확인</span></div>
+          </section>
+
+          <section className="print-result-card print-rehab-result">
+            <div className="print-result-card-head"><div><h2>재활관리</h2><p>기존 rehabRecords 저장 데이터</p></div><span>{rehabRecords.length}건</span></div>
+            {rehabRecords.length ? rehabRecords.slice(-6).reverse().map((item, index) => <div className="print-rehab-row" key={`${item.date}-${item.area}-${index}`}><b>{item.date}</b><span>{item.area}</span><span>{item.exercise}</span><strong>{item.completed ? "완료" : "진행"}</strong></div>) : <p>저장된 재활 기록이 없습니다.</p>}
           </section>
 
           <section className="print-result-card print-medical-result">

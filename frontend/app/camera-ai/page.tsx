@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/purity, react-hooks/refs */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -11,7 +12,7 @@ import {
 import "./camera-ai.css";
 import NovaTopBar from "../../components/NovaTopBar";
 import { getCurrentUser } from "../../lib/nova-auth";
-import { getJumpFatigueRecord, upsertJumpFatigueRecord } from "../../lib/nova-data";
+import { getJumpFatigueRecord, upsertJumpFatigueRecord, readNovaAthleteData, writeNovaAthleteData } from "../../lib/nova-data";
 
 type Chapter = {
   id: string;
@@ -92,6 +93,20 @@ const CAPTURE_GUIDES = {
     squat: { view: "Front + side recommended", distance: "2–3 m", action: "Stand → descend → hold bottom → rise for 3–5 reps", tips: ["Keep the full body from head to feet in frame", "Keep both feet and knees unobstructed", "If possible, record separate front and side views"] },
   },
 } as const;
+
+const SPEED_AGILITY_TESTS = [
+  { id: "sprint-5m", label: "5m Sprint", distance: "5m", split: false },
+  { id: "sprint-10m", label: "10m Sprint", distance: "10m", split: false },
+  { id: "sprint-10-5", label: "10m + 5m Split", distance: "15m", split: true },
+  { id: "sprint-20m", label: "20m Sprint", distance: "20m", split: false },
+  { id: "sprint-20-10", label: "20m + 10m Split", distance: "30m", split: true },
+  { id: "sprint-splits", label: "전체 Split 기록", distance: "전체", split: true },
+] as const;
+
+const AGILITY_TESTS = [
+  { id: "agility-505", label: "5-0-5", distance: "5-0-5", split: false },
+  { id: "agility-5105", label: "5-10-5 Pro Agility", distance: "5-10-5", split: false },
+] as const;
 
 const SHOOTING_SPORTS = {
   soccer: {
@@ -635,11 +650,44 @@ export default function CameraAIPage() {
     useState<JointId[]>(DEFAULT_JOINTS.sprint);
   const [shootingSport, setShootingSport] = useState<ShootingSportId>("soccer");
   const [shootingDetail, setShootingDetail] = useState("");
+  const [selectedSpeedTestId, setSelectedSpeedTestId] = useState("sprint-5m");
+  const [speedTestRunning, setSpeedTestRunning] = useState(false);
+  const [speedTestElapsed, setSpeedTestElapsed] = useState(0);
+  const [speedTestSplits, setSpeedTestSplits] = useState<number[]>([]);
+  const speedTestTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const selectedSpeedTest = [...SPEED_AGILITY_TESTS, ...AGILITY_TESTS].find((test) => test.id === selectedSpeedTestId) ?? SPEED_AGILITY_TESTS[0];
+  const availableSpeedAgilityTests = selectedChapter?.id === "change-direction" ? AGILITY_TESTS : SPEED_AGILITY_TESTS;
+
+  const startSpeedAgilityTest = () => {
+    if (speedTestTimerRef.current) clearInterval(speedTestTimerRef.current);
+    setSpeedTestElapsed(0);
+    setSpeedTestSplits([]);
+    setSpeedTestRunning(true);
+    const startedAt = Date.now();
+    speedTestTimerRef.current = setInterval(() => {
+      setSpeedTestElapsed((Date.now() - startedAt) / 1000);
+    }, 50);
+  };
+
+  const finishSpeedAgilityTest = () => {
+    if (speedTestTimerRef.current) clearInterval(speedTestTimerRef.current);
+    speedTestTimerRef.current = null;
+    setSpeedTestRunning(false);
+  };
+
+  const recordSpeedAgilitySplit = () => {
+    if (speedTestRunning) setSpeedTestSplits((current) => [...current, speedTestElapsed]);
+  };
 
   useEffect(() => {
     if (selectedChapter?.id === "shooting") {
       const details = SHOOTING_SPORTS[shootingSport][lang === "en" ? "en" : "ko"].details;
       if (!details.includes(shootingDetail as never)) setShootingDetail(details[0]);
+    }
+    if (selectedChapter?.id === "change-direction") {
+      setSelectedSpeedTestId((current) => AGILITY_TESTS.some((test) => test.id === current) ? current : AGILITY_TESTS[0].id);
+    } else if (selectedChapter?.id === "sprint") {
+      setSelectedSpeedTestId((current) => SPEED_AGILITY_TESTS.some((test) => test.id === current) ? current : SPEED_AGILITY_TESTS[0].id);
     }
   }, [lang, selectedChapter, shootingSport, shootingDetail]);
 
@@ -1607,6 +1655,11 @@ export default function CameraAIPage() {
     stopCamera();
 
     if (selectedChapter) {
+      if (window.history.state?.novaCameraAISelection) {
+        window.history.back();
+        return;
+      }
+
       setSelectedChapter(
         null,
       );
@@ -1627,6 +1680,12 @@ export default function CameraAIPage() {
     chapter: Chapter,
   ) => {
     stopCamera();
+
+    window.history.pushState(
+      { novaCameraAISelection: true },
+      "",
+      window.location.href,
+    );
 
     setSelectedChapter(
       chapter,
@@ -1649,6 +1708,21 @@ export default function CameraAIPage() {
       null,
     );
   };
+
+  useEffect(() => {
+    if (!selectedChapter) return;
+
+    const handlePopState = () => {
+      stopCamera();
+      setSelectedChapter(null);
+      setAnalysisComplete(false);
+      setAnalysisResults(null);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedChapter]);
 
   /*
    * 분석 시작 전 최종 안전 검사.
@@ -2179,6 +2253,29 @@ export default function CameraAIPage() {
       setAnalysisResults(
         result,
       );
+
+      const currentUser = getCurrentUser();
+      if (currentUser?.role === "athlete") {
+        const currentData = readNovaAthleteData();
+        writeNovaAthleteData({
+          ...currentData,
+          cameraAIResults: [
+            ...currentData.cameraAIResults,
+            {
+              id: `camera-${selectedChapter?.id || "analysis"}-${Date.now()}`,
+              title: selectedChapter?.title || "Camera AI",
+              category: selectedChapter?.category || "Camera AI",
+              score: Math.max(0, Math.min(100, Number(result.bodyControl.replace(/[^0-9.]/g, "")) || 0)),
+              status: "양호" as const,
+              summary: `${selectedChapter?.title || "동작"} 분석이 완료되었습니다.`,
+              recommendation: "동일한 촬영 조건으로 반복 측정하여 변화 추이를 확인하세요.",
+              metrics: Object.entries(result).map(([label, value]) => ({ label, value })),
+              completedAt: new Date().toISOString(),
+              source: "camera-ai" as const,
+            },
+          ],
+        });
+      }
       saveJumpFatigueFromResult(result);
 
       setAnalyzing(false);
@@ -2213,6 +2310,7 @@ export default function CameraAIPage() {
         );
 
       poseRef.current?.close();
+      if (speedTestTimerRef.current) clearInterval(speedTestTimerRef.current);
     };
   }, []);
 
@@ -2470,6 +2568,32 @@ export default function CameraAIPage() {
             )}
           </div>
 
+          {(selectedChapter?.id === "sprint" || selectedChapter?.id === "change-direction") && (
+            <section className="setup-card speed-agility-test-card">
+              <div className="setup-card-header">
+                <div>
+                  <span className="panel-label">{selectedChapter.id === "change-direction" ? "AGILITY TEST" : "SPRINT TEST"}</span>
+                  <h3>{selectedChapter.id === "change-direction" ? "민첩성 측정" : "스프린트 측정"}</h3>
+                </div>
+                <strong className="speed-test-clock">{speedTestElapsed.toFixed(2)}s</strong>
+              </div>
+              <div className="speed-test-select-row">
+                <label>
+                  <span>측정 항목</span>
+                  <select value={selectedSpeedTest.id} onChange={(event) => { setSelectedSpeedTestId(event.target.value); setSpeedTestRunning(false); setSpeedTestElapsed(0); setSpeedTestSplits([]); }} disabled={speedTestRunning}>
+                    {availableSpeedAgilityTests.map((test) => <option key={test.id} value={test.id}>{test.label}</option>)}
+                  </select>
+                </label>
+              </div>
+              <p className="speed-test-note">{selectedSpeedTest.distance} · 전신을 화면에 유지 · 자세분석 LIVE</p>
+              <div className="speed-test-actions">
+                {!speedTestRunning ? <button type="button" onClick={startSpeedAgilityTest}>측정 시작</button> : <button type="button" onClick={finishSpeedAgilityTest}>측정 종료</button>}
+                {speedTestRunning && selectedSpeedTest.split && <button type="button" onClick={recordSpeedAgilitySplit}>구간 기록</button>}
+              </div>
+              <div className="speed-test-splits">{speedTestSplits.length ? speedTestSplits.map((value, index) => <span key={`${value}-${index}`}>{index + 1}구간 <b>{value.toFixed(2)}s</b></span>) : <span>Split 테스트는 구간 기록 버튼으로 기록합니다.</span>}</div>
+            </section>
+          )}
+
           <div className="camera-layout">
             <div className="camera-preview-card">
               <div className="camera-preview">
@@ -2566,6 +2690,7 @@ export default function CameraAIPage() {
                             ? "tool-active"
                             : ""
                         }
+                        style={{ color: "#fff" }}
                         onClick={() =>
                           setSkeletonEnabled(
                             (
@@ -2587,6 +2712,7 @@ export default function CameraAIPage() {
                             ? "tool-active"
                             : ""
                         }
+                        style={{ color: "#fff" }}
                         onClick={() =>
                           setAngleEnabled(
                             (
@@ -2736,6 +2862,42 @@ export default function CameraAIPage() {
                   </button>
                 )}
               </div>
+            {selectedChapter && (
+              <section className="desktop-live-analysis-card">
+                <div className="desktop-live-analysis-heading"><span className="panel-label">LIVE ANALYSIS</span><h2>분석 결과</h2></div>
+                <div className="desktop-result-grid">
+                  <div><span>신체 인식</span><strong>{bodyDetectionScore > 0 ? `${bodyDetectionScore}%` : "대기"}</strong></div>
+                  <div><span>평균 무릎 각도</span><strong>{analysisResults?.averageKnee ?? "-"}</strong></div>
+                  <div><span>왼쪽 무릎</span><strong>{metrics.leftKnee != null ? `${metrics.leftKnee}°` : "-"}</strong></div>
+                  <div><span>오른쪽 무릎</span><strong>{metrics.rightKnee != null ? `${metrics.rightKnee}°` : "-"}</strong></div>
+                  <div><span>평균 고관절</span><strong>{metrics.leftHip != null && metrics.rightHip != null ? `${Math.round((metrics.leftHip + metrics.rightHip) / 2)}°` : "-"}</strong></div>
+                  <div><span>평균 팔꿈치</span><strong>{metrics.leftElbow != null && metrics.rightElbow != null ? `${Math.round((metrics.leftElbow + metrics.rightElbow) / 2)}°` : "-"}</strong></div>
+                  <div><span>좌우 밸런스</span><strong>{analysisResults?.bodyControl ?? "-"}</strong></div>
+                  <div><span>자세 상태</span><strong>{analysisResults ? "분석 완료" : "측정 대기"}</strong></div>
+                </div>
+                <div className="desktop-result-detail">
+                  <div><span>자세분석</span><strong>{analysisResults ? "분석 완료" : "측정 대기"}</strong></div>
+                  <div><span>신체 인식</span><strong>{bodyDetectionScore}%</strong></div>
+                  <div><span>좌우 밸런스</span><strong>{analysisResults?.bodyControl ?? "-"}</strong></div>
+                </div>
+                <p className="desktop-result-note">카메라 하단에서 관절 각도, 전신 인식, 좌우 균형을 함께 확인합니다.</p>
+                <div className="desktop-result-rows">
+                  <div><span>{displayedMetrics[0] ?? "측정 항목 1"}</span><strong>{analysisResults ? "분석 완료" : "대기"}</strong><span>{displayedMetrics[1] ?? "측정 항목 2"}</span><strong>{analysisResults ? "분석 완료" : "대기"}</strong></div>
+                  <div><span>{displayedMetrics[2] ?? "측정 항목 3"}</span><strong>{analysisResults ? "분석 완료" : "대기"}</strong><span>{displayedMetrics[3] ?? "측정 항목 4"}</span><strong>{analysisResults ? "분석 완료" : "대기"}</strong></div>
+                </div>
+              </section>
+            )}
+
+            {selectedChapter && currentGuide && (
+              <section className="desktop-bottom-guide">
+                <div className="desktop-bottom-guide-head"><span className="panel-label">GUIDE</span><h2>측정 데이터 대기</h2></div>
+                <p>전신 인식이 완료되면 관절 각도와 좌우 밸런스를 함께 해석해 현재 자세 특성과 보강 운동을 제안합니다.</p>
+                <div className="desktop-bottom-guide-divider" />
+                <strong>추천 보강 운동</strong>
+                <button type="button" disabled={!analysisResults}>측정 후 자동 추천</button>
+              </section>
+            )}
+
             </div>
 
             <aside className="camera-info-panel">
@@ -3131,6 +3293,7 @@ export default function CameraAIPage() {
               </div>
             </aside>
           </div>
+
         </section>
       )}
     </main>

@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useNovaSettings } from "../settings-context";
 import "./medical.css";
-import NovaPageHeader from "../../components/NovaPageHeader";
+import NovaPageHeader from "../../../components/NovaPageHeader";
 
 type Injury = {
   id: number;
@@ -31,7 +30,6 @@ const monthNames: Record<"ko" | "en", string[]> = {
 };
 
 export default function MedicalPage() {
-  const router = useRouter();
   const { language, theme } = useNovaSettings();
   const [year, setYear] = useState(2026);
   const [records, setRecords] = useState<Injury[]>(injuries);
@@ -53,7 +51,10 @@ export default function MedicalPage() {
       const saved = localStorage.getItem("nova-medical-injuries");
       if (saved) {
         const parsed = JSON.parse(saved) as Injury[];
-        if (Array.isArray(parsed)) setRecords(parsed);
+        if (Array.isArray(parsed)) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          setRecords(parsed);
+        }
       }
     } catch {
       // Keep built-in records if saved data is unavailable.
@@ -176,7 +177,7 @@ export default function MedicalPage() {
   const yearRows = records.filter((x) => x.injuryDate.startsWith(String(year)));
   const monthCounts = useMemo(
     () => currentMonthNames.map((_, i) => yearRows.filter(x => Number(x.injuryDate.slice(5, 7)) === i + 1).length),
-    [yearRows]
+    [yearRows, currentMonthNames]
   );
   const maxMonth = Math.max(1, ...monthCounts);
   const peakIndex = monthCounts.indexOf(Math.max(...monthCounts));

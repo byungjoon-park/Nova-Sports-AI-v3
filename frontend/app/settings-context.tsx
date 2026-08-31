@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
@@ -146,7 +147,7 @@ export function useNovaSettings() {
 }
 
 function SettingsModal() {
-  const { language, theme, role, setLanguage, setTheme, setRole, closeSettings } = useNovaSettings();
+  const { language, theme, role, setLanguage, setTheme, closeSettings } = useNovaSettings();
 
   return (
     <div className="nova-settings-backdrop" role="presentation" onMouseDown={closeSettings}>
@@ -180,14 +181,10 @@ function SettingsModal() {
         </div>
 
         <div className="nova-settings-group">
-          <label>사용자 모드</label>
-          <div className="nova-choice-grid two">
-            {(["coach", "director", "athlete", "parent", "admin"] as NovaRole[]).map((item) => (
-              <button key={item} type="button" className={role === item ? "selected" : ""} onClick={() => setRole(item)}>
-                <strong>{roleLabels[item]}</strong>
-                <small>{item === "admin" ? "연구·통계·데이터 관리" : item === "director" ? "팀 전체·선수·훈련 관리" : item === "coach" ? "담당 선수·훈련 관리" : item === "athlete" ? "개인 퍼포먼스·재활" : "선수 상태·일정 확인"}</small>
-              </button>
-            ))}
+          <label>{language === "en" ? "Current account" : "현재 사용자"}</label>
+          <div className="nova-role-summary">
+            <strong>{roleLabels[role]}</strong>
+            <small>{language === "en" ? "This role is assigned to the account at sign-up and cannot be changed here." : "가입 시 지정된 계정 역할입니다. 환경설정에서는 변경할 수 없습니다."}</small>
           </div>
         </div>
 

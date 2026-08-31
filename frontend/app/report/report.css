@@ -2913,3 +2913,7 @@
     padding: 0 !important;
   }
 }
+
+
+/* NOVA V3 targeted rehab report additions. */
+.print-rehab-result{margin-top:8px}.print-rehab-row{display:grid;grid-template-columns:78px 90px 1fr 48px;gap:8px;padding:6px 0;border-bottom:1px solid #eeeae3;font-size:8px}.print-rehab-row:last-child{border-bottom:0}.print-rehab-row b{color:#687384}.print-rehab-row span{color:#394454}.print-rehab-row strong{color:#238548;text-align:right}@media(max-width:760px){.print-rehab-row{grid-template-columns:1fr 1fr}.print-rehab-row strong{text-align:left}}
