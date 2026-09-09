@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useNovaSettings } from "../../settings-context";
 import NovaTopBar from "../../../components/NovaTopBar";
+import MobileGlobalNavigation from "../../../components/MobileGlobalNavigation";
 import "./dashboard.css";
 
 const metrics = [
@@ -28,8 +29,8 @@ const activity = [
 ];
 
 export default function MobileDashboardPage() {
-  const { theme } = useNovaSettings();
   const router = useRouter();
+  const { theme } = useNovaSettings();
   const [noticeOpen, setNoticeOpen] = useState(false);
   const activeTheme =
     theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
@@ -37,6 +38,7 @@ export default function MobileDashboardPage() {
   return (
     <main className={`mobile-dashboard theme-${activeTheme}`} data-theme={activeTheme}>
       <NovaTopBar statusText="AI 시스템 온라인" />
+      <MobileGlobalNavigation />
 
       <div className="mobile-dashboard-shell">
         <header className="mobile-dashboard-header">
