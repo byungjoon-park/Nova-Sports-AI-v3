@@ -1,5 +1,13 @@
-import MobileFeaturePage from "../_components/MobileFeaturePage";
+"use client";
+
+import DashboardPage from "../../dashboard/page";
+import MobileGlobalNavigation from "../../../components/MobileGlobalNavigation";
 
 export default function MobileDashboardPage() {
-  return <MobileFeaturePage section="dashboard" />;
+  return (
+    <>
+      <DashboardPage />
+      <MobileGlobalNavigation />
+    </>
+  );
 }
