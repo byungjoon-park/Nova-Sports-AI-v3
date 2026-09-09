@@ -1,4 +1,12 @@
 export type NovaUserRole = "admin" | "director" | "coach" | "athlete" | "parent";
+
+export const NOVA_TEST_ACCOUNTS: Array<{ label: string; role: NovaUserRole; email: string; name: string }> = [
+  { label: "관리자", role: "admin", email: "admin@test.nova.ai", name: "NOVA Admin" },
+  { label: "감독", role: "director", email: "director@test.nova.ai", name: "NOVA 감독" },
+  { label: "코치", role: "coach", email: "coach@test.nova.ai", name: "NOVA 코치" },
+  { label: "선수", role: "athlete", email: "player@test.nova.ai", name: "NOVA 선수" },
+  { label: "학부모", role: "parent", email: "parent@test.nova.ai", name: "NOVA 학부모" },
+];
 export type NovaMembershipStatus = "pending" | "active" | "rejected";
 export type NovaInviteStatus = "pending" | "accepted" | "expired" | "cancelled";
 
@@ -238,6 +246,24 @@ export function signInUser(email: string): NovaUser | null {
   return user;
 }
 
+export function updateCurrentUserProfile(input: { name: string; email: string }): NovaUser | null {
+  const store = readStore();
+  const current = store.users.find((user) => user.id === store.currentUserId);
+  if (!current) return null;
+
+  const name = input.name.trim();
+  const email = input.email.trim().toLowerCase();
+  if (!name || !email) return null;
+
+  const duplicate = store.users.find((user) => user.id !== current.id && user.email === email);
+  if (duplicate) return null;
+
+  current.name = name;
+  current.email = email;
+  writeStore(store);
+  return current;
+}
+
 
 export function deleteCurrentUser(): boolean {
   const store = readStore();
@@ -259,6 +285,69 @@ export function deleteCurrentUser(): boolean {
 export function findUserByEmail(email: string): NovaUser | null {
   const normalized = email.trim().toLowerCase();
   return readStore().users.find((user) => user.email === normalized) ?? null;
+}
+
+export function getAthleteSubscription(userId?: string): NovaUser | null {
+  const store = readStore();
+  const idValue = userId ?? store.currentUserId;
+  if (!idValue) return null;
+  const user = store.users.find((item) => item.id === idValue);
+  if (!user || user.role !== "athlete") return null;
+  refreshSubscriptionStatus(user);
+  writeStore(store);
+  return user.subscriptionStatus === "active" ? user : null;
+}
+
+export function activatePersonalSubscription(input: {
+  athleteUserId: string;
+  parentEmail: string;
+  parentName: string;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+}): NovaUser | null {
+  const store = readStore();
+  const athlete = store.users.find((user) => user.id === input.athleteUserId && user.role === "athlete");
+  if (!athlete) return null;
+
+  athlete.subscriptionStatus = "active";
+  delete athlete.trialEndsAt;
+
+  const normalizedParentEmail = input.parentEmail.trim().toLowerCase();
+  if (normalizedParentEmail) {
+    let parent = store.users.find((user) => user.email === normalizedParentEmail);
+    if (!parent) {
+      parent = {
+        id: id("user"),
+        name: input.parentName.trim() || "학부모",
+        email: normalizedParentEmail,
+        role: "parent",
+        createdAt: new Date().toISOString(),
+        subscriptionStatus: "none",
+      };
+      store.users.push(parent);
+    }
+
+    const existingLink = store.guardianLinks.find(
+      (link) =>
+        link.athleteUserId === athlete.id &&
+        link.guardianUserId === parent.id &&
+        link.status === "active",
+    );
+    if (!existingLink) {
+      store.guardianLinks.push({
+        id: id("guardian"),
+        teamId: "",
+        athleteUserId: athlete.id,
+        guardianUserId: parent.id,
+        status: "active",
+        createdAt: new Date().toISOString(),
+        approvedAt: new Date().toISOString(),
+      });
+    }
+  }
+
+  writeStore(store);
+  return athlete;
 }
 
 export function signOutUser() {

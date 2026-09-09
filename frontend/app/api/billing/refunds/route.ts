@@ -1,5 +1,16 @@
 import { NextResponse } from "next/server";
 
+type StripeRefundItem = {
+  id: string;
+  amount: number;
+  currency?: string | null;
+  status?: string | null;
+  reason?: string | null;
+  created: number;
+  charge?: string | null;
+  payment_intent?: string | null;
+};
+
 const stripe = async (path: string, init?: RequestInit) => {
   const secret = process.env.STRIPE_SECRET_KEY;
   if (!secret) throw new Error("STRIPE_SECRET_KEY가 설정되지 않았습니다.");
@@ -17,7 +28,7 @@ export async function GET() {
   try {
     const data = await stripe("refunds?limit=20");
     return NextResponse.json({
-      refunds: (data.data || []).map((item: any) => ({
+      refunds: (data.data || []).map((item: StripeRefundItem) => ({
         id: item.id,
         amount: item.amount,
         currency: String(item.currency || "krw").toUpperCase(),

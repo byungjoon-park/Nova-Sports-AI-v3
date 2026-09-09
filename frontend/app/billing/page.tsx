@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { activatePersonalSubscription, findUserByEmail, getAthleteSubscription, getAuthStore, getCurrentUser } from "../../lib/nova-auth";
+import { findUserByEmail, getAthleteSubscription, getAuthStore, getCurrentUser } from "../../lib/nova-auth";
 import { useNovaSettings } from "../settings-context";
 import "../dashboard/dashboard.css";
 

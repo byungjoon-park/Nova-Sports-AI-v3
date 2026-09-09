@@ -1,190 +1,98 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useMemo } from "react";
-import { useNovaSettings } from "../settings-context";
-import { getCurrentUser } from "../../lib/nova-auth";
-import { readNovaAthleteData, type NovaCameraAIResult } from "../../lib/nova-data";
+import { useEffect, useState } from "react";
+import { readNovaAthleteData } from "../lib/nova-data";
+import { useNovaSettings } from "../app/settings-context";
+import NovaTopBar from "../components/NovaTopBar";
 import "./growth-analysis.css";
 
-type TrendPoint = { date: string; value: number };
-
-function numberFromMetric(result: NovaCameraAIResult | undefined, labels: string[]) {
-  if (!result) return null;
-  const metric = result.metrics.find((item) => labels.some((label) => item.label.toLowerCase().includes(label.toLowerCase())));
-  if (!metric) return null;
-  const match = metric.value.replace(/,/g, "").match(/-?\d+(?:\.\d+)?/);
-  return match ? Number(match[0]) : null;
+function latest<T extends { date: string }>(records: T[]) {
+  return records.length ? [...records].sort((a, b) => a.date.localeCompare(b.date)).at(-1) ?? null : null;
 }
 
-function latest<T extends { date: string }>(items: T[]) {
-  return [...items].sort((a, b) => b.date.localeCompare(a.date))[0];
-}
-
-function formatDate(value?: string) {
-  if (!value) return "—";
-  return value.replace(/-/g, ".");
-}
-
-function TrendChart({ points, unit, empty }: { points: TrendPoint[]; unit: string; empty: string }) {
-  if (!points.length) return <div className="growth-empty">{empty}</div>;
-  const max = Math.max(...points.map((p) => p.value), 1);
-  const min = Math.min(...points.map((p) => p.value));
-  const range = Math.max(max - min, 1);
-
-  return (
-    <div className="trend-chart" aria-label={`${unit} 추이`}>
-      <div className="trend-bars">
-        {points.slice(-8).map((point) => {
-          const height = 20 + ((point.value - min) / range) * 80;
-          return (
-            <div className="trend-column" key={`${point.date}-${point.value}`}>
-              <span className="trend-value">{point.value}{unit}</span>
-              <div className="trend-bar-track"><div className="trend-bar" style={{ height: `${height}%` }} /></div>
-              <small>{point.date.slice(5)}</small>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+function change(current?: number, previous?: number) {
+  if (current == null || previous == null || previous === 0) return null;
+  return ((current - previous) / previous) * 100;
 }
 
 export default function GrowthAnalysisPage() {
-  const { language } = useNovaSettings();
-  const data = readNovaAthleteData();
-  const user = getCurrentUser();
-  const isEn = language === "en";
+  const { theme } = useNovaSettings();
+  const activeTheme = theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
+  const [data, setData] = useState<ReturnType<typeof readNovaAthleteData> | null>(null);
 
-  const bodyRecords = [...data.bodyRecords].sort((a, b) => a.date.localeCompare(b.date));
-  const fatigueRecords = [...data.fatigueRecords].sort((a, b) => a.date.localeCompare(b.date));
-  const performanceRecords = [...data.performanceRecords].sort((a, b) => a.date.localeCompare(b.date));
-  const recoveryRecords = [...data.recoveryRecords].sort((a, b) => a.date.localeCompare(b.date));
-  const cameraResults = [...data.cameraAIResults].sort((a, b) => a.completedAt.localeCompare(b.completedAt));
-  const latestCamera = cameraResults.at(-1);
+  useEffect(() => {
+    setData(readNovaAthleteData());
+  }, []);
 
-  const jumpPoints = useMemo(() => cameraResults
-    .map((result) => ({ date: result.completedAt.slice(0, 10), value: numberFromMetric(result, isEn ? ["jump height", "vertical jump"] : ["점프 높이", "수직 점프"]) }))
-    .filter((point): point is { date: string; value: number } => point.value !== null), [cameraResults, isEn]);
+  if (!data) {
+    return (
+      <main className={`growth-analysis-page theme-${activeTheme}`} data-theme={activeTheme}>
+        <NovaTopBar />
+        <section className="growth-shell">
+          <div className="growth-empty">측정 데이터를 불러오는 중입니다.</div>
+        </section>
+      </main>
+    );
+  }
 
-  const latestBody = latest(bodyRecords);
-  const latestPerformance = performanceRecords.at(-1);
-  const latestRecovery = recoveryRecords.at(-1);
-  const latestFatigue = fatigueRecords.at(-1);
-  const latestJump = jumpPoints.at(-1);
-  const previousJump = jumpPoints.length > 1 ? jumpPoints.at(-2) : undefined;
-  const jumpChange = latestJump && previousJump ? ((latestJump.value - previousJump.value) / previousJump.value) * 100 : null;
+  const athlete = data.athlete;
+  const body = [...data.bodyRecords].sort((a, b) => a.date.localeCompare(b.date));
+  const performance = [...data.performanceRecords].sort((a, b) => a.date.localeCompare(b.date));
+  const jump = [...data.jumpFatigueRecords].sort((a, b) => a.date.localeCompare(b.date));
+  const fatigue = [...data.fatigueRecords].sort((a, b) => a.date.localeCompare(b.date));
+  const recovery = [...data.recoveryRecords].sort((a, b) => a.date.localeCompare(b.date));
 
-  const labels = isEn ? {
-    eyebrow: "GROWTH & FITNESS ANALYSIS",
-    title: "Growth / Fitness Analysis",
-    desc: "Track body growth and performance changes in one place.",
-    growth: "Growth",
-    fitness: "Fitness",
-    height: "Height",
-    weight: "Weight",
-    performance: "Performance",
-    recovery: "Recovery",
-    fatigue: "Fatigue",
-    jump: "Vertical Jump",
-    trend: "Measurement Trend",
-    fitnessTrend: "Fitness Trend",
-    history: "Recent Measurements",
-    noData: "No measurement data yet.",
-    camera: "Source: Camera AI",
-    gps: "Source: GPS",
-    strength: "Strength",
-    unavailable: "No recorded data",
-    athlete: "Athlete",
-    date: "Date",
-    change: "Change",
-  } : {
-    eyebrow: "성장 · 체력 분석",
-    title: "성장 / 체력 분석",
-    desc: "신체 성장과 체력 변화를 한 화면에서 확인합니다.",
-    growth: "성장 분석",
-    fitness: "체력 분석",
-    height: "키",
-    weight: "체중",
-    performance: "퍼포먼스",
-    recovery: "회복",
-    fatigue: "피로도",
-    jump: "수직 점프",
-    trend: "신체 측정 추이",
-    fitnessTrend: "체력 지표 추이",
-    history: "최근 측정 기록",
-    noData: "아직 측정 기록이 없습니다.",
-    camera: "측정 출처: Camera AI",
-    gps: "측정 출처: GPS",
-    strength: "근력",
-    unavailable: "기록 없음",
-    athlete: "선수",
-    date: "날짜",
-    change: "변화",
-  };
+  const latestBody = latest(body);
+  const previousBody = body.length > 1 ? body[body.length - 2] : null;
+  const latestJump = latest(jump);
+  const latestPerformance = latest(performance);
+  const latestFatigue = latest(fatigue);
+  const latestRecovery = latest(recovery);
+
+  const heightChange = change(latestBody?.heightCm, previousBody?.heightCm);
+  const weightChange = change(latestBody?.weightKg, previousBody?.weightKg);
+  const bodyRows = body.slice(-8).reverse();
 
   return (
-    <main className="growth-page">
-      <header className="growth-header">
-        <div>
-          <span className="growth-eyebrow">{labels.eyebrow}</span>
-          <h1>{labels.title}</h1>
-          <p>{labels.desc}</p>
-        </div>
-        <div className="growth-athlete">
-          <span>{labels.athlete}</span>
-          <strong>{data.athlete.name || user?.name || "NOVA Athlete"}</strong>
-        </div>
-      </header>
+    <main className={`growth-analysis-page theme-${activeTheme}`} data-theme={activeTheme}>
+      <NovaTopBar />
+      <section className="growth-shell">
+        <header className="growth-header">
+          <div>
+            <span className="growth-eyebrow">GROWTH / FITNESS ANALYSIS</span>
+            <h1>성장 / 체력 분석</h1>
+            <p>{athlete.name || "선수"}의 실제 측정 기록을 기준으로 성장과 체력 변화를 확인합니다.</p>
+          </div>
+        </header>
 
-      <section className="growth-section">
-        <div className="section-title"><span>{labels.growth}</span><h2>{labels.growth}</h2></div>
-        <div className="summary-grid">
-          <article className="summary-card"><span>{labels.height}</span><strong>{latestBody?.heightCm != null ? `${latestBody.heightCm} cm` : "—"}</strong><small>{latestBody ? formatDate(latestBody.date) : labels.noData}</small></article>
-          <article className="summary-card"><span>{labels.weight}</span><strong>{latestBody?.weightKg != null ? `${latestBody.weightKg} kg` : "—"}</strong><small>{latestBody ? formatDate(latestBody.date) : labels.noData}</small></article>
-        </div>
-        <div className="chart-grid">
-          <article className="analysis-card"><div className="card-heading"><div><span>{labels.height}</span><h3>{labels.trend}</h3></div></div><TrendChart points={bodyRecords.filter((x) => x.heightCm != null).map((x) => ({ date: x.date, value: x.heightCm! }))} unit=" cm" empty={labels.noData} /></article>
-          <article className="analysis-card"><div className="card-heading"><div><span>{labels.weight}</span><h3>{labels.trend}</h3></div></div><TrendChart points={bodyRecords.filter((x) => x.weightKg != null).map((x) => ({ date: x.date, value: x.weightKg! }))} unit=" kg" empty={labels.noData} /></article>
-        </div>
-      </section>
+        <section className="growth-grid">
+          <article className="growth-card"><span>키</span><strong>{latestBody?.heightCm != null ? `${latestBody.heightCm} cm` : "—"}</strong><small>{heightChange == null ? "이전 기록 없음" : `${heightChange >= 0 ? "▲" : "▼"} ${Math.abs(heightChange).toFixed(1)}%`}</small></article>
+          <article className="growth-card"><span>몸무게</span><strong>{latestBody?.weightKg != null ? `${latestBody.weightKg} kg` : "—"}</strong><small>{weightChange == null ? "이전 기록 없음" : `${weightChange >= 0 ? "▲" : "▼"} ${Math.abs(weightChange).toFixed(1)}%`}</small></article>
+          <article className="growth-card"><span>점프력</span><strong>{latestJump ? `${latestJump.currentJumpCm} cm` : "—"}</strong><small>{latestJump ? `전일 ${latestJump.previousJumpCm} cm` : "Camera AI 기록 없음"}</small></article>
+          <article className="growth-card"><span>속도</span><strong>—</strong><small>기록 없음</small></article>
+          <article className="growth-card"><span>근력</span><strong>—</strong><small>기록 없음</small></article>
+        </section>
 
-      <section className="growth-section">
-        <div className="section-title"><span>{labels.fitness}</span><h2>{labels.fitness}</h2></div>
-        <div className="fitness-grid">
-          <article className="fitness-card"><span>{labels.performance}</span><strong>{latestPerformance ? `${latestPerformance.score}/100` : "—"}</strong><small>{latestPerformance ? formatDate(latestPerformance.date) : labels.noData}</small></article>
-          <article className="fitness-card"><span>{labels.recovery}</span><strong>{latestRecovery ? `${latestRecovery.score}/100` : "—"}</strong><small>{latestRecovery ? formatDate(latestRecovery.date) : labels.noData}</small></article>
-          <article className="fitness-card"><span>{labels.fatigue}</span><strong>{latestFatigue ? `${latestFatigue.score}/100` : "—"}</strong><small>{latestFatigue ? formatDate(latestFatigue.date) : labels.noData}</small></article>
-          <article className="fitness-card"><span>{labels.jump}</span><strong>{latestJump ? `${latestJump.value.toFixed(1)} cm` : "—"}</strong><small>{latestJump ? `${formatDate(latestJump.date)} · ${labels.camera}` : labels.noData}</small></article>
-        </div>
-        <div className="chart-grid">
-          <article className="analysis-card"><div className="card-heading"><div><span>{labels.performance} · {labels.recovery} · {labels.fatigue}</span><h3>{labels.fitnessTrend}</h3></div></div><div className="score-list">
-            {[
-              [labels.performance, latestPerformance?.score],
-              [labels.recovery, latestRecovery?.score],
-              [labels.fatigue, latestFatigue?.score],
-            ].map(([label, value]) => <div className="score-row" key={String(label)}><span>{label}</span><div className="score-track"><i style={{ width: `${Number(value ?? 0)}%` }} /></div><strong>{value != null ? value : "—"}</strong></div>)}
-          </div></article>
-          <article className="analysis-card"><div className="card-heading"><div><span>{labels.jump}</span><h3>{labels.fitnessTrend}</h3></div></div><TrendChart points={jumpPoints} unit=" cm" empty={labels.noData} />{jumpChange !== null && <div className="change-note">{labels.change}: {jumpChange >= 0 ? "+" : ""}{jumpChange.toFixed(1)}%</div>}</article>
-        </div>
-        <div className="source-grid">
-          <div><strong>{labels.jump}</strong><span>{latestJump ? labels.camera : labels.unavailable}</span></div>
-          <div><strong>{isEn ? "Speed" : "속도"}</strong><span>{labels.unavailable} · {labels.gps}</span></div>
-          <div><strong>{labels.strength}</strong><span>{labels.unavailable}</span></div>
-        </div>
-      </section>
+        <section className="growth-panel">
+          <div className="growth-panel-head"><div><span className="growth-eyebrow">GROWTH TREND</span><h2>성장 기록</h2></div><span className="growth-muted">최근 8회</span></div>
+          {bodyRows.length ? (
+            <div className="growth-table-wrap">
+              <table className="growth-table">
+                <thead><tr><th>측정일</th><th>키</th><th>몸무게</th><th>BMI</th></tr></thead>
+                <tbody>{bodyRows.map((row) => <tr key={row.date}><td>{row.date}</td><td>{row.heightCm != null ? `${row.heightCm} cm` : "—"}</td><td>{row.weightKg != null ? `${row.weightKg} kg` : "—"}</td><td>{row.bmi != null ? row.bmi.toFixed(1) : "—"}</td></tr>)}</tbody>
+              </table>
+            </div>
+          ) : <div className="growth-empty">측정 기록이 없습니다.</div>}
+        </section>
 
-      <section className="growth-section">
-        <div className="section-title"><span>{labels.history}</span><h2>{labels.history}</h2></div>
-        <div className="history-table">
-          <div className="history-row history-head"><span>{labels.date}</span><span>{labels.height}</span><span>{labels.weight}</span><span>{labels.performance}</span><span>{labels.recovery}</span><span>{labels.fatigue}</span></div>
-          {bodyRecords.length || performanceRecords.length || recoveryRecords.length || fatigueRecords.length ? [...new Set([...bodyRecords.map(x => x.date), ...performanceRecords.map(x => x.date), ...recoveryRecords.map(x => x.date), ...fatigueRecords.map(x => x.date)])].sort((a,b)=>b.localeCompare(a)).slice(0,10).map(date => {
-            const body = bodyRecords.find(x => x.date === date);
-            const performance = performanceRecords.find(x => x.date === date);
-            const recovery = recoveryRecords.find(x => x.date === date);
-            const fatigue = fatigueRecords.find(x => x.date === date);
-            return <div className="history-row" key={date}><span>{formatDate(date)}</span><span>{body?.heightCm != null ? `${body.heightCm} cm` : "—"}</span><span>{body?.weightKg != null ? `${body.weightKg} kg` : "—"}</span><span>{performance?.score ?? "—"}</span><span>{recovery?.score ?? "—"}</span><span>{fatigue?.score ?? "—"}</span></div>;
-          }) : <div className="history-empty">{labels.noData}</div>}
-        </div>
+        <section className="growth-grid growth-grid-secondary">
+          <article className="growth-panel compact"><span className="growth-eyebrow">PERFORMANCE</span><h2>최근 퍼포먼스</h2><strong>{latestPerformance ? `${latestPerformance.score} / 100` : "—"}</strong><small>{latestPerformance?.date || "기록 없음"}</small></article>
+          <article className="growth-panel compact"><span className="growth-eyebrow">RECOVERY</span><h2>최근 회복</h2><strong>{latestRecovery ? `${latestRecovery.score} / 100` : "—"}</strong><small>{latestRecovery?.date || "기록 없음"}</small></article>
+          <article className="growth-panel compact"><span className="growth-eyebrow">FATIGUE</span><h2>최근 피로도</h2><strong>{latestFatigue ? `${latestFatigue.score} / 100` : "—"}</strong><small>{latestFatigue?.date || "기록 없음"}</small></article>
+        </section>
+
+        <p className="growth-footnote">속도와 근력은 현재 프로젝트에서 실제 측정 데이터가 확인될 때까지 임의의 값을 표시하지 않습니다.</p>
       </section>
     </main>
   );

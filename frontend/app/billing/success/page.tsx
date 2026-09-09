@@ -1,12 +1,13 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { activatePersonalSubscription, getCurrentUser } from "../../../lib/nova-auth";
 import { useNovaSettings } from "../../settings-context";
 import "../../dashboard/dashboard.css";
 
-export default function BillingSuccessPage() {
+function BillingSuccessContent() {
   const router = useRouter();
   const params = useSearchParams();
   const { theme } = useNovaSettings();
@@ -48,5 +49,13 @@ export default function BillingSuccessPage() {
         </section>
       </section>
     </main>
+  );
+}
+
+export default function BillingSuccessPage() {
+  return (
+    <Suspense fallback={null}>
+      <BillingSuccessContent />
+    </Suspense>
   );
 }

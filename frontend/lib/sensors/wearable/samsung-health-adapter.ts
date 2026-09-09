@@ -4,6 +4,7 @@ import type { NormalizedWearableData, WearableSensorAdapter } from "../types";
 export const samsungHealthAdapter: WearableSensorAdapter = {
   source: "samsung-health",
   normalize(_input: unknown): NormalizedWearableData {
+    void _input;
     throw new Error("Samsung Health adapter requires user authorization.");
   },
 };

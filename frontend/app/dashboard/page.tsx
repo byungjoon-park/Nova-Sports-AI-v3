@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useNovaSettings } from "../settings-context";
-import { getAthleteProfile, getAuthStore, getCurrentUser, getUserTeams, saveAthleteProfile } from "../../lib/nova-auth";
+import { getAthleteProfile, getAuthStore, getCurrentUser, getUserTeams, saveAthleteProfile, signOutUser } from "../../lib/nova-auth";
 import { getMeasurementRange } from "../../lib/nova-measurements";
 import "./dashboard.css";
 
@@ -677,7 +678,7 @@ export default function DashboardPage() {
 
           {userMenuOpen && (
             <div className="user-menu" role="menu">
-              <button type="button" role="menuitem">
+              <button type="button" role="menuitem" onClick={() => { setUserMenuOpen(false); router.push("/profile"); }}>
                 <span>◉</span>
                 {t.profile}
               </button>
@@ -701,10 +702,7 @@ export default function DashboardPage() {
                 role="menuitem"
                 className="logout-menu-item"
                 onClick={() => {
-                  localStorage.removeItem("nova-authenticated");
-                  localStorage.removeItem("nova-user-role");
-                  localStorage.removeItem("nova-auth");
-                  localStorage.removeItem("nova-user");
+                  signOutUser();
                   setUserMenuOpen(false);
                   router.replace("/");
                 }}

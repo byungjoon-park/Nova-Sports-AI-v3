@@ -4,6 +4,7 @@ import type { NormalizedWearableData, WearableSensorAdapter } from "../types";
 export const appleHealthAdapter: WearableSensorAdapter = {
   source: "apple-health",
   normalize(_input: unknown): NormalizedWearableData {
+    void _input;
     throw new Error("Apple Health adapter requires user authorization.");
   },
 };

@@ -19,3 +19,7 @@ html,body{margin:0}body{background:#f7f4ec}.medical-page[data-theme="dark"]{min-
 .nova-brand-button{appearance:none;border:0;padding:0;margin:0;background:transparent;text-align:left;cursor:pointer;color:inherit;font:inherit}
 .nova-brand-button:hover{opacity:.82}
 .sidebar-logo{cursor:pointer}
+
+
+/* NOVA V3 targeted rehab registration additions. */
+.rehab-record-panel{margin-bottom:18px}.rehab-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.rehab-form-grid label{display:grid;gap:5px;font-size:10px;color:var(--muted)}.rehab-form-grid input{height:38px;box-sizing:border-box;padding:0 10px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);color:inherit}.rehab-form-wide{grid-column:1/-1}.rehab-check{display:flex!important;align-items:center;gap:7px}.rehab-check input{width:auto;height:auto}.rehab-save-button{height:38px;border:0;border-radius:8px;cursor:pointer}@media(max-width:560px){.rehab-form-grid{grid-template-columns:1fr}.rehab-form-wide{grid-column:auto}}

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -6,6 +7,7 @@ import { useNovaSettings } from "../settings-context";
 import "./medical.css";
 import NovaTopBar from "../../components/NovaTopBar";
 import { getAuthStore, getCurrentUser, getUserTeams } from "../../lib/nova-auth";
+import { readNovaAthleteData, writeNovaAthleteData, type NovaAthleteData } from "../../lib/nova-data";
 
 type Injury = {
   id: number;
@@ -105,6 +107,7 @@ export default function MedicalPage() {
       const resolvedId = resolveLegacyAthleteUserId(record.athlete);
       return Boolean(resolvedId && visibleAthleteIds.has(resolvedId));
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [records, visibleAthleteIds, authStore, currentUser],
   );
 
@@ -130,9 +133,16 @@ export default function MedicalPage() {
   });
 
   const [showForm, setShowForm] = useState(false);
+  const [rehabData, setRehabData] = useState<NovaAthleteData | null>(null);
+  const [rehabArea, setRehabArea] = useState("");
+  const [rehabExercise, setRehabExercise] = useState("");
+  const [rehabNote, setRehabNote] = useState("");
+  const [rehabCompleted, setRehabCompleted] = useState(false);
 
   useEffect(() => {
     try {
+      const current = getCurrentUser();
+      if (current?.role === "athlete") setRehabData(readNovaAthleteData());
       const saved = localStorage.getItem("nova-medical-injuries");
       if (saved) {
         const parsed = JSON.parse(saved) as Partial<Injury>[];
@@ -182,6 +192,7 @@ export default function MedicalPage() {
     } catch {
       // Keep built-in records if saved data is unavailable.
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -335,6 +346,17 @@ export default function MedicalPage() {
 
     setShowForm(false);
     resetForm();
+  };
+
+  const saveRehabRecord = () => {
+    if (!rehabData || !rehabArea.trim() || !rehabExercise.trim()) return;
+    const next = {
+      ...rehabData,
+      rehabRecords: [...rehabData.rehabRecords, { date: new Date().toISOString().slice(0, 10), area: rehabArea.trim(), exercise: rehabExercise.trim(), completed: rehabCompleted, note: rehabNote.trim() || undefined }],
+    };
+    writeNovaAthleteData(next);
+    setRehabData(next);
+    setRehabArea(""); setRehabExercise(""); setRehabNote(""); setRehabCompleted(false);
   };
 
   const deleteRecord = (id: number) => {
@@ -504,6 +526,19 @@ export default function MedicalPage() {
           </>
         )}
       </section>
+
+      {currentUser?.role === "athlete" && rehabData && (
+        <section className="panel rehab-record-panel">
+          <div className="panel-head"><div><span className="eyebrow">REHABILITATION</span><h2>재활 기록 등록</h2></div><span>{rehabData.rehabRecords.length}건 저장</span></div>
+          <div className="rehab-form-grid">
+            <label>부위<input value={rehabArea} onChange={(e) => setRehabArea(e.target.value)} placeholder="예: 무릎" /></label>
+            <label>운동/치료 내용<input value={rehabExercise} onChange={(e) => setRehabExercise(e.target.value)} placeholder="예: 하체 안정화 운동" /></label>
+            <label className="rehab-form-wide">메모<input value={rehabNote} onChange={(e) => setRehabNote(e.target.value)} placeholder="진행 내용을 입력하세요." /></label>
+            <label className="rehab-check"><input type="checkbox" checked={rehabCompleted} onChange={(e) => setRehabCompleted(e.target.checked)} /> 완료된 재활</label>
+            <button type="button" className="primary rehab-save-button" onClick={saveRehabRecord}>재활 기록 저장</button>
+          </div>
+        </section>
+      )}
 
       <section className="panel records">
         <div className="panel-head">

@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useNovaSettings } from "../settings-context";
-import { getAthleteProfile, getAuthStore, getCurrentUser, saveAthleteProfile } from "../../lib/nova-auth";
-import { getMeasurementRange } from "../../lib/nova-measurements";
+import { useNovaSettings } from "../app/settings-context";
+import { getAthleteProfile, getAuthStore, getCurrentUser, getUserTeams, saveAthleteProfile, signOutUser } from "../lib/nova-auth";
+import { getMeasurementRange } from "../lib/nova-measurements";
 import "./dashboard.css";
 
 type Metric = {
@@ -368,6 +369,16 @@ export default function DashboardPage() {
   const [athleteProfile, setAthleteProfile] = useState({ height: "", weight: "", bodyFat: "", position: "", injuryHistory: "" });
   const [parentChildren, setParentChildren] = useState<Array<{ id: string; name: string; profile: ReturnType<typeof getAthleteProfile> }>>([]);
   const [profileSaved, setProfileSaved] = useState(false);
+  const [teamOverview, setTeamOverview] = useState<Array<{
+    id: string;
+    name: string;
+    sport: string;
+    athletes: number;
+    coaches: number;
+    pending: number;
+    profileComplete: number;
+    injuryRecorded: number;
+  }>>([]);
   const hideForSevenDays = () => setHideAnnouncement(true);
   useEffect(() => {
     if (activeRole !== "athlete" || !currentUser) return;
@@ -380,6 +391,38 @@ export default function DashboardPage() {
       position: profile.position ?? "",
       injuryHistory: profile.injuryHistory ?? "",
     });
+  }, [activeRole, currentUser]);
+
+  useEffect(() => {
+    if ((activeRole !== "director" && activeRole !== "coach") || !currentUser) {
+      setTeamOverview([]);
+      return;
+    }
+
+    const store = getAuthStore();
+    const teams = getUserTeams(currentUser.id);
+    const overview = teams.map((team) => {
+      const members = store.members.filter((member) => member.teamId === team.id);
+      const activeAthletes = members.filter((member) => member.role === "athlete" && member.status === "active");
+      const activeCoaches = members.filter((member) => member.role === "coach" && member.status === "active");
+      const pending = members.filter((member) => member.status === "pending").length;
+      const profiles = activeAthletes.map((member) => store.athleteProfiles.find((profile) => profile.userId === member.userId));
+      const profileComplete = profiles.filter((profile) => Boolean(profile?.height && profile?.weight && profile?.sport && profile?.position)).length;
+      const injuryRecorded = profiles.filter((profile) => Boolean(profile?.injuryHistory?.trim())).length;
+
+      return {
+        id: team.id,
+        name: team.name,
+        sport: team.sport || "미입력",
+        athletes: activeAthletes.length,
+        coaches: activeCoaches.length,
+        pending,
+        profileComplete,
+        injuryRecorded,
+      };
+    });
+
+    setTeamOverview(overview);
   }, [activeRole, currentUser]);
 
   useEffect(() => {
@@ -570,9 +613,6 @@ export default function DashboardPage() {
             <a className="nav-item" href="/analysis">
               <span>▥</span>{t.analysis}
             </a>
-            <button className="nav-item" type="button" onClick={() => router.push("/growth-analysis")}>
-              <span>◈</span>{t.growthAnalysis}
-            </button>
           </div>
 
           {roleView.showMedical && (
@@ -592,7 +632,7 @@ export default function DashboardPage() {
           {canSeeManagement && (
             <div className="nav-section">
               <span className="nav-label">{t.management}</span>
-              <button className="nav-item" type="button" onClick={() => router.push("/players")}>
+              <button className="nav-item" type="button" onClick={() => router.push("/coach-dashboard")}>
                 <span>♙</span>{t.coach}
               </button>
               <button className="nav-item" type="button" onClick={() => router.push("/team")}>
@@ -638,7 +678,7 @@ export default function DashboardPage() {
 
           {userMenuOpen && (
             <div className="user-menu" role="menu">
-              <button type="button" role="menuitem">
+              <button type="button" role="menuitem" onClick={() => { setUserMenuOpen(false); router.push("/profile"); }}>
                 <span>◉</span>
                 {t.profile}
               </button>
@@ -662,10 +702,7 @@ export default function DashboardPage() {
                 role="menuitem"
                 className="logout-menu-item"
                 onClick={() => {
-                  localStorage.removeItem("nova-authenticated");
-                  localStorage.removeItem("nova-user-role");
-                  localStorage.removeItem("nova-auth");
-                  localStorage.removeItem("nova-user");
+                  signOutUser();
                   setUserMenuOpen(false);
                   router.replace("/");
                 }}
@@ -745,6 +782,53 @@ export default function DashboardPage() {
             </article>
           ))}
         </section>
+
+        {(activeRole === "director" || activeRole === "coach") && (
+          <section className="dashboard-card team-overview-card">
+            <div className="card-header">
+              <div>
+                <span className="card-eyebrow">{activeRole === "director" ? "TEAM MANAGEMENT" : "ASSIGNED TEAM"}</span>
+                <h2>{activeRole === "director" ? "팀 전체 현황" : "담당 팀 현황"}</h2>
+              </div>
+              <button type="button" onClick={() => router.push("/team")}>팀 관리 →</button>
+            </div>
+
+            {teamOverview.length === 0 ? (
+              <div className="team-overview-empty">
+                <strong>{activeRole === "director" ? "관리 중인 팀이 없습니다." : "담당 팀이 없습니다."}</strong>
+                <p>팀에 가입되거나 활성화된 선수 데이터가 연결되면 팀 현황이 표시됩니다.</p>
+              </div>
+            ) : (
+              <>
+                <div className="team-summary-grid">
+                  <div><span>관리 팀</span><strong>{teamOverview.length}</strong></div>
+                  <div><span>전체 선수</span><strong>{teamOverview.reduce((sum, team) => sum + team.athletes, 0)}</strong></div>
+                  <div><span>코치</span><strong>{teamOverview.reduce((sum, team) => sum + team.coaches, 0)}</strong></div>
+                  <div><span>승인 대기</span><strong>{teamOverview.reduce((sum, team) => sum + team.pending, 0)}</strong></div>
+                </div>
+
+                <div className="team-overview-table-wrap">
+                  <table className="team-overview-table">
+                    <thead>
+                      <tr><th>팀</th><th>종목</th><th>선수</th><th>프로필 입력</th><th>부상 이력</th></tr>
+                    </thead>
+                    <tbody>
+                      {teamOverview.map((team) => (
+                        <tr key={team.id}>
+                          <td><strong>{team.name}</strong></td>
+                          <td>{team.sport}</td>
+                          <td>{team.athletes}명</td>
+                          <td>{team.profileComplete}/{team.athletes}</td>
+                          <td>{team.injuryRecorded}/{team.athletes}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </section>
+        )}
 
         {activeRole === "athlete" && (
           <section className="dashboard-card athlete-input-card">

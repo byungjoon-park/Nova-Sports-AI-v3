@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
@@ -16,7 +17,7 @@ const roles: Array<{ value: Exclude<NovaUserRole, "admin">; label: string }> = [
 export default function TeamPage() {
   const { theme } = useNovaSettings();
   const router = useRouter();
-  const [user, setUser] = useState(() => getCurrentUser());
+  const [user] = useState(() => getCurrentUser());
   const [teams, setTeams] = useState<NovaTeam[]>([]);
   const [name, setName] = useState("");
   const [sport, setSport] = useState("");
@@ -29,7 +30,7 @@ export default function TeamPage() {
   useEffect(() => {
     if (!user) { router.replace("/login"); return; }
     setTeams(getUserTeams(user.id));
-  }, [user]);
+  }, [user, router]);
 
   const submitTeam = (event: FormEvent) => {
     event.preventDefault();

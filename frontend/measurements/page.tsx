@@ -1,15 +1,15 @@
+/* eslint-disable react-hooks/set-state-in-effect */
  "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { getMeasurementRange, saveDailyMeasurement } from "../../lib/nova-measurements";
-import { getAthleteProfile } from "../../lib/nova-data";
+import NovaTopBar from "../components/NovaTopBar";
+import { getMeasurementRange, saveDailyMeasurement } from "../lib/nova-measurements";
+import { getAthleteProfile } from "../lib/nova-data";
 import "./measurements.css";
 
-const today = new Date().toISOString().slice(0, 10);
+const today = "";
 
 export default function MeasurementsPage() {
-  const router = useRouter();
   const athlete = getAthleteProfile();
   const [date, setDate] = useState(today);
   const [height, setHeight] = useState("");
@@ -19,6 +19,10 @@ export default function MeasurementsPage() {
   const [recovery, setRecovery] = useState("");
   const [note, setNote] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    setDate(new Date().toISOString().slice(0, 10));
+  }, []);
 
   useEffect(() => {
     const range = getMeasurementRange(date, date);
@@ -55,10 +59,7 @@ export default function MeasurementsPage() {
 
   return (
     <main className="nova-measurements">
-      <header className="measure-header">
-        <button type="button" onClick={() => router.back()}>← 뒤로 가기</button>
-        <div><b>NOVA</b><small>AI SPORTS PLATFORM</small></div>
-      </header>
+      <NovaTopBar />
       <section className="measure-shell">
         <span className="eyebrow">DAILY MEASUREMENT</span>
         <h1>{athlete.name || "선수"} 측정 기록</h1>

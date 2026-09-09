@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useNovaAthlete } from "../../lib/use-nova-athlete";
+import NovaTopBar from "../components/NovaTopBar";
+import { useNovaAthlete } from "../lib/use-nova-athlete";
 import "./player-profile.css";
 
 export default function PlayerProfilePage() {
@@ -38,13 +39,7 @@ export default function PlayerProfilePage() {
 
   return (
     <main className="nova-profile-page">
-      <header className="nova-profile-header">
-        <button type="button" onClick={() => router.back()}>← 뒤로 가기</button>
-        <div>
-          <span>NOVA</span>
-          <small>AI SPORTS PLATFORM</small>
-        </div>
-      </header>
+      <NovaTopBar />
 
       <section className="nova-profile-shell">
         <div className="nova-profile-heading">

@@ -1035,3 +1035,9 @@ html[data-nova-theme="dark"] .nova-settings-footer { border-color:#243247; }
   .nova-choice-grid.three, .nova-choice-grid.two { grid-template-columns:1fr; }
   .nova-settings-modal { padding:20px; }
 }
+
+.nova-role-summary { display:flex; flex-direction:column; gap:5px; min-height:56px; justify-content:center; padding:11px 12px; border:1px solid #ddd9cf; border-radius:10px; background:#faf8f2; }
+.nova-role-summary strong { font-size:14px; }
+.nova-role-summary small { color:#64748b; font-size:10px; line-height:1.45; }
+html[data-nova-theme="dark"] .nova-role-summary { border-color:#243247; background:#111a28; }
+html[data-nova-theme="dark"] .nova-role-summary small { color:#94a3b8; }

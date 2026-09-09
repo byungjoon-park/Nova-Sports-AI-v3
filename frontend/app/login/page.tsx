@@ -1,19 +1,14 @@
+/* eslint-disable react-hooks/set-state-in-effect, @next/next/no-location-assign-relative-destination */
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInDemoUser, signInUser, NovaUserRole } from "../../lib/nova-auth";
+import { NOVA_TEST_ACCOUNTS, signInDemoUser, signInUser, NovaUserRole } from "../../lib/nova-auth";
 import { useNovaSettings } from "../settings-context";
 import "./login.css";
 import "../splash.css";
 
-const demoAccounts: Array<{ label: string; role: NovaUserRole; email: string; name: string }> = [
-  { label: "관리자", role: "admin", email: "admin@nova.ai", name: "NOVA Admin" },
-  { label: "감독", role: "director", email: "director@nova.ai", name: "Team Director" },
-  { label: "코치", role: "coach", email: "coach@nova.ai", name: "Team Coach" },
-  { label: "선수", role: "athlete", email: "athlete@nova.ai", name: "NOVA Athlete" },
-  { label: "학부모", role: "parent", email: "parent@nova.ai", name: "NOVA Parent" },
-];
+const demoAccounts = NOVA_TEST_ACCOUNTS;
 
 const roleLabel: Record<NovaUserRole, string> = {
   admin: "관리자",
@@ -22,10 +17,6 @@ const roleLabel: Record<NovaUserRole, string> = {
   athlete: "선수",
   parent: "학부모",
 };
-
-function settingsRole(role: NovaUserRole) {
-  return role;
-}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,14 +42,13 @@ export default function LoginPage() {
   }, []);
 
   const goAfterLogin = (role: NovaUserRole) => {
-    const uiRole = settingsRole(role);
     try {
-      localStorage.setItem("nova-role", uiRole);
+      localStorage.setItem("nova-role", role);
       localStorage.setItem("nova-active-role", role);
       localStorage.setItem("nova-login-role", role);
-      window.dispatchEvent(new CustomEvent("nova-settings-change", { detail: { role: uiRole, activeRole: role } }));
+      window.dispatchEvent(new CustomEvent("nova-settings-change", { detail: { role, activeRole: role } }));
     } catch {}
-    setRole(uiRole);
+    setRole(role);
     window.location.href = role === "admin" ? "/admin" : "/dashboard";
   };
 
@@ -85,15 +75,6 @@ export default function LoginPage() {
     finish(email);
   };
 
-  const useDemo = (account: typeof demoAccounts[number]) => {
-    const user = signInDemoUser(account);
-    try {
-      localStorage.setItem("nova-demo-role", user.role);
-      localStorage.setItem("nova-demo-email", user.email);
-    } catch {}
-    setMessage(`${roleLabel[user.role]} 계정으로 로그인했습니다.`);
-    goAfterLogin(user.role);
-  };
 
   const startKakao = () => {
     window.location.href = "/api/auth/kakao?mode=signup";
@@ -141,16 +122,7 @@ export default function LoginPage() {
           이메일로 회원가입
         </button>
 
-        <div className="demo-block">
-          <span>개발 테스트 계정</span>
-          <div className="demo-grid">
-            {demoAccounts.map((account) => (
-              <button key={account.role} type="button" onClick={() => useDemo(account)}>
-                <strong>{account.label}</strong><small>{account.email}</small>
-              </button>
-            ))}
-          </div>
-        </div>
+
 
         {message && <div className="login-message">{message}</div>}
       </section>

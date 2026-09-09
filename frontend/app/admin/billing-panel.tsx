@@ -48,6 +48,7 @@ export default function BillingPanel() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadSummary();
 
     const loadPrices = async () => {
@@ -65,10 +66,16 @@ export default function BillingPanel() {
     };
 
     void loadPrices();
+    // loadSummary is intentionally invoked for initial billing data.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
+    // Intentional API-backed refresh when the selected year changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (selectedYear !== new Date().getFullYear()) void loadSummary(selectedYear);
+    // loadSummary is intentionally triggered only by selectedYear.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear]);
 
   const money = useMemo(() => new Intl.NumberFormat("ko-KR", { style: "currency", currency: summary?.currency || "KRW", maximumFractionDigits: 0 }), [summary?.currency]);
@@ -92,7 +99,7 @@ export default function BillingPanel() {
       const response = await fetch("/api/billing/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan, amount: prices[plan] }) });
       const data = await response.json();
       if (!response.ok || !data.url) throw new Error(data.error || "결제 페이지를 열 수 없습니다.");
-      window.location.href = data.url;
+      window.location.assign(data.url);
     } catch (err) {
       setError(err instanceof Error ? err.message : "결제 연결에 실패했습니다."); setLoading("");
     }

@@ -18,3 +18,9 @@
 .nova-account-danger strong{font-size:13px}.nova-account-danger p{margin:5px 0 0;font-size:11px;line-height:1.5;opacity:.7}
 .nova-account-danger button{flex:none;border:1px solid #dc2626;border-radius:7px;background:transparent;color:#dc2626;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer}
 .nova-settings-modal .nova-account-danger{margin-bottom:4px}
+
+.nova-settings-current-role{display:flex;flex-direction:column;gap:4px;padding:11px 12px;border:1px solid #d8d1c4;border-radius:8px;background:#fffdf8}
+.nova-settings-current-role strong{font-size:13px}
+.nova-settings-current-role small{font-size:10px;line-height:1.45;color:#64748b}
+.nova-settings-panel[data-theme="dark"] .nova-settings-current-role{background:#111a28;border-color:#334155}
+.nova-settings-panel[data-theme="dark"] .nova-settings-current-role small{color:#94a3b8}

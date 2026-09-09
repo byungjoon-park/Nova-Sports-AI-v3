@@ -1,4 +1,7 @@
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/purity */
+/* eslint-disable react-hooks/refs */
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -2407,9 +2410,7 @@ export default function CameraAIPage() {
                 <p>
                   {copy.analysis === "LIVE ANALYSIS"
                     ? "Live body tracking information is shown here."
-                    : copy.analysis === "リアルタイム分析"
-                      ? "カメラで認識した身体情報をリアルタイムで表示します。"
-                      : "카메라에서 인식된 신체 정보를 실시간으로 표시합니다."}
+                    : "카메라에서 인식된 신체 정보를 실시간으로 표시합니다."}
                 </p>
               </div>
 

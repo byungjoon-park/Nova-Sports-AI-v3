@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { betaConfig } from "../../lib/beta-config";
 
 export default function BetaStatusPage() {
@@ -8,7 +9,7 @@ export default function BetaStatusPage() {
         <h1 style={{ margin: "10px 0" }}>베타 서비스 상태</h1>
         <p>버전: {betaConfig.version}</p>
         <p>상태: {betaConfig.enabled ? "베타 운영 중" : "베타 비활성"}</p>
-        {betaConfig.enabled && <a href="/mobile">모바일 베타 입장</a>}
+        {betaConfig.enabled && <Link href="/mobile">모바일 베타 입장</Link>}
       </section>
     </main>
   );

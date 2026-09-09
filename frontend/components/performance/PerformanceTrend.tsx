@@ -17,7 +17,6 @@ export default function PerformanceTrend({ points }: Props) {
 
   const ordered = [...points].sort((a, b) => a.date.localeCompare(b.date));
   const max = Math.max(...ordered.map((p) => p.score), 100);
-  const min = Math.min(...ordered.map((p) => p.score), 0);
 
   return (
     <section className="performance-trend" aria-labelledby="performance-trend-title">

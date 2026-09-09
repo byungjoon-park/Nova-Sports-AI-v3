@@ -1,8 +1,8 @@
  "use client";
 
 import { useMemo, useState } from "react";
-import { getHistorySummary } from "../../../lib/nova-history";
-import { getAthleteProfile } from "../../../lib/nova-data";
+import { getHistorySummary } from "../../lib/nova-history";
+import { getAthleteProfile } from "../../lib/nova-data";
 import "../measurements.css";
 import "./history.css";
 
