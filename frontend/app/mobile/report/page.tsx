@@ -1,1 +1,13 @@
-export { default } from "../../report/page";
+"use client";
+
+import DesktopPage from "../../report/page";
+import MobileGlobalNavigation from "../../../components/MobileGlobalNavigation";
+
+export default function MobileReportPage() {
+  return (
+    <>
+      <DesktopPage />
+      <MobileGlobalNavigation />
+    </>
+  );
+}
