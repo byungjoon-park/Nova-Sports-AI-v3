@@ -1,3 +1,5 @@
+"use client";
+
 import "./mobile.css";
 import "./mobile-navigation-brand-fix.css";
 import MobileGlobalNavigation from "./MobileGlobalNavigation";
