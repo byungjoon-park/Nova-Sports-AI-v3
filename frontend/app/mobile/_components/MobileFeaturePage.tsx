@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect, react-hooks/purity, react-hooks/immutability */
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -48,16 +47,6 @@ const MOBILE_SPEED_AGILITY_TESTS = {
   ],
 } as const;
 
-const DEFAULT_JOINTS: Record<string, string[]> = {
-    sprint: ["shoulders","hips","knees","ankles","feet"],
-    running: ["head","shoulders","hips","knees","ankles","feet"],
-    jump: ["head","shoulders","hips","knees","ankles","feet"],
-    shooting: ["head","shoulders","elbows","wrists","hips","knees","ankles"],
-    "change-direction": ["head","shoulders","hips","knees","ankles","feet"],
-    athletics: ["head","shoulders","hips","knees","ankles","feet"],
-    squat: ["head","shoulders","hips","knees","ankles","feet"],
-  };
-
 function last<T>(items: T[]) { return items.length ? items[items.length - 1] : null; }
 
 export default function MobileFeaturePage({ section }: { section: MobileSection }) {
@@ -65,6 +54,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
   const { theme } = useNovaSettings();
   const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null);
   const [data, setData] = useState<NovaAthleteData | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [gpsConnected, setGpsConnected] = useState(false);
   const [gpsMetrics, setGpsMetrics] = useState({ distance: "-- km", highSpeed: "-- km", maxSpeed: "-- km/h", sprints: "--" });
 
@@ -84,6 +74,26 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
     return () => window.removeEventListener("nova:gps-connect", connect);
   }, []);
 
+  const role = user?.role;
+  const novaSidebarItems = [
+    { label: "대시보드", description: "퍼포먼스·회복·훈련 현황", href: "/mobile/dashboard" },
+    { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai" },
+    ...(role === "admin" || role === "director" || role === "coach"
+      ? [{ label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players" }]
+      : []),
+    { label: "AI 분석", description: "퍼포먼스·회복·피로도 분석", href: "/mobile/analysis" },
+    { label: "재활관리", description: "부상·진료·재활 기록", href: "/mobile/medical" },
+    { label: "리포트", description: "선수 데이터 요약과 보고서", href: "/mobile/report" },
+    ...(role === "admin" || role === "director" || role === "coach"
+      ? [
+          { label: "감독 / 코치", description: "선수와 훈련 관리", href: "/mobile/team" },
+          { label: "팀", description: "팀·선수 구성과 운영", href: "/mobile/team" },
+        ]
+      : []),
+    ...(role === "admin"
+      ? [{ label: "연구·매출 통계", description: "연구·플랫폼·매출 현황", href: "/admin" }]
+      : []),
+  ];
 
   const activeTheme = theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
   const config = CONFIG[section];
@@ -100,7 +110,57 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
   if (forbidden) return <MobileShell title="접근 제한" subtitle="현재 계정에서 사용할 수 없는 기능입니다." active="dashboard"><div className="mobile-empty-card">{roleLabel(user.role)} 계정에는 이 메뉴의 권한이 없습니다.</div></MobileShell>;
 
   return (
-    <MobileShell title={config.title} subtitle={config.subtitle} active={section === "dashboard" ? "dashboard" : section}>
+    <>
+      <button
+        type="button"
+        className="mobile-nova-sidebar-button"
+        aria-label="NOVA 사이드바 열기"
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        ☰
+      </button>
+
+      {menuOpen && (
+        <button
+          type="button"
+          className="mobile-nova-sidebar-backdrop"
+          aria-label="메뉴 닫기"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
+      <aside className={`mobile-nova-sidebar-panel ${menuOpen ? "is-open" : ""}`} aria-label={`${roleLabel(user.role)} NOVA 메뉴`}>
+        <div className="mobile-nova-sidebar-header">
+          <div>
+            <span>NOVA SPORTS AI</span>
+            <strong>{roleLabel(user.role)} 메뉴</strong>
+          </div>
+          <button type="button" onClick={() => setMenuOpen(false)} aria-label="메뉴 닫기">×</button>
+        </div>
+
+        <nav className="mobile-nova-sidebar-nav">
+          {novaSidebarItems.map((item) => (
+            <button
+              key={`${item.href}-${item.label}`}
+              type="button"
+              className="mobile-nova-sidebar-item"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push(item.href);
+              }}
+            >
+              <span>
+                <strong>{item.label}</strong>
+                <small>{item.description}</small>
+              </span>
+              <b aria-hidden="true">›</b>
+            </button>
+          ))}
+        </nav>
+      </aside>
+
+      <MobileShell title={config.title} subtitle={config.subtitle} active={section === "dashboard" ? "dashboard" : section}>
       {section === "dashboard" && (
         <>
           <StatusCard user={user} />
@@ -216,7 +276,8 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
           <SectionCard eyebrow="FATIGUE" title="피로 분석"><p>{latest.fatigue ? `최근 피로도 ${latest.fatigue.score}/100` : "피로도 측정 기록 없음"}</p><Link href="/mobile/analysis">분석 보기 ›</Link></SectionCard>
         </TwoColumnCards>
       )}
-    </MobileShell>
+      </MobileShell>
+    </>
   );
 }
 
@@ -230,7 +291,15 @@ function MobileCameraPanel() {
     head: "머리", shoulders: "어깨", elbows: "팔꿈치", wrists: "손목",
     hips: "골반", knees: "무릎", ankles: "발목", feet: "발",
   };
-
+  const DEFAULT_JOINTS: Record<string, string[]> = {
+    sprint: ["shoulders","hips","knees","ankles","feet"],
+    running: ["head","shoulders","hips","knees","ankles","feet"],
+    jump: ["head","shoulders","hips","knees","ankles","feet"],
+    shooting: ["head","shoulders","elbows","wrists","hips","knees","ankles"],
+    "change-direction": ["head","shoulders","hips","knees","ankles","feet"],
+    athletics: ["head","shoulders","hips","knees","ankles","feet"],
+    squat: ["head","shoulders","hips","knees","ankles","feet"],
+  };
   const CAPTURE_GUIDES: Record<string, { view:string; distance:string; action:string; tips:string[] }> = {
     sprint:{view:"측면 촬영",distance:"8~12m",action:"최대 가속으로 10~20m 질주",tips:["카메라를 허리 높이에 고정","머리부터 발끝까지 프레임에 유지","출발 전 2초 정지 후 질주"]},
     running:{view:"측면 또는 후면",distance:"6~10m",action:"자연스러운 속도로 10초 이상 달리기",tips:["전신이 프레임 중앙에 오도록 배치","발 착지가 가리지 않게 촬영","가능하면 3회 이상 반복"]},
@@ -261,6 +330,9 @@ function MobileCameraPanel() {
   const startedAtRef = useRef<number | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedJoints, setSelectedJoints] = useState<string[]>([]);
+  const [gpsConnected, setGpsConnected] = useState(false);
+  const [gpsMetrics, setGpsMetrics] = useState({ distance: "-- km", highSpeed: "-- km", maxSpeed: "-- km/h", sprints: "--" });
+  const [menuOpen, setMenuOpen] = useState(false);
 
 
   const [cameraOn, setCameraOn] = useState(false);
@@ -283,6 +355,7 @@ function MobileCameraPanel() {
     posture: "측정 대기",
   });
   const [aiLoading, setAiLoading] = useState(false);
+  const savedCameraResultRef = useRef<string | null>(null);
   const speedTestStartRef = useRef<number | null>(null);
   const [selectedSpeedTestId, setSelectedSpeedTestId] = useState<string>(MOBILE_SPEED_AGILITY_TESTS.sprint[0].id);
   const [speedTestRunning, setSpeedTestRunning] = useState(false);
@@ -311,8 +384,6 @@ function MobileCameraPanel() {
 
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  // stopCamera is captured intentionally by this mount-only browser subscription.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const selectCameraChapter = (id: string) => {
@@ -320,7 +391,7 @@ function MobileCameraPanel() {
     setSelectedId(id);
   };
   useEffect(() => {
-    if (selectedId) setSelectedJoints(DEFAULT_JOINTS[selectedId] ?? []);
+    if (selected) setSelectedJoints(DEFAULT_JOINTS[selected.id] ?? []);
   }, [selectedId]);
   useEffect(() => {
     if (!speedTestRunning) return;
@@ -331,7 +402,7 @@ function MobileCameraPanel() {
   }, [speedTestRunning]);
 
   useEffect(() => {
-    const group = selectedId === "change-direction" ? "agility" : "sprint";
+    const group = selected?.id === "change-direction" ? "agility" : "sprint";
     setSelectedSpeedTestId(MOBILE_SPEED_AGILITY_TESTS[group][0].id);
     setSpeedTestRunning(false); setSpeedTestElapsed(0); setSpeedTestSplits([]);
   }, [selectedId]);
