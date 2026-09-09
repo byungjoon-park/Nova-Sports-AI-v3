@@ -1,0 +1,41 @@
+.mobile-dashboard{min-height:100dvh;width:100%;overflow-x:hidden;background:#070a10;color:#f5f7fb}
+.mobile-dashboard-shell{width:min(100%,680px);margin:0 auto;padding:18px 14px 88px;box-sizing:border-box}
+.mobile-dashboard-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.mobile-dashboard-eyebrow,.mobile-card-heading>div>span{display:block;font-size:9px;letter-spacing:.16em;color:#6680ae}
+.mobile-dashboard-header h1{margin:4px 0 3px;font-size:26px;line-height:1.1}
+.mobile-dashboard-header p{margin:0;font-size:12px;color:#8995a8;line-height:1.5}
+.mobile-dashboard-header-actions{display:flex;gap:7px}
+.mobile-dashboard-header-actions button{position:relative;width:38px;height:38px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:#0d1420;color:#b9c4d5;font-size:18px}
+.mobile-dashboard-header-actions .has-badge span{position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;display:grid;place-items:center;background:#2873f8;color:white;font-size:9px}
+.mobile-dashboard-notice,.mobile-dashboard-card,.mobile-metric-card{border:1px solid rgba(255,255,255,.07);border-radius:14px;background:#0d1420;box-sizing:border-box}
+.mobile-dashboard-notice{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px;margin-bottom:12px}
+.notice-copy{display:flex;align-items:flex-start;gap:10px;min-width:0}
+.notice-icon,.insight-badge{flex:0 0 auto;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#102a5a;color:#5790ff;font-weight:700}
+.notice-copy>div{min-width:0}.notice-copy span:not(.notice-icon){display:block;font-size:9px;color:#6680ae;margin-bottom:3px}
+.notice-copy strong{display:block;font-size:11px;line-height:1.4}.notice-copy p{margin:6px 0 0;color:#8995a8;font-size:10px;line-height:1.5}
+.mobile-dashboard-notice>button,.mobile-card-heading button,.mobile-card-heading select{flex:0 0 auto;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:#111b2b;color:#9eb0cc;padding:7px 9px;font-size:10px}
+.mobile-metrics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.mobile-metric-card{position:relative;min-height:142px;padding:13px;overflow:hidden}
+.metric-card-top{display:flex;align-items:center;gap:7px;color:#8794a8;font-size:10px}.metric-icon{width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:#102a5a;color:#5790ff;font-size:14px}
+.metric-number{margin-top:13px;font-size:25px;font-weight:650}.metric-number small{margin-left:3px;color:#6d7a8e;font-size:9px;font-weight:400}
+.metric-change{position:absolute;right:13px;top:57px;color:#42d48a;font-size:10px}
+.metric-bars{position:absolute;left:13px;right:13px;bottom:13px;height:20px;display:flex;align-items:flex-end;gap:3px}.metric-bars i{flex:1;min-width:0;border-radius:2px;background:#1b63dd}
+.metric-bars i:nth-child(1){height:25%}.metric-bars i:nth-child(2){height:42%}.metric-bars i:nth-child(3){height:35%}.metric-bars i:nth-child(4){height:60%}.metric-bars i:nth-child(5){height:48%}.metric-bars i:nth-child(6){height:78%}.metric-bars i:nth-child(7){height:65%}
+.mobile-dashboard-card{padding:15px;margin-bottom:12px}.mobile-card-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.mobile-card-heading h2{margin:4px 0 0;font-size:15px}
+.insight-body{display:flex;gap:10px;margin-top:16px}.insight-body p{margin:0;color:#aab5c5;font-size:11px;line-height:1.7}.insight-body strong{display:block;margin-top:8px;color:#d7deea;font-size:10px;line-height:1.5}
+.mobile-chart{display:flex;height:155px;margin-top:15px}.chart-y{width:24px;display:flex;flex-direction:column;justify-content:space-between;padding-bottom:2px;color:#657186;font-size:8px}.chart-area{position:relative;flex:1;overflow:hidden}
+.grid-line{position:absolute;left:0;right:0;border-top:1px solid rgba(255,255,255,.055)}.g100{top:0}.g75{top:25%}.g50{top:50%}.g25{top:75%}
+.chart-area svg{position:absolute;inset:0;width:100%;height:100%;color:#2873f8}.chart-area b{position:absolute;top:13%;right:2%;padding:4px 6px;border-radius:5px;background:#2873f8;color:white;font-size:9px}
+.chart-labels{display:flex;justify-content:space-between;margin-left:24px;margin-top:5px;color:#657186;font-size:8px}
+.schedule-list,.activity-list{margin-top:10px}.schedule-row{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.055)}.schedule-row:last-child{border-bottom:0}
+.schedule-row time{color:#697589;font-size:9px}.schedule-row strong{min-width:0;font-size:10px;font-weight:500}.schedule-status{padding:5px 7px;border-radius:6px;font-size:8px}.schedule-status.done{background:rgba(42,202,119,.13);color:#3fd488}.schedule-status.progress{background:rgba(45,113,255,.14);color:#6198ff}.schedule-status.upcoming{background:rgba(255,255,255,.06);color:#7c879a}
+.activity-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.055)}.activity-row:last-child{border-bottom:0}.activity-icon{width:32px;height:32px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;background:#101c31;color:#5d8fff;font-size:13px}.activity-row div{min-width:0}.activity-row strong,.activity-row div>span{display:block}.activity-row strong{font-size:10px;line-height:1.35}.activity-row div>span{margin-top:3px;color:#697589;font-size:8px}
+.mobile-dashboard[data-theme="ivory"]{background:#f7f4ec;color:#101827}.mobile-dashboard[data-theme="ivory"] .mobile-dashboard-notice,.mobile-dashboard[data-theme="ivory"] .mobile-dashboard-card,.mobile-dashboard[data-theme="ivory"] .mobile-metric-card,.mobile-dashboard[data-theme="ivory"] .mobile-dashboard-header-actions button{background:#fffdf8;border-color:#dedbd2}
+.mobile-dashboard[data-theme="ivory"] .mobile-dashboard-header p,.mobile-dashboard[data-theme="ivory"] .metric-card-top,.mobile-dashboard[data-theme="ivory"] .insight-body p,.mobile-dashboard[data-theme="ivory"] .activity-row div>span,.mobile-dashboard[data-theme="ivory"] .schedule-row time{color:#64748b}
+.mobile-dashboard[data-theme="ivory"] .mobile-dashboard-header h1,.mobile-dashboard[data-theme="ivory"] .mobile-card-heading h2,.mobile-dashboard[data-theme="ivory"] .metric-number,.mobile-dashboard[data-theme="ivory"] .notice-copy strong,.mobile-dashboard[data-theme="ivory"] .schedule-row strong,.mobile-dashboard[data-theme="ivory"] .activity-row strong{color:#101827}
+.mobile-dashboard[data-theme="ivory"] .mobile-dashboard-notice>button,.mobile-dashboard[data-theme="ivory"] .mobile-card-heading button,.mobile-dashboard[data-theme="ivory"] .mobile-card-heading select{background:#faf8f2;border-color:#dedbd2;color:#475569}
+.mobile-dashboard[data-theme="white"]{background:#f6f7f9;color:#111827}.mobile-dashboard[data-theme="white"] .mobile-dashboard-notice,.mobile-dashboard[data-theme="white"] .mobile-dashboard-card,.mobile-dashboard[data-theme="white"] .mobile-metric-card,.mobile-dashboard[data-theme="white"] .mobile-dashboard-header-actions button{background:#fff;border-color:#dbe1e8}
+.mobile-dashboard[data-theme="white"] .mobile-dashboard-header p,.mobile-dashboard[data-theme="white"] .metric-card-top,.mobile-dashboard[data-theme="white"] .insight-body p,.mobile-dashboard[data-theme="white"] .activity-row div>span,.mobile-dashboard[data-theme="white"] .schedule-row time{color:#64748b}
+.mobile-dashboard[data-theme="white"] .mobile-dashboard-header h1,.mobile-dashboard[data-theme="white"] .mobile-card-heading h2,.mobile-dashboard[data-theme="white"] .metric-number,.mobile-dashboard[data-theme="white"] .notice-copy strong,.mobile-dashboard[data-theme="white"] .schedule-row strong,.mobile-dashboard[data-theme="white"] .activity-row strong{color:#111827}
+.mobile-dashboard[data-theme="white"] .mobile-dashboard-notice>button,.mobile-dashboard[data-theme="white"] .mobile-card-heading button,.mobile-dashboard[data-theme="white"] .mobile-card-heading select{background:#f8fafc;border-color:#dbe1e8;color:#475569}
+@media (max-width:380px){.mobile-dashboard-shell{padding-left:11px;padding-right:11px}.mobile-dashboard-header h1{font-size:23px}.metric-number{font-size:22px}.mobile-card-heading h2{font-size:14px}}
