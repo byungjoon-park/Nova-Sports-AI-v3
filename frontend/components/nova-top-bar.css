@@ -14,7 +14,7 @@
 }
 .nova-top-back{box-sizing:border-box;width:42px;height:42px;min-width:42px;flex:0 0 42px;border:1px solid #ddd6ca;border-radius:10px;background:#fffdf9;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;cursor:pointer;color:#111827;padding:0}
 .nova-top-back:hover{background:#f5f1e9}
-.nova-top-brand{margin-left:12px;display:flex;flex-direction:column;align-items:flex-start;border:0;background:transparent;cursor:pointer;padding:0;color:inherit;min-width:0}
+.nova-top-brand{margin-left:12px;display:flex;flex-direction:column;align-items:flex-start;border:0;background:transparent;cursor:pointer;padding:0;color:inherit}
 .nova-top-brand strong{font-size:18px;font-weight:500;letter-spacing:.28em;line-height:1}
 .nova-top-brand span{margin-top:8px;font-size:9px;letter-spacing:.12em;color:#50627d}
 .nova-top-status{margin-left:auto;display:flex;align-items:center;gap:8px;color:#34c878;font-size:12px;white-space:nowrap}
@@ -25,11 +25,5 @@ html[data-nova-theme="dark"] .nova-top-back:hover{background:#132033}
 html[data-nova-theme="dark"] .nova-top-brand span{color:#9db0c9}
 html[data-nova-theme="white"] .nova-top-bar{background:#fff;border-color:#dbe1e8}
 html[data-nova-theme="white"] .nova-top-back{background:#fff;border-color:#dbe1e8}
-@media(max-width:600px){
-  .nova-top-bar{width:100%;margin-left:0;height:64px;min-height:64px;padding:0 12px;max-width:100%;overflow:visible}
-  .nova-top-back{width:40px;height:40px;min-width:40px;flex-basis:40px}
-  .nova-top-brand{margin-left:9px;max-width:calc(100% - 104px);padding-right:4px}
-  .nova-top-brand strong{font-size:16px}
-  .nova-top-brand span{margin-top:6px;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-  .nova-top-status{display:none}
-}
+.nova-top-menu-slot{margin-left:12px;display:flex;align-items:center;flex:0 0 auto}.nova-top-menu-slot .nova-mobile-global-menu-button{position:static}.nova-top-menu-slot .nova-mobile-global-menu-panel{top:64px}.nova-top-menu-slot .nova-mobile-global-menu-backdrop{top:64px}
+@media(max-width:600px){.nova-top-bar{width:100%;margin-left:0;height:64px;min-height:64px;padding:0 12px;max-width:100%;overflow:hidden}.nova-top-back{width:40px;height:40px;min-width:40px;flex-basis:40px}.nova-top-brand{margin-left:9px;min-width:0;max-width:calc(100% - 116px)}.nova-top-brand strong{font-size:16px}.nova-top-brand span{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.nova-top-menu-slot{margin-left:auto}.nova-top-status{display:none}}
