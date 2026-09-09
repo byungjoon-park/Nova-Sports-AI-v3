@@ -1,19 +1,19 @@
-/* Hard-fix: globally visible mobile menu + persistent login gate. */
+/* NOVA mobile navigation final visibility fix. */
 
 .nova-mobile-global-menu-button {
   position: fixed !important;
-  top: 12px !important;
-  right: 12px !important;
+  top: 14px !important;
+  right: 14px !important;
   z-index: 99999 !important;
   width: 58px !important;
   height: 58px !important;
   min-width: 58px !important;
   min-height: 58px !important;
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 4px !important;
-  flex-direction: column !important;
   padding: 0 !important;
   border: 2px solid #cfc8bb !important;
   border-radius: 16px !important;
@@ -31,13 +31,6 @@
   font-size: 9px !important;
   line-height: 1 !important;
   font-weight: 800 !important;
-  letter-spacing: .04em !important;
-}
-
-.theme-dark .nova-mobile-global-menu-button {
-  border-color: rgba(255,255,255,.20) !important;
-  background: #171717 !important;
-  color: #fff !important;
 }
 
 .nova-mobile-global-menu-backdrop {
@@ -56,7 +49,7 @@
   width: min(88vw, 390px) !important;
   height: 100dvh !important;
   box-sizing: border-box !important;
-  padding: calc(env(safe-area-inset-top, 0px) + 20px) 14px calc(env(safe-area-inset-bottom, 0px) + 24px) !important;
+  padding: calc(env(safe-area-inset-top,0px) + 20px) 14px calc(env(safe-area-inset-bottom,0px) + 24px) !important;
   overflow-y: auto !important;
   background: #fffdf8 !important;
   color: #171717 !important;
@@ -73,16 +66,21 @@
   visibility: visible !important;
 }
 
-.nova-mobile-global-menu-head {
+.nova-mobile-global-menu-head,
+.mobile-nova-sidebar-header {
   display: flex !important;
   align-items: flex-start !important;
   justify-content: space-between !important;
   gap: 12px !important;
+}
+
+.nova-mobile-global-menu-head {
   padding: 4px 2px 18px !important;
   border-bottom: 1px solid #e5e0d6 !important;
 }
 
-.nova-mobile-global-menu-head span {
+.nova-mobile-global-menu-head span,
+.mobile-nova-sidebar-header span {
   display: block !important;
   margin-bottom: 6px !important;
   color: #2563eb !important;
@@ -91,12 +89,14 @@
   letter-spacing: .14em !important;
 }
 
-.nova-mobile-global-menu-head strong {
+.nova-mobile-global-menu-head strong,
+.mobile-nova-sidebar-header strong {
   display: block !important;
   font-size: 22px !important;
 }
 
-.nova-mobile-global-menu-head button {
+.nova-mobile-global-menu-head button,
+.mobile-nova-sidebar-header button {
   width: 44px !important;
   height: 44px !important;
   border: 1px solid #ddd7cc !important;
@@ -106,15 +106,17 @@
   font-size: 25px !important;
 }
 
-.nova-mobile-global-menu-list {
+.nova-mobile-global-menu-list,
+.mobile-nova-sidebar-nav {
   display: grid !important;
   gap: 8px !important;
   padding-top: 16px !important;
 }
 
-.nova-mobile-global-menu-item {
+.nova-mobile-global-menu-item,
+.mobile-nova-sidebar-item {
   width: 100% !important;
-  min-height: 62px !important;
+  min-height: 58px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
@@ -134,21 +136,26 @@
 }
 
 .nova-mobile-global-menu-item strong,
-.nova-mobile-global-menu-item small {
+.nova-mobile-global-menu-item small,
+.mobile-nova-sidebar-item strong,
+.mobile-nova-sidebar-item small {
   display: block !important;
 }
 
-.nova-mobile-global-menu-item strong {
+.nova-mobile-global-menu-item strong,
+.mobile-nova-sidebar-item strong {
   font-size: 14px !important;
 }
 
-.nova-mobile-global-menu-item small {
+.nova-mobile-global-menu-item small,
+.mobile-nova-sidebar-item small {
   margin-top: 3px !important;
   color: #64748b !important;
   font-size: 10px !important;
 }
 
-.nova-mobile-global-menu-item b {
+.nova-mobile-global-menu-item b,
+.mobile-nova-sidebar-item b {
   flex: 0 0 auto !important;
   color: #64748b !important;
   font-size: 22px !important;
@@ -166,49 +173,104 @@
   font-weight: 700 !important;
 }
 
-.theme-dark .nova-mobile-global-menu-panel {
-  background: #161616 !important;
+/* Existing feature-page sidebar button: this was the key missing selector. */
+.mobile-nova-sidebar-button {
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top, 0px) + 14px) !important;
+  right: 14px !important;
+  z-index: 99999 !important;
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  min-height: 58px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  border: 2px solid #cfc8bb !important;
+  border-radius: 16px !important;
+  background: #fffdf8 !important;
+  color: #171717 !important;
+  box-shadow: 0 8px 26px rgba(15,23,42,.20) !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.mobile-nova-sidebar-panel {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 100000 !important;
+  width: min(88vw, 390px) !important;
+  height: 100dvh !important;
+  box-sizing: border-box !important;
+  padding: calc(env(safe-area-inset-top,0px) + 20px) 14px calc(env(safe-area-inset-bottom,0px) + 24px) !important;
+  overflow-y: auto !important;
+  background: #fffdf8 !important;
+  color: #171717 !important;
+  box-shadow: -18px 0 48px rgba(15,23,42,.22) !important;
+  transform: translate3d(105%,0,0) !important;
+  transition: transform .22s ease !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+.mobile-nova-sidebar-panel.is-open {
+  transform: translate3d(0,0,0) !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+}
+
+.mobile-nova-sidebar-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99990 !important;
+  border: 0 !important;
+  background: rgba(15,23,42,.35) !important;
+}
+
+/* Dashboard / feature-page NOVA header. */
+.mobile-desktop-brand {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.mobile-desktop-brand strong {
+  font-size: clamp(34px, 9vw, 52px) !important;
+  line-height: 1 !important;
+  letter-spacing: .28em !important;
+  font-weight: 800 !important;
+  color: #171717 !important;
+}
+
+.mobile-desktop-brand span {
+  font-size: clamp(16px, 4.4vw, 22px) !important;
+  line-height: 1.25 !important;
+  letter-spacing: .12em !important;
+  font-weight: 800 !important;
+  color: #64748b !important;
+}
+
+.mobile-subheader {
+  padding-right: 78px !important;
+  box-sizing: border-box !important;
+}
+
+.theme-dark .mobile-desktop-brand strong {
   color: #f4f4f4 !important;
 }
 
-.theme-dark .nova-mobile-global-menu-head {
-  border-color: rgba(255,255,255,.12) !important;
-}
-
-.theme-dark .nova-mobile-global-menu-head button {
-  border-color: rgba(255,255,255,.16) !important;
-  background: #1d1d1d !important;
-  color: #fff !important;
-}
-
-.theme-dark .nova-mobile-global-menu-item {
-  border-color: rgba(255,255,255,.12) !important;
-  background: #1d1d1d !important;
-  color: #fff !important;
-}
-
-.theme-dark .nova-mobile-global-menu-item.active {
-  border-color: #6ea0ff !important;
-  background: #182542 !important;
-}
-
-.theme-dark .nova-mobile-global-menu-item small {
+.theme-dark .mobile-desktop-brand span {
   color: #a3adbd !important;
 }
 
-.theme-dark .nova-mobile-global-menu-item b {
-  color: #a3adbd !important;
-}
-
-.theme-dark .nova-mobile-global-logout {
-  border-color: rgba(255,255,255,.12) !important;
-  background: #1d1d1d !important;
-  color: #fff !important;
-}
-
-/* Top-of-screen NOVA splash branding remains larger and clearer. */
+/* Splash brand. */
 .mobile-splash-brand {
-  font-size: clamp(56px, 17vw, 84px) !important;
+  font-size: clamp(56px,17vw,84px) !important;
   line-height: 1 !important;
   letter-spacing: .30em !important;
   font-weight: 800 !important;
@@ -216,7 +278,7 @@
 
 .mobile-splash-platform {
   margin-top: 18px !important;
-  font-size: clamp(20px, 5.6vw, 28px) !important;
+  font-size: clamp(20px,5.6vw,28px) !important;
   line-height: 1.3 !important;
   letter-spacing: .16em !important;
   font-weight: 800 !important;
@@ -224,7 +286,8 @@
 }
 
 @media (max-width: 390px) {
-  .nova-mobile-global-menu-button {
+  .nova-mobile-global-menu-button,
+  .mobile-nova-sidebar-button {
     top: 10px !important;
     right: 10px !important;
     width: 54px !important;
@@ -233,11 +296,15 @@
     min-height: 54px !important;
   }
 
-  .nova-mobile-global-menu-button strong {
-    font-size: 8px !important;
+  .mobile-subheader {
+    padding-right: 70px !important;
   }
 
-  .nova-mobile-global-menu-panel {
-    width: 92vw !important;
+  .mobile-desktop-brand strong {
+    font-size: 30px !important;
+  }
+
+  .mobile-desktop-brand span {
+    font-size: 15px !important;
   }
 }

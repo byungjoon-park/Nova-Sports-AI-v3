@@ -2,11 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  getCurrentUser,
-  signOutUser,
-  type NovaUserRole,
-} from "../../lib/nova-auth";
+import { getCurrentUser, signOutUser, type NovaUserRole } from "../../lib/nova-auth";
 
 type MenuItem = {
   label: string;
@@ -41,23 +37,30 @@ const labelForRole = (role: NovaUserRole) =>
 export default function MobileGlobalNavigation() {
   const router = useRouter();
   const pathname = usePathname();
+
+  // Read the existing login immediately so the menu is rendered on first paint.
+  const [role, setRole] = useState<NovaUserRole | null>(() => getCurrentUser()?.role ?? null);
   const [open, setOpen] = useState(false);
-  const [role, setRole] = useState<NovaUserRole | null>(null);
 
   useEffect(() => {
     const current = getCurrentUser();
-    if (current) {
-      setRole(current.role);
-      try {
-        sessionStorage.setItem("nova-mobile-login-complete", "1");
-        localStorage.setItem("nova-active-role", current.role);
-        localStorage.setItem("nova-login-role", current.role);
-        localStorage.setItem("nova-role", current.role);
-      } catch {}
+    if (!current) return;
 
-      if (pathname === "/mobile/login" || pathname === "/mobile/signup") {
-        router.replace(current.role === "admin" ? "/admin" : "/mobile");
-      }
+    setRole(current.role);
+    try {
+      // Restore the transient mobile flag from the durable NOVA auth store.
+      sessionStorage.setItem("nova-mobile-login-complete", "1");
+      localStorage.setItem("nova-active-role", current.role);
+      localStorage.setItem("nova-login-role", current.role);
+      localStorage.setItem("nova-role", current.role);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    if (pathname === "/mobile/login" || pathname === "/mobile/signup") return;
+    const current = getCurrentUser();
+    if (current && (pathname === "/mobile/login" || pathname === "/mobile/signup")) {
+      router.replace(current.role === "admin" ? "/admin" : "/mobile");
     }
   }, [pathname, router]);
 
@@ -66,9 +69,10 @@ export default function MobileGlobalNavigation() {
     [role],
   );
 
-  if (pathname === "/mobile/login" || pathname === "/mobile/signup" || !role) {
-    return null;
-  }
+  // Feature pages already have their own NOVA sidebar button/panel.
+  // The global component is therefore used only on the mobile home screen,
+  // preventing duplicate menu buttons.
+  if (pathname !== "/mobile" || !role) return null;
 
   const go = (href: string) => {
     setOpen(false);
