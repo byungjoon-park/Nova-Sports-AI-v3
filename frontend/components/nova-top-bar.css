@@ -128,11 +128,11 @@ html[data-nova-theme="white"] .nova-top-back{background:#fff;border-color:#dbe1e
     max-width:calc(100% - 110px);
   }
 
-  .nova-top-brand strong{font-size:16px;letter-spacing:.24em}
+  .nova-top-brand strong{font-size:18px;letter-spacing:.28em}
   .nova-top-brand span{
     margin-top:7px;
-    font-size:7px;
-    letter-spacing:.10em;
+    font-size:9px;
+    letter-spacing:.12em;
     white-space:nowrap;
   }
 
