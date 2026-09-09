@@ -1,31 +1,66 @@
 "use client";
 
 import "../mobile.css";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { NOVA_TEST_ACCOUNTS, signInDemoUser, signInUser, type NovaUserRole } from "../../../lib/nova-auth";
+import {
+  NOVA_TEST_ACCOUNTS,
+  getCurrentUser,
+  signInDemoUser,
+  signInUser,
+  type NovaUserRole,
+} from "../../../lib/nova-auth";
 import { useNovaSettings } from "../../settings-context";
 
+const AUTO_LOGIN_KEY = "nova-auto-login";
 
 export default function MobileLoginPage() {
   const router = useRouter();
   const { theme, setRole } = useNovaSettings();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [autoLogin, setAutoLogin] = useState(true);
+
+  useEffect(() => {
+    try {
+      setAutoLogin(localStorage.getItem(AUTO_LOGIN_KEY) !== "0");
+    } catch {}
+
+    const current = getCurrentUser();
+    if (current) {
+      setRole(current.role);
+      router.replace(current.role === "admin" ? "/admin" : "/mobile");
+    }
+  }, [router, setRole]);
 
   const finishLogin = (userRole: NovaUserRole, name: string) => {
     try {
       localStorage.setItem("nova-role", userRole);
       localStorage.setItem("nova-active-role", userRole);
       localStorage.setItem("nova-login-role", userRole);
-      window.dispatchEvent(new CustomEvent("nova-settings-change", { detail: { role: userRole, activeRole: userRole } }));
+      localStorage.setItem(AUTO_LOGIN_KEY, autoLogin ? "1" : "0");
+      sessionStorage.setItem("nova-mobile-login-complete", "1");
+      window.dispatchEvent(
+        new CustomEvent("nova-settings-change", {
+          detail: { role: userRole, activeRole: userRole },
+        }),
+      );
     } catch {}
 
     setRole(userRole);
-    try {
-      sessionStorage.setItem("nova-mobile-login-complete", "1");
-    } catch {}
-    setMessage(`${name} · ${userRole === "director" ? "감독" : userRole === "coach" ? "코치" : userRole === "athlete" ? "선수" : userRole === "parent" ? "학부모" : "관리자"} 로그인 완료`);
+    setMessage(
+      `${name} · ${
+        userRole === "director"
+          ? "감독"
+          : userRole === "coach"
+            ? "코치"
+            : userRole === "athlete"
+              ? "선수"
+              : userRole === "parent"
+                ? "학부모"
+                : "관리자"
+      } 로그인 완료`,
+    );
     window.location.href = userRole === "admin" ? "/admin" : "/mobile";
   };
 
@@ -36,8 +71,7 @@ export default function MobileLoginPage() {
 
     const demo = NOVA_TEST_ACCOUNTS.find((account) => account.email === normalized);
     if (demo) {
-      const user = signInDemoUser(demo);
-      finishLogin(user.role, user.name);
+      finishLogin(signInDemoUser(demo).role, demo.name);
       return;
     }
 
@@ -49,14 +83,17 @@ export default function MobileLoginPage() {
     finishLogin(user.role, user.name);
   };
 
-  const activeTheme = theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
+  const activeTheme =
+    theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
 
   return (
     <main className={`mobile-login-page theme-${activeTheme}`}>
       <section className="mobile-login-card">
         <span className="mobile-eyebrow">NOVA AI SPORTS PLATFORM</span>
         <h1>로그인</h1>
-        <p className="mobile-login-subtitle">이메일로 로그인하면 가입된 계정의 역할로 자동 접속합니다.</p>
+        <p className="mobile-login-subtitle">
+          등록된 계정은 자동으로 로그인 상태를 유지합니다.
+        </p>
 
         <form onSubmit={submit} className="mobile-login-form">
           <label>
@@ -70,13 +107,44 @@ export default function MobileLoginPage() {
               required
             />
           </label>
-          <button type="submit" className="mobile-login-primary">이메일 로그인</button>
+
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginTop: 14,
+              fontSize: 12,
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={autoLogin}
+              onChange={(event) => {
+                const enabled = event.target.checked;
+                setAutoLogin(enabled);
+                try {
+                  localStorage.setItem(AUTO_LOGIN_KEY, enabled ? "1" : "0");
+                } catch {}
+              }}
+              style={{ width: 16, height: 16 }}
+            />
+            로그인 상태 유지
+          </label>
+
+          <button type="submit" className="mobile-login-primary" style={{ marginTop: 14 }}>
+            이메일 로그인
+          </button>
         </form>
 
         <div className="mobile-login-divider"><span>또는</span></div>
 
         {/* eslint-disable-next-line @next/next/no-location-assign-relative-destination */}
-        <button type="button" className="mobile-login-kakao" onClick={() => { window.location.href = "/api/auth/kakao?mode=signup"; }}>
+        <button
+          type="button"
+          className="mobile-login-kakao"
+          onClick={() => { window.location.href = "/api/auth/kakao?mode=signup"; }}
+        >
           <span>K</span> 카카오로 회원가입
         </button>
 
@@ -88,7 +156,13 @@ export default function MobileLoginPage() {
           이메일로 회원가입
         </button>
 
-        <button type="button" className="mobile-login-link" onClick={() => router.push("/")}>기존 서비스로 이동</button>
+        <button
+          type="button"
+          className="mobile-login-link"
+          onClick={() => router.push("/")}
+        >
+          기존 서비스로 이동
+        </button>
 
         {message && <div className="mobile-login-message" role="status">{message}</div>}
       </section>
