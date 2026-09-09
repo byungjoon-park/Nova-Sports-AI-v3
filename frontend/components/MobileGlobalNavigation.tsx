@@ -13,21 +13,21 @@ type MenuItem = {
 };
 
 const MENU: MenuItem[] = [
-  { label: "대시보드", description: "퍼포먼스·회복·훈련 현황", href: "/mobile/dashboard" },
-  { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai", roles: ["admin", "director", "coach", "athlete"] },
-  { label: "AI 분석", description: "퍼포먼스·회복·피로도 분석", href: "/mobile/analysis" },
-  { label: "GPS", description: "GPS 데이터와 활동 분석", href: "/mobile/gps-test" },
-  { label: "성장·체력", description: "신체와 체력 측정", href: "/mobile/growth-analysis" },
-  { label: "측정 기록", description: "측정값과 변화 이력", href: "/mobile/measurements" },
-  { label: "의료·재활", description: "부상·진료·재활 기록", href: "/mobile/medical" },
-  { label: "리포트", description: "선수 데이터 요약과 보고서", href: "/mobile/report" },
-  { label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players", roles: ["admin", "director", "coach"] },
-  { label: "감독·코치", description: "선수와 훈련 관리", href: "/mobile/team", roles: ["admin", "director", "coach"] },
-  { label: "팀", description: "팀 구성과 단체 운영 문의", href: "/mobile/inquiry", roles: ["admin", "director", "coach"] },
-  { label: "프로필", description: "내 계정과 선수 정보", href: "/mobile/profile" },
-  { label: "결제", description: "개인 Premium 구독 및 결제", href: "/mobile/billing", roles: ["athlete"] },
-  { label: "1:1 문의", description: "NOVA 고객지원 문의", href: "/mobile/inquiry" },
-  { label: "설정", description: "언어·테마·계정 설정", href: "/mobile/settings" },
+  { label: "대시보드", description: "퍼포먼스·회복·훈련 현황", href: "/dashboard" },
+  { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/camera-ai", roles: ["admin", "director", "coach", "athlete"] },
+  { label: "AI 분석", description: "퍼포먼스·회복·피로도 분석", href: "/analysis" },
+  { label: "GPS", description: "GPS 데이터와 활동 분석", href: "/gps-test" },
+  { label: "성장·체력", description: "신체와 체력 측정", href: "/growth-analysis" },
+  { label: "측정 기록", description: "측정값과 변화 이력", href: "/measurements" },
+  { label: "의료·재활", description: "부상·진료·재활 기록", href: "/medical" },
+  { label: "리포트", description: "선수 데이터 요약과 보고서", href: "/report" },
+  { label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/players", roles: ["admin", "director", "coach"] },
+  { label: "감독·코치", description: "선수와 훈련 관리", href: "/team", roles: ["admin", "director", "coach"] },
+  { label: "팀", description: "팀 구성과 단체 운영 문의", href: "/inquiry", roles: ["admin", "director", "coach"] },
+  { label: "프로필", description: "내 계정과 선수 정보", href: "/profile" },
+  { label: "결제", description: "개인 Premium 구독 및 결제", href: "/billing", roles: ["athlete"] },
+  { label: "1:1 문의", description: "NOVA 고객지원 문의", href: "/inquiry" },
+  { label: "설정", description: "언어·테마·계정 설정", href: "/settings" },
 ];
 
 const roleLabel = (role: NovaUserRole) =>
@@ -63,7 +63,7 @@ export default function MobileGlobalNavigation() {
   useEffect(() => {
     const current = getCurrentUser();
     if (current && (pathname === "/mobile/login" || pathname === "/mobile/signup") && autoLogin) {
-      router.replace(current.role === "admin" ? "/admin" : "/mobile");
+      router.replace(current.role === "admin" ? "/admin" : "/dashboard");
     }
   }, [autoLogin, pathname, router]);
 
@@ -159,7 +159,7 @@ export default function MobileGlobalNavigation() {
               try {
                 sessionStorage.removeItem("nova-mobile-login-complete");
               } catch {}
-              router.replace("/mobile/login");
+              router.replace("/login");
             }}
           >
             로그아웃
