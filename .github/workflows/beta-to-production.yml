@@ -39,6 +39,15 @@ jobs:
         run: npm run build
 
       - name: Promote beta to main
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -e
-          git push origin HEAD:main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin main beta
+
+          git checkout -B main origin/main
+          git merge --no-edit --no-ff origin/beta -m "Promote beta to Production"
+          git push origin main
