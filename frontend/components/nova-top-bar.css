@@ -25,4 +25,5 @@ html[data-nova-theme="dark"] .nova-top-back:hover{background:#132033}
 html[data-nova-theme="dark"] .nova-top-brand span{color:#9db0c9}
 html[data-nova-theme="white"] .nova-top-bar{background:#fff;border-color:#dbe1e8}
 html[data-nova-theme="white"] .nova-top-back{background:#fff;border-color:#dbe1e8}
-@media(max-width:600px){.nova-top-bar{height:64px;min-height:64px;padding:0 14px}.nova-top-back{width:40px;height:40px;flex-basis:40px}.nova-top-brand strong{font-size:16px}.nova-top-brand span{font-size:8px}.nova-top-status{font-size:10px}}
+.nova-top-menu-slot{margin-left:12px;display:flex;align-items:center;flex:0 0 auto}.nova-top-menu-slot .nova-mobile-global-menu-button{position:static}.nova-top-menu-slot .nova-mobile-global-menu-panel{top:64px}.nova-top-menu-slot .nova-mobile-global-menu-backdrop{top:64px}
+@media(max-width:600px){.nova-top-bar{width:100%;margin-left:0;height:64px;min-height:64px;padding:0 12px;max-width:100%;overflow:hidden}.nova-top-back{width:40px;height:40px;min-width:40px;flex-basis:40px}.nova-top-brand{margin-left:9px;min-width:0;max-width:calc(100% - 116px)}.nova-top-brand strong{font-size:16px}.nova-top-brand span{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.nova-top-menu-slot{margin-left:auto}.nova-top-status{display:none}}
