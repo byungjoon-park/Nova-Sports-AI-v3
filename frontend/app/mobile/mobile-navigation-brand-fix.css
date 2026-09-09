@@ -1,188 +1,122 @@
-/* NOVA mobile navigation + branding visibility fix.
-   Scope: mobile layout only. Existing page content and navigation logic are preserved. */
+/* Mobile navigation visibility + automatic-login support.
+   Scope: NOVA mobile shell only. */
 
-.mobile-menu-trigger,
-.mobile-nova-sidebar-button {
-  position: fixed !important;
-  top: calc(env(safe-area-inset-top, 0px) + 16px) !important;
-  right: 16px !important;
-  z-index: 120 !important;
-  width: 48px !important;
-  height: 48px !important;
-  min-width: 48px !important;
-  min-height: 48px !important;
+.nova-mobile-shell {
+  min-height: 100dvh;
+}
+
+/* Root mobile dashboard: keep the menu control visibly attached to the header. */
+.mobile-header {
+  position: relative !important;
+  padding-right: 64px !important;
+  box-sizing: border-box !important;
+}
+
+.mobile-header .mobile-menu-trigger {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 200 !important;
+  width: 50px !important;
+  height: 50px !important;
+  min-width: 50px !important;
+  min-height: 50px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   visibility: visible !important;
   opacity: 1 !important;
-  box-sizing: border-box !important;
-  border: 1px solid #d9d5ca !important;
+  border: 1px solid #d8d3c8 !important;
   border-radius: 14px !important;
   background: #fffdf8 !important;
   color: #171717 !important;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
-  font-size: 22px !important;
+  box-shadow: 0 8px 24px rgba(15,23,42,.12) !important;
+  font-size: 24px !important;
   line-height: 1 !important;
   cursor: pointer !important;
 }
 
-.theme-dark .mobile-menu-trigger,
-.theme-dark .mobile-nova-sidebar-button {
-  background: #161616 !important;
-  color: #f4f4f4 !important;
+.theme-dark .mobile-header .mobile-menu-trigger {
+  background: #171717 !important;
+  color: #fff !important;
   border-color: rgba(255,255,255,.16) !important;
 }
 
-.mobile-menu-trigger:hover,
-.mobile-nova-sidebar-button:hover {
-  transform: translateY(-1px);
-}
-
-.mobile-menu,
-.mobile-nova-sidebar-panel {
-  z-index: 130 !important;
-}
-
-.mobile-nova-sidebar-panel {
+/* Feature pages use their own sidebar trigger outside the header. */
+.mobile-nova-sidebar-button {
   position: fixed !important;
-  top: 0 !important;
-  right: 0 !important;
-  width: min(88vw, 380px) !important;
-  height: 100dvh !important;
-  box-sizing: border-box !important;
-  padding: calc(env(safe-area-inset-top, 0px) + 22px) 16px 28px !important;
-  overflow-y: auto !important;
+  top: calc(env(safe-area-inset-top, 0px) + 18px) !important;
+  right: 16px !important;
+  z-index: 300 !important;
+  width: 50px !important;
+  height: 50px !important;
+  min-width: 50px !important;
+  min-height: 50px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  border: 1px solid #d8d3c8 !important;
+  border-radius: 14px !important;
   background: #fffdf8 !important;
   color: #171717 !important;
-  box-shadow: -18px 0 44px rgba(15, 23, 42, 0.18) !important;
-  transform: translateX(102%) !important;
-  transition: transform .22s ease !important;
-}
-
-.mobile-nova-sidebar-panel.is-open {
-  transform: translateX(0) !important;
-}
-
-.mobile-nova-sidebar-backdrop {
-  position: fixed !important;
-  z-index: 125 !important;
-  inset: 0 !important;
-  border: 0 !important;
-  background: rgba(15, 23, 42, 0.32) !important;
-}
-
-.mobile-nova-sidebar-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.mobile-nova-sidebar-header span {
-  display: block;
-  margin-bottom: 7px;
-  color: #2563eb;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .14em;
-}
-
-.mobile-nova-sidebar-header strong {
-  display: block;
-  font-size: 24px;
-}
-
-.mobile-nova-sidebar-header button {
-  width: 42px;
-  height: 42px;
-  border: 1px solid #dedbd2;
-  border-radius: 12px;
-  background: #fff;
-  color: #171717;
-  font-size: 24px;
-}
-
-.mobile-nova-sidebar-nav {
-  display: grid;
-  gap: 7px;
-}
-
-.mobile-nova-sidebar-item {
-  width: 100%;
-  min-height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 11px 12px;
-  box-sizing: border-box;
-  border: 1px solid #e2ded4 !important;
-  border-radius: 13px !important;
-  background: #fff !important;
-  color: #171717 !important;
-  text-align: left;
-}
-
-.mobile-nova-sidebar-item strong,
-.mobile-nova-sidebar-item small {
-  display: block;
-}
-
-.mobile-nova-sidebar-item strong {
-  font-size: 14px;
-}
-
-.mobile-nova-sidebar-item small {
-  margin-top: 3px;
-  color: #64748b;
-  font-size: 10px;
-  line-height: 1.4;
-}
-
-.mobile-nova-sidebar-item b {
-  flex: 0 0 auto;
-  font-size: 22px;
-  color: #64748b;
-}
-
-.theme-dark .mobile-nova-sidebar-panel {
-  background: #161616 !important;
-  color: #f4f4f4 !important;
-}
-
-.theme-dark .mobile-nova-sidebar-item {
-  border-color: rgba(255,255,255,.12) !important;
-  background: #1d1d1d !important;
-  color: #f4f4f4 !important;
-}
-
-.theme-dark .mobile-nova-sidebar-item small {
-  color: #9ca3af;
-}
-
-/* Make the NOVA / AI SPORTS PLATFORM branding materially easier to read. */
-.mobile-splash-brand {
-  font-size: clamp(50px, 16vw, 78px) !important;
+  box-shadow: 0 8px 24px rgba(15,23,42,.12) !important;
+  font-size: 24px !important;
   line-height: 1 !important;
-  letter-spacing: .34em !important;
-  font-weight: 700 !important;
+  cursor: pointer !important;
+}
+
+.theme-dark .mobile-nova-sidebar-button {
+  background: #171717 !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,.16) !important;
+}
+
+/* Force the sidebar panel above page cards and mobile browser-safe UI. */
+.mobile-menu,
+.mobile-nova-sidebar-panel {
+  z-index: 310 !important;
+}
+
+.mobile-menu-backdrop,
+.mobile-nova-sidebar-backdrop {
+  z-index: 305 !important;
+}
+
+/* Make the initial NOVA branding substantially easier to read. */
+.mobile-splash-brand {
+  font-size: clamp(56px, 17vw, 84px) !important;
+  line-height: 1 !important;
+  letter-spacing: .30em !important;
+  font-weight: 800 !important;
 }
 
 .mobile-splash-platform {
-  margin-top: 16px !important;
-  font-size: clamp(18px, 5vw, 26px) !important;
-  line-height: 1.25 !important;
-  letter-spacing: .20em !important;
-  font-weight: 700 !important;
+  margin-top: 18px !important;
+  font-size: clamp(20px, 5.6vw, 28px) !important;
+  line-height: 1.3 !important;
+  letter-spacing: .16em !important;
+  font-weight: 800 !important;
+  text-align: center !important;
 }
 
-/* Keep fixed menu controls away from the browser edge on very narrow screens. */
 @media (max-width: 390px) {
-  .mobile-menu-trigger,
+  .mobile-header {
+    padding-right: 60px !important;
+  }
+
+  .mobile-header .mobile-menu-trigger,
   .mobile-nova-sidebar-button {
-    top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
     right: 12px !important;
+  }
+
+  .mobile-splash-platform {
+    font-size: 18px !important;
+    letter-spacing: .13em !important;
   }
 }
