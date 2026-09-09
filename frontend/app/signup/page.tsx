@@ -16,7 +16,7 @@ const roles: Array<{ value: Exclude<NovaUserRole, "admin">; label: string }> = [
 
 export default function SignupPage() {
   const router = useRouter();
-  const { setRole, theme } = useNovaSettings();
+  const { setRole } = useNovaSettings();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setSignupRole] = useState<Exclude<NovaUserRole, "admin">>("athlete");
@@ -63,12 +63,13 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="nova-signup-page" data-theme={theme}>
+    <main className="nova-signup-page theme-ivory" data-theme="ivory">
       <section className="signup-card">
         <button className="signup-back" type="button" onClick={() => router.push("/login")}>← 로그인</button>
         <span className="signup-eyebrow">NOVA SPORTS AI</span>
         <h1>회원가입</h1>
-        <p>계정을 만들고 NOVA Sports AI를 시작하세요.</p><div style={{ margin: "12px 0 18px", padding: "10px 12px", borderRadius: "9px", background: "#f3f7ff", color: "#2457a6", fontSize: "12px" }}>신규 가입자는 14일간 무료로 사용할 수 있습니다.</div>
+        <p>계정을 만들고 NOVA Sports AI를 시작하세요.</p>
+        <div className="signup-free-trial">신규 가입자는 14일간 무료로 사용할 수 있습니다.</div>
 
         {kakaoConnected && <div className="kakao-connected">카카오 계정이 연결되었습니다. 역할을 선택하고 약관에 동의하세요.</div>}
 
