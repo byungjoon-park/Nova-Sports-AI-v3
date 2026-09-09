@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 concurrency:
   group: nova-beta-to-production
@@ -40,17 +39,6 @@ jobs:
         run: npm run build
 
       - name: Promote beta to main
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
         run: |
           set -e
-
-          PR_NUMBER="$(gh pr list             --repo "$REPO"             --base main             --head beta             --state open             --json number             --jq '.[0].number // empty')"
-
-          if [ -z "$PR_NUMBER" ]; then
-            PR_URL="$(gh pr create               --repo "$REPO"               --base main               --head beta               --title "Promote beta to Production"               --body "Automatically created after the beta production build passed.")"
-            PR_NUMBER="$(gh pr view "$PR_URL" --repo "$REPO" --json number --jq '.number')"
-          fi
-
-          gh pr merge "$PR_NUMBER"             --repo "$REPO"             --squash             --delete-branch=false             --subject "Promote beta to Production"             --body "Automatically merged after the beta production build passed."
+          git push origin HEAD:main
