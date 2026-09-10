@@ -59,3 +59,8 @@ html[data-nova-theme="white"] .nova-top-back{background:#fff;border-color:#dbe1e
   .nova-top-brand span{margin-top:6px;font-size:9px;letter-spacing:.08em;white-space:nowrap}
   .nova-top-status{display:none}
 }
+
+/* Mobile pages reserve 20px above the top bar; move only the content back button into that reserved area. */
+@media(max-width:600px){
+  .mobile-page > .nova-top-bar.is-mobile-content .nova-top-back{top:-20px}
+}
