@@ -1,0 +1,9 @@
+{
+  "notice": {
+    "id": "UPDATE-bba8f1778bc8",
+    "title": "서비스 업데이트 안내",
+    "body": "이번 서비스 업데이트가 반영되었습니다.\n\n변경 내용:\n- fix: enable automatic service update notices\n\n수정 파일:\n- .github/workflows/beta-to-production.yml\n- frontend/app/layout.tsx\n- frontend/components/NovaNoticeBoard.tsx\n- frontend/components/nova-notice-board.css",
+    "type": "update",
+    "createdAt": "2026-09-10T23:41:08Z"
+  }
+}
