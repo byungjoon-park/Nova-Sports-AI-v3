@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser, type NovaUser } from "../../../lib/nova-auth";
 import "../mobile.css";
+import NovaTopBar from "../../../components/NovaTopBar";
 
 export default function MobileBillingPage() {
   const router = useRouter();
@@ -25,23 +26,8 @@ export default function MobileBillingPage() {
 
   return (
     <main className="mobile-page theme-ivory">
-      <header className="mobile-subheader">
-        <div className="mobile-desktop-header">
-          <div className="mobile-desktop-header-left">
-            <button onClick={() => { if (window.history.length > 1) window.history.back(); else router.push("/mobile/dashboard"); }} aria-label="뒤로">←</button>
-            <div className="mobile-desktop-brand">
-              <strong>N O V A</strong>
-              <span>AI SPORTS PERFORMANCE PLATFORM</span>
-            </div>
-          </div>
-          <div className="mobile-ai-status"><i></i> AI 시스템 준비</div>
-        </div>
-        <div className="mobile-page-title">
-          <span className="mobile-eyebrow">NOVA SPORTS AI · MOBILE</span>
-          <h1>결제</h1>
-          <p>개인 Premium은 선수 1회 결제로 운영됩니다.</p>
-        </div>
-      </header>
+      <NovaTopBar statusText="AI 시스템 준비" />
+      <div className="mobile-page-title"><span className="mobile-eyebrow">NOVA SPORTS AI · MOBILE</span><h1>결제</h1><p>개인 Premium은 선수 1회 결제로 운영됩니다.</p></div>
 
       <section className="mobile-content-card">
         <div className="mobile-card-heading">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { getCurrentUser } from "../../../lib/nova-auth";
 import { readNovaAthleteData, writeNovaAthleteData, type NovaAthleteData } from "../../../lib/nova-data";
+import NovaTopBar from "../../../components/NovaTopBar";
 
 export default function MobileRehab() {
   const [data, setData] = useState<NovaAthleteData | null>(null);
@@ -36,13 +37,8 @@ export default function MobileRehab() {
   };
 
   return <div className="mobile-page">
-    <header className="mobile-subheader">
-      <div className="mobile-desktop-header">
-        <div className="mobile-desktop-header-left"><Link href="/mobile/dashboard" aria-label="뒤로" onClick={(event) => { event.preventDefault(); if (window.history.length > 1) window.history.back(); else window.location.assign("/mobile/dashboard"); }}>←</Link><div className="mobile-desktop-brand"><strong>N O V A</strong><span>AI SPORTS PERFORMANCE PLATFORM</span></div></div>
-        <div className="mobile-ai-status"><i></i> AI 시스템 준비</div>
-      </div>
-      <div className="mobile-page-title"><h1>재활</h1><p>재활 기록과 진행 상태를 관리합니다.</p></div>
-    </header>
+    <NovaTopBar statusText="AI 시스템 준비" />
+      <div className="mobile-page-title"><span className="mobile-eyebrow">NOVA SPORTS AI · MOBILE</span><h1>재활</h1><p>재활 기록과 진행 상태를 관리합니다.</p></div>
 
     <section className="mobile-content-card">
       <div className="mobile-card-heading"><span>REHABILITATION</span><strong>재활 기록 등록</strong></div>
