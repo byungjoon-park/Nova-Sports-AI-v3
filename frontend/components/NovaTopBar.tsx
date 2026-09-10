@@ -17,10 +17,10 @@ export default function NovaTopBar({ statusText = "AI 시스템 준비" }: Props
 
   const goBack = () => {
     if (isMobilePage) {
-      router.push("/mobile");
+      window.location.replace("/mobile");
       return;
     }
-    if (window.history.length > 1) router.back();
+    if (window.history.length > 1) window.history.back();
     else router.push("/dashboard");
   };
 
