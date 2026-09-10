@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import NovaTopBar from "../../../components/NovaTopBar";
 import { getCurrentUser, type NovaUser } from "../../../lib/nova-auth";
 import "../mobile.css";
-import NovaTopBar from "../../../components/NovaTopBar";
 
 export default function MobileBillingPage() {
   const router = useRouter();
@@ -26,8 +26,7 @@ export default function MobileBillingPage() {
 
   return (
     <main className="mobile-page theme-ivory">
-      <NovaTopBar statusText="AI 시스템 준비" />
-      <div className="mobile-page-title"><span className="mobile-eyebrow">NOVA SPORTS AI · MOBILE</span><h1>결제</h1><p>개인 Premium은 선수 1회 결제로 운영됩니다.</p></div>
+      <NovaTopBar statusText="AI 시스템 준비" /><div className="mobile-page-title"><h1>결제</h1><p>개인 Premium은 선수 1회 결제로 운영됩니다.</p></div>
 
       <section className="mobile-content-card">
         <div className="mobile-card-heading">

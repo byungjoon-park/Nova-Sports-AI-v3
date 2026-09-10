@@ -1,11 +1,11 @@
 "use client";
+import NovaTopBar from "../../../components/NovaTopBar";
 /* eslint-disable react-hooks/set-state-in-effect */
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { getCurrentUser } from "../../../lib/nova-auth";
 import { readNovaAthleteData, writeNovaAthleteData, type NovaAthleteData } from "../../../lib/nova-data";
-import NovaTopBar from "../../../components/NovaTopBar";
 
 export default function MobileRehab() {
   const [data, setData] = useState<NovaAthleteData | null>(null);
@@ -37,8 +37,7 @@ export default function MobileRehab() {
   };
 
   return <div className="mobile-page">
-    <NovaTopBar statusText="AI 시스템 준비" />
-      <div className="mobile-page-title"><span className="mobile-eyebrow">NOVA SPORTS AI · MOBILE</span><h1>재활</h1><p>재활 기록과 진행 상태를 관리합니다.</p></div>
+    <NovaTopBar statusText="AI 시스템 준비" /><div className="mobile-page-title"><h1>재활</h1><p>재활 기록과 진행 상태를 관리합니다.</p></div>
 
     <section className="mobile-content-card">
       <div className="mobile-card-heading"><span>REHABILITATION</span><strong>재활 기록 등록</strong></div>
