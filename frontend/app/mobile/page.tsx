@@ -16,7 +16,6 @@ type MobileMenuItem = {
 };
 
 const menuItems: MobileMenuItem[] = [
-  { label: "대시보드", description: "퍼포먼스·회복·훈련 현황", href: "/mobile/dashboard", section: "main" },
   { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai", section: "main", roles: ["admin", "director", "coach", "athlete"] },
   { label: "GPS", description: "GPS 데이터와 피로 분석", href: "/mobile/gps-test", section: "main" },
   { label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players", section: "main", roles: ["admin", "director", "coach"] },
