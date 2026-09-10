@@ -107,11 +107,17 @@ html[data-nova-theme="white"] .nova-top-back{background:#fff;border-color:#dbe1e
     overflow:visible;
   }
 
-  .nova-top-back{
-    width:40px;
-    height:40px;
-    min-width:40px;
-    flex-basis:40px;
+  /* Step 2: lock the mobile content back button to the same geometry on every route. */
+  .nova-top-bar.is-mobile-content .nova-top-back{
+    width:40px !important;
+    height:40px !important;
+    min-width:40px !important;
+    max-width:40px !important;
+    flex:0 0 40px !important;
+    padding:0 !important;
+    box-sizing:border-box !important;
+    appearance:none;
+    -webkit-appearance:none;
   }
 
   .nova-top-bar.is-mobile-content .nova-top-brand{
