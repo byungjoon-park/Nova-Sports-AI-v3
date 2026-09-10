@@ -26,8 +26,13 @@ export default function MobileLoginPage() {
       setAutoLogin(localStorage.getItem(AUTO_LOGIN_KEY) !== "0");
     } catch {}
 
+    let shouldAutoLogin = true;
+    try {
+      shouldAutoLogin = localStorage.getItem(AUTO_LOGIN_KEY) !== "0";
+    } catch {}
+
     const current = getCurrentUser();
-    if (current) {
+    if (current && shouldAutoLogin) {
       setRole(current.role);
       router.replace(current.role === "admin" ? "/admin" : "/mobile");
     }

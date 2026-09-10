@@ -16,8 +16,12 @@ export default function NovaTopBar({ statusText = "AI 시스템 준비" }: Props
   const isDesktopContent = !isMobilePage;
 
   const goBack = () => {
+    if (isMobilePage) {
+      router.push("/mobile/dashboard");
+      return;
+    }
     if (window.history.length > 1) router.back();
-    else router.push(isMobilePage ? "/mobile/dashboard" : "/dashboard");
+    else router.push("/dashboard");
   };
 
   return (

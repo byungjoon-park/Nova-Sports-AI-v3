@@ -50,8 +50,13 @@ export default function MobileBetaPage() {
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
+      let shouldAutoLogin = true;
+      try {
+        shouldAutoLogin = window.localStorage.getItem("nova-auto-login") !== "0";
+      } catch {}
+
       const current = getCurrentUser();
-      if (current) {
+      if (current && shouldAutoLogin) {
         setUser(current);
         try { sessionStorage.setItem("nova-mobile-login-complete", "1"); } catch {}
       } else {
@@ -135,7 +140,7 @@ export default function MobileBetaPage() {
 
       <header className="mobile-header">
         <div>
-          <span className="mobile-eyebrow">NOVA AI SPORTS</span>
+          <span className="mobile-eyebrow">NOVA SPORTS AI · MOBILE BETA</span>
           <h1>{mobileDisplayName}</h1>
           <p>{roleDescription}</p>
         </div>
