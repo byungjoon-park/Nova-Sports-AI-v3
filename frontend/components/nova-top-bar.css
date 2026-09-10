@@ -13,7 +13,6 @@
   flex:0 0 auto;
   position:relative;
 }
-
 .nova-top-back{
   box-sizing:border-box;
   width:42px;
@@ -33,114 +32,28 @@
   padding:0;
 }
 .nova-top-back:hover{background:#f5f1e9}
-
-.nova-top-brand{
-  display:flex;
-  flex-direction:column;
-  border:0;
-  background:transparent;
-  cursor:pointer;
-  padding:0;
-  color:inherit;
-}
-
-.nova-top-bar.is-desktop-content .nova-top-brand{
-  margin-left:12px;
-  align-items:flex-start;
-}
-
-.nova-top-bar.is-mobile-content .nova-top-brand{
-  margin-left:9px;
-  align-items:flex-start;
-}
-
-.nova-top-bar.is-mobile-dashboard .nova-top-brand{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  align-items:center;
-  margin:0;
-  white-space:nowrap;
-}
-
-.nova-top-brand strong{
-  font-size:18px;
-  font-weight:500;
-  letter-spacing:.28em;
-  line-height:1;
-}
-.nova-top-brand span{
-  margin-top:8px;
-  font-size:9px;
-  letter-spacing:.12em;
-  color:#50627d;
-  line-height:1;
-}
-
-.nova-top-status{
-  margin-left:auto;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  color:#34c878;
-  font-size:12px;
-  white-space:nowrap;
-}
+.nova-top-brand{display:flex;flex-direction:column;border:0;background:transparent;cursor:pointer;padding:0;color:inherit}
+.nova-top-bar.is-desktop-content .nova-top-brand{margin-left:12px;align-items:flex-start}
+.nova-top-bar.is-mobile-content .nova-top-brand{margin-left:9px;align-items:flex-start}
+.nova-top-bar.is-mobile-dashboard .nova-top-brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);align-items:center;margin:0;white-space:nowrap}
+.nova-top-brand strong{font-size:18px;font-weight:500;letter-spacing:.28em;line-height:1}
+.nova-top-brand span{margin-top:8px;font-size:9px;letter-spacing:.12em;color:#50627d;line-height:1}
+.nova-top-status{margin-left:auto;display:flex;align-items:center;gap:8px;color:#34c878;font-size:12px;white-space:nowrap}
 .nova-top-status-dot{width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:#34c878}
-
 html[data-nova-theme="dark"] .nova-top-bar{background:#080d16;border-color:#243247;color:#f5f7fb}
 html[data-nova-theme="dark"] .nova-top-back{background:#0d1420;border-color:#243247;color:#f5f7fb}
 html[data-nova-theme="dark"] .nova-top-back:hover{background:#132033}
 html[data-nova-theme="dark"] .nova-top-brand span{color:#9db0c9}
 html[data-nova-theme="white"] .nova-top-bar{background:#fff;border-color:#dbe1e8}
 html[data-nova-theme="white"] .nova-top-back{background:#fff;border-color:#dbe1e8}
-
 @media(max-width:600px){
-  .nova-top-bar{
-    width:100%;
-    margin-left:0;
-    height:64px;
-    min-height:64px;
-    padding:0 12px;
-    max-width:100%;
-    overflow:visible;
-  }
-
-  /* Step 2: lock the mobile content back button to the same geometry on every route. */
-  .nova-top-bar.is-mobile-content .nova-top-back{
-    width:40px !important;
-    height:40px !important;
-    min-width:40px !important;
-    max-width:40px !important;
-    flex:0 0 40px !important;
-    padding:0 !important;
-    box-sizing:border-box !important;
-    appearance:none;
-    -webkit-appearance:none;
-  }
-
-  .nova-top-bar.is-mobile-content .nova-top-brand{
-    margin-left:9px;
-    max-width:calc(100% - 60px);
-  }
-
-  .nova-top-bar.is-mobile-dashboard{
-    justify-content:flex-start;
-  }
-
-  .nova-top-bar.is-mobile-dashboard .nova-top-brand{
-    left:50%;
-    max-width:calc(100% - 110px);
-  }
-
+  .nova-top-bar{width:100%;margin-left:0;height:64px;min-height:64px;padding:0 12px;max-width:100%;overflow:visible}
+  /* Mobile content uses one fixed top-back geometry and position on every route. */
+  .nova-top-bar.is-mobile-content .nova-top-back{position:absolute;left:12px;top:12px;z-index:10;width:40px !important;height:40px !important;min-width:40px !important;max-width:40px !important;flex:0 0 40px !important;margin:0 !important;padding:0 !important;box-sizing:border-box !important;appearance:none;-webkit-appearance:none}
+  .nova-top-bar.is-mobile-content .nova-top-brand{margin-left:52px;max-width:calc(100% - 60px)}
+  .nova-top-bar.is-mobile-dashboard{justify-content:flex-start}
+  .nova-top-bar.is-mobile-dashboard .nova-top-brand{left:50%;max-width:calc(100% - 110px)}
   .nova-top-brand strong{font-size:18px;letter-spacing:.28em}
-  .nova-top-brand span{
-    margin-top:6px;
-    font-size:9px;
-    letter-spacing:.08em;
-    white-space:nowrap;
-  }
-
+  .nova-top-brand span{margin-top:6px;font-size:9px;letter-spacing:.08em;white-space:nowrap}
   .nova-top-status{display:none}
 }
