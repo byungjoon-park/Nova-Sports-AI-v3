@@ -55,7 +55,6 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
   const { theme } = useNovaSettings();
   const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null);
   const [data, setData] = useState<NovaAthleteData | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [gpsConnected, setGpsConnected] = useState(false);
   const [gpsMetrics, setGpsMetrics] = useState({ distance: "-- km", highSpeed: "-- km", maxSpeed: "-- km/h", sprints: "--" });
 
@@ -76,26 +75,6 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
   }, []);
 
   const role = user?.role;
-  const novaSidebarItems = [
-    { label: "대시보드", description: "퍼포먼스·회복·훈련 현황", href: "/mobile/dashboard" },
-    { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai" },
-    ...(role === "admin" || role === "director" || role === "coach"
-      ? [{ label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players" }]
-      : []),
-    { label: "AI 분석", description: "퍼포먼스·회복·피로도 분석", href: "/mobile/analysis" },
-    { label: "재활관리", description: "부상·진료·재활 기록", href: "/mobile/medical" },
-    { label: "리포트", description: "선수 데이터 요약과 보고서", href: "/mobile/report" },
-    ...(role === "admin" || role === "director" || role === "coach"
-      ? [
-          { label: "감독 / 코치", description: "선수와 훈련 관리", href: "/mobile/team" },
-          { label: "팀", description: "팀·선수 구성과 운영", href: "/mobile/team" },
-        ]
-      : []),
-    ...(role === "admin"
-      ? [{ label: "연구·매출 통계", description: "연구·플랫폼·매출 현황", href: "/admin" }]
-      : []),
-  ];
-
   const activeTheme = theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
   const config = CONFIG[section];
   const forbidden = Boolean(config.roles && user && !config.roles.includes(user.role));
@@ -112,55 +91,6 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
 
   return (
     <>
-      <button
-        type="button"
-        className="mobile-nova-sidebar-button"
-        aria-label="NOVA 사이드바 열기"
-        aria-expanded={menuOpen}
-        onClick={() => setMenuOpen((open) => !open)}
-      >
-        ☰
-      </button>
-
-      {menuOpen && (
-        <button
-          type="button"
-          className="mobile-nova-sidebar-backdrop"
-          aria-label="메뉴 닫기"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
-
-      <aside className={`mobile-nova-sidebar-panel ${menuOpen ? "is-open" : ""}`} aria-label={`${roleLabel(user.role)} NOVA 메뉴`}>
-        <div className="mobile-nova-sidebar-header">
-          <div>
-            <span>NOVA SPORTS AI</span>
-            <strong>{roleLabel(user.role)} 메뉴</strong>
-          </div>
-          <button type="button" onClick={() => setMenuOpen(false)} aria-label="메뉴 닫기">×</button>
-        </div>
-
-        <nav className="mobile-nova-sidebar-nav">
-          {novaSidebarItems.map((item) => (
-            <button
-              key={`${item.href}-${item.label}`}
-              type="button"
-              className="mobile-nova-sidebar-item"
-              onClick={() => {
-                setMenuOpen(false);
-                router.push(item.href);
-              }}
-            >
-              <span>
-                <strong>{item.label}</strong>
-                <small>{item.description}</small>
-              </span>
-              <b aria-hidden="true">›</b>
-            </button>
-          ))}
-        </nav>
-      </aside>
-
       <MobileShell title={config.title} subtitle={config.subtitle} active={section === "dashboard" ? "dashboard" : section}>
       {section === "dashboard" && (
         <>
@@ -283,8 +213,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
 }
 
 function MobileShell({ title, subtitle, active, children }: { title: string; subtitle: string; active: string; children: ReactNode }) {
-  return <div className="mobile-page"><NovaTopBar />
-    <div className="mobile-page-title"><h1>{title}</h1><p>{subtitle}</p></div>{children}<nav className="mobile-bottom-nav"><Link className={active === "dashboard" ? "active" : ""} href="/mobile">홈</Link><Link className={active === "analysis" ? "active" : ""} href="/mobile/analysis">분석</Link><Link className={active === "training" ? "active" : ""} href="/mobile/training">훈련</Link><Link className={active === "rehab" ? "active" : ""} href="/mobile/rehab">재활</Link><Link className={active === "report" ? "active" : ""} href="/mobile/report">리포트</Link></nav></div>;
+  return <div className="mobile-page"><NovaTopBar statusText="AI 시스템 준비" /><div className="mobile-page-title"><h1>{title}</h1><p>{subtitle}</p></div>{children}<nav className="mobile-bottom-nav"><Link className={active === "dashboard" ? "active" : ""} href="/mobile">홈</Link><Link className={active === "analysis" ? "active" : ""} href="/mobile/analysis">분석</Link><Link className={active === "training" ? "active" : ""} href="/mobile/training">훈련</Link><Link className={active === "rehab" ? "active" : ""} href="/mobile/rehab">재활</Link><Link className={active === "report" ? "active" : ""} href="/mobile/report">리포트</Link></nav></div>;
 }
 
 
@@ -334,7 +263,6 @@ function MobileCameraPanel() {
   const [selectedJoints, setSelectedJoints] = useState<string[]>([]);
   const [gpsConnected, setGpsConnected] = useState(false);
   const [gpsMetrics, setGpsMetrics] = useState({ distance: "-- km", highSpeed: "-- km", maxSpeed: "-- km/h", sprints: "--" });
-  const [menuOpen, setMenuOpen] = useState(false);
 
 
   const [cameraOn, setCameraOn] = useState(false);
