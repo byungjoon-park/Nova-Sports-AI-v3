@@ -135,7 +135,7 @@ export default function MobileBetaPage() {
 
       <header className="mobile-header">
         <div>
-          <span className="mobile-eyebrow">NOVA SPORTS AI · MOBILE BETA</span>
+          <span className="mobile-eyebrow">NOVA AI SPORTS</span>
           <h1>{mobileDisplayName}</h1>
           <p>{roleDescription}</p>
         </div>
