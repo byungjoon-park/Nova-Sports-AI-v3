@@ -46,7 +46,7 @@ export default function MobileBetaPage() {
   const [user, setUser] = useState<NovaUser | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [booting, setBooting] = useState(true);
-  const [noticeIndex, setNoticeIndex] = useState(0);
+  const [noticeIndex, setNoticeIndex] = useState(2);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -68,12 +68,6 @@ export default function MobileBetaPage() {
     { date: "2026. 8. 29.", title: "GPS 연동 가능 제품 안내", body: "스포츠 GPS 장비 연동을 준비하고 있습니다. 실제 지원 범위는 데이터/API 확인 후 적용됩니다.", href: "/mobile/gps-test" },
     { date: "2026. 8. 29.", title: "GPS 데이터 · AI 분석 연계 안내", body: "GPS 이동거리·고속주행·최고속도·스프린트 데이터를 AI 분석과 함께 확인할 수 있도록 연동 범위를 확대합니다.", href: "/mobile/gps-test" },
   ];
-
-  useEffect(() => {
-    if (booting || !user) return;
-    const timer = window.setInterval(() => setNoticeIndex((index) => (index + 1) % notices.length), 2500);
-    return () => window.clearInterval(timer);
-  }, [booting, user, notices.length]);
 
   const mobileRole = user?.role ?? null;
   const mobileUser = user && mobileRole !== "admin" ? user : null;
@@ -142,7 +136,7 @@ export default function MobileBetaPage() {
       <header className="mobile-header">
         <div>
           <span className="mobile-eyebrow">NOVA SPORTS AI · MOBILE BETA</span>
-          <h1>{mobileUser.role === "athlete" ? `${mobileDisplayName} 선수` : `${mobileDisplayName}님`}</h1>
+          <h1>{mobileDisplayName}</h1>
           <p>{roleDescription}</p>
         </div>
         <button type="button" onClick={() => setMenuOpen(true)} className="mobile-menu-trigger" aria-label="전체 메뉴 열기">☰</button>
@@ -150,7 +144,21 @@ export default function MobileBetaPage() {
 
       {(() => {
         const notice = notices[noticeIndex];
-        return <section className="mobile-notice-card" aria-label="공지사항"><div className="mobile-notice-top"><span className="mobile-notice-label">공지사항</span><time>{notice.date}</time></div><strong>{notice.title}</strong><p>{notice.body}</p><div className="mobile-notice-actions"><button type="button" onClick={() => go(notice.href)}>자세히 보기</button><button type="button" onClick={() => setMenuOpen(true)}>전체 기능</button></div><div className="mobile-notice-dots" aria-label="공지사항 순서">{notices.map((item, index) => <button key={item.title} type="button" className={index === noticeIndex ? "active" : ""} aria-label={`${index + 1}번 공지`} onClick={() => setNoticeIndex(index)} />)}</div></section>;
+        return <section className="mobile-notice-card" aria-label="공지사항">
+          <div className="mobile-notice-top">
+            <span className="mobile-notice-label">공지사항</span>
+            <time>{notice.date}</time>
+          </div>
+          <strong>{notice.title}</strong>
+          <p>{notice.body}</p>
+          <div className="mobile-notice-actions">
+            <button type="button" onClick={() => go(notice.href)}>자세히 보기</button>
+            <button type="button" onClick={() => setMenuOpen(true)}>전체 기능</button>
+          </div>
+          <div className="mobile-notice-dots" aria-label="공지사항 순서">
+            {notices.map((item, index) => <button key={item.title} type="button" className={index === noticeIndex ? "active" : ""} aria-label={`${index + 1}번 공지`} onClick={() => setNoticeIndex(index)} />)}
+          </div>
+        </section>;
       })()}
 
       <section className="mobile-metric-grid" aria-label="주요 지표">
