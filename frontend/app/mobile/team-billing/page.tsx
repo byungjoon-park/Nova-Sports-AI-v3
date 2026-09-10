@@ -166,6 +166,10 @@ export default function MobileTeamBillingPage() {
         .mobile-team-billing-page .mobile-page-title h1{margin:6px 0;font-size:28px}
         .mobile-team-billing-page .mobile-page-title p{margin:0;color:#64748b;font-size:12px;line-height:1.6}
         .mobile-team-billing-card{margin-bottom:90px}
+        .mobile-team-billing-page .mobile-billing-field{display:grid;grid-template-columns:1fr;gap:7px}
+        .mobile-team-billing-page .mobile-billing-field input{width:100%;box-sizing:border-box}
+        .mobile-team-billing-page .mobile-billing-field{display:grid!important;grid-template-columns:1fr!important;gap:7px!important;width:100%;margin-bottom:14px}
+        .mobile-team-billing-page .mobile-billing-field input{width:100%;box-sizing:border-box}
         .mobile-team-billing-price{display:flex;align-items:baseline;gap:8px;margin:18px 0 12px}
         .mobile-team-billing-price strong{font-size:30px;color:#101827}
         .mobile-team-billing-price span{font-size:11px;color:#64748b}
