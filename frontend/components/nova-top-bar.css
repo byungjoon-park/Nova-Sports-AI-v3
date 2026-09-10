@@ -50,8 +50,8 @@ html[data-nova-theme="white"] .nova-top-back{background:#fff;border-color:#dbe1e
 @media(max-width:600px){html[data-nova-theme="white"] .nova-top-bar.is-mobile-content .nova-top-back{background:#fff !important;border-color:#dbe1e8 !important}}
 @media(max-width:600px){
   .nova-top-bar{width:100vw;margin-left:calc(50% - 50vw);height:64px;min-height:64px;padding:0 12px;max-width:none;overflow:visible}
-  /* Mobile content uses one fixed top-back geometry and position on every route. */
-  .nova-top-bar.is-mobile-content .nova-top-back{position:absolute;left:12px;top:50%;transform:translateY(-50%);z-index:20;width:40px !important;height:40px !important;min-width:40px !important;max-width:40px !important;flex:0 0 40px !important;margin:0 !important;padding:0 !important;box-sizing:border-box !important;border:1px solid #ddd6ca !important;border-radius:10px !important;background:#fffdf9 !important;color:#111827 !important;display:flex !important;align-items:center !important;justify-content:center !important;font-size:22px !important;line-height:1 !important;appearance:none;-webkit-appearance:none}
+  /* Mobile content: keep the back button directly under the browser address bar. */
+  .nova-top-bar.is-mobile-content .nova-top-back{position:absolute;left:12px;top:0;transform:none;z-index:20;width:40px !important;height:40px !important;min-width:40px !important;max-width:40px !important;flex:0 0 40px !important;margin:0 !important;padding:0 !important;box-sizing:border-box !important;border:1px solid #ddd6ca !important;border-radius:10px !important;background:#fffdf9 !important;color:#111827 !important;display:flex !important;align-items:center !important;justify-content:center !important;font-size:22px !important;line-height:1 !important;appearance:none !important;-webkit-appearance:none !important}
   .nova-top-bar.is-mobile-content .nova-top-brand{margin-left:52px;max-width:calc(100% - 60px)}
   .nova-top-bar.is-mobile-dashboard{justify-content:flex-start}
   .nova-top-bar.is-mobile-dashboard .nova-top-brand{left:50%;max-width:calc(100% - 110px)}
