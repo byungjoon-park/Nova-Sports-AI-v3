@@ -1,51 +1,193 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NovaTopBar from "../../../components/NovaTopBar";
-import { getCurrentUser, type NovaUser } from "../../../lib/nova-auth";
+import {
+  activatePersonalSubscription,
+  findUserByEmail,
+  getAthleteSubscription,
+  getCurrentUser,
+  type NovaUser,
+} from "../../../lib/nova-auth";
 import "../mobile.css";
+
+const PENDING_KEY = "nova-pending-parent-billing-v1";
+const REFUND_KEY = "nova-refund-requests-v1";
+const DEFAULT_PRICE = 49000;
+
+type PendingBilling = { athleteUserId: string; parentEmail: string; parentName: string };
+type RefundRequest = { id: string; userId: string; email: string; reason: string; createdAt: string; status: "requested" };
 
 export default function MobileBillingPage() {
   const router = useRouter();
   const [user, setUser] = useState<NovaUser | null>(null);
+  const [price, setPrice] = useState(DEFAULT_PRICE);
+  const [parentEmail, setParentEmail] = useState("");
+  const [parentName, setParentName] = useState("");
+  const [refundReason, setRefundReason] = useState("");
+  const [refundRequested, setRefundRequested] = useState(false);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
+    const run = async () => {
     const current = getCurrentUser();
-    if (!current) {
-      router.replace("/mobile/login");
-      return;
-    }
-    if (current.role !== "athlete" && current.role !== "parent") {
-      router.replace("/mobile");
-      return;
-    }
+    if (!current) { router.replace("/mobile/login"); return; }
+    if (current.role !== "athlete" && current.role !== "parent") { router.replace("/mobile"); return; }
     setUser(current);
+    setActive(Boolean(getAthleteSubscription(current.id)));
+
+    fetch("/api/billing/prices", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => { if (Number.isInteger(data?.pro) && data.pro > 0) setPrice(data.pro); })
+      .catch(() => {});
+
+    if (current.role === "athlete") {
+      const raw = localStorage.getItem(REFUND_KEY);
+      if (raw) {
+        try { setRefundRequested((JSON.parse(raw) as RefundRequest[]).some((item) => item.userId === current.id && item.status === "requested")); } catch {}
+      }
+      const query = new URLSearchParams(window.location.search);
+      if (query.get("billing") === "success") {
+        const sessionId = query.get("session_id");
+        const pendingRaw = localStorage.getItem(PENDING_KEY);
+        if (pendingRaw) {
+          try {
+            const pending = JSON.parse(pendingRaw) as PendingBilling;
+            if (pending.athleteUserId === current.id) {
+              if (sessionId) {
+                const verify = await fetch(`/api/billing/verify?session_id=${encodeURIComponent(sessionId)}`, { cache: "no-store" });
+                const verified = await verify.json().catch(() => ({}));
+                if (!verify.ok || !verified.paid) throw new Error(verified.error || "결제 확인에 실패했습니다.");
+                const activated = activatePersonalSubscription({
+                  athleteUserId: verified.athleteId || pending.athleteUserId,
+                  parentEmail: verified.parentEmail || pending.parentEmail,
+                  parentName: verified.parentName || pending.parentName,
+                  stripeCustomerId: verified.stripeCustomerId,
+                  stripeSubscriptionId: verified.stripeSubscriptionId,
+                });
+                if (activated) setMessage(`결제가 완료되었습니다. ${verified.parentEmail || pending.parentEmail} 학부모 계정이 자동 등록·연결되었습니다.`);
+              } else {
+                const activated = activatePersonalSubscription(pending);
+                if (activated) setMessage(`결제가 완료되었습니다. ${pending.parentEmail} 학부모 계정이 자동 등록·연결되었습니다.`);
+              }
+              localStorage.removeItem(PENDING_KEY);
+            }
+          } catch (error) {
+            setMessage(error instanceof Error ? error.message : "결제 확인에 실패했습니다.");
+          }
+        }
+        setActive(Boolean(getAthleteSubscription(current.id)));
+      }
+      if (query.get("billing") === "cancelled") setMessage("결제가 취소되었습니다. 결제 전 입력 정보는 저장되지 않았습니다.");
+    }
+    };
+    void run();
   }, [router]);
+
+  const startCheckout = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!user || user.role !== "athlete") return;
+    const normalized = parentEmail.trim().toLowerCase();
+    if (!normalized) { setMessage("학부모 이메일을 입력하세요."); return; }
+    if (normalized === user.email) { setMessage("선수 본인 이메일과 다른 학부모 이메일을 입력하세요."); return; }
+    const existing = findUserByEmail(normalized);
+    if (existing && existing.role !== "parent") { setMessage("입력한 이메일은 다른 역할의 계정으로 사용 중입니다."); return; }
+
+    localStorage.setItem(PENDING_KEY, JSON.stringify({ athleteUserId: user.id, parentEmail: normalized, parentName: parentName.trim() } satisfies PendingBilling));
+    setLoading(true); setMessage("");
+    try {
+      const response = await fetch("/api/billing/checkout", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: "pro", athleteId: user.id, parentEmail: normalized, parentName: parentName.trim(), returnPath: "/mobile/billing" }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.url) throw new Error(result.error || "결제 페이지를 만들 수 없습니다.");
+      window.location.href = result.url;
+    } catch (error) {
+      localStorage.removeItem(PENDING_KEY);
+      setMessage(error instanceof Error ? error.message : "결제를 시작할 수 없습니다.");
+      setLoading(false);
+    }
+  };
+
+  const requestRefund = () => {
+    if (!user || user.role !== "athlete") return;
+    const reason = refundReason.trim();
+    if (!reason) { setMessage("환불 사유를 입력하세요."); return; }
+    const request: RefundRequest = { id: `refund-${Date.now()}`, userId: user.id, email: user.email, reason, createdAt: new Date().toISOString(), status: "requested" };
+    try {
+      const raw = localStorage.getItem(REFUND_KEY);
+      const list = raw ? JSON.parse(raw) as RefundRequest[] : [];
+      localStorage.setItem(REFUND_KEY, JSON.stringify([...list, request]));
+      setRefundRequested(true); setRefundReason(""); setMessage("환불 신청이 접수되었습니다. 결제 확인 후 처리됩니다.");
+    } catch { setMessage("환불 신청 정보를 저장하지 못했습니다. 다시 시도하세요."); }
+  };
 
   if (!user) return null;
 
   return (
-    <main className="mobile-page theme-ivory">
-      <NovaTopBar statusText="AI 시스템 준비" /><div className="mobile-page-title"><h1>결제</h1><p>개인 Premium은 선수 1회 결제로 운영됩니다.</p></div>
-
-      <section className="mobile-content-card">
-        <div className="mobile-card-heading">
-          <span>PREMIUM</span>
-          <strong>{user.role === "parent" ? "학부모 이용 권한" : "개인 Premium"}</strong>
-        </div>
-
+    <main className="mobile-page theme-ivory mobile-billing-page">
+      <NovaTopBar statusText="AI 시스템 준비" />
+      <div className="mobile-page-title">
+        <span className="mobile-billing-eyebrow">PREMIUM BILLING</span>
+        <h1>결제</h1>
+        <p>선수 1건의 Premium 구독으로 선수와 연결된 학부모가 함께 이용합니다.</p>
+      </div>
+      <section className="mobile-content-card mobile-billing-card">
+        <div className="mobile-card-heading"><span>PERSONAL PREMIUM</span><strong>{active ? "Premium 이용 중" : "개인 Premium"}</strong></div>
+        <div className="mobile-billing-price"><strong>{price.toLocaleString("ko-KR")}원</strong><span>/ 월</span></div>
+        <ul className="mobile-billing-benefits">
+          <li>선수 1명 기준 월 구독</li>
+          <li>결제한 선수의 학부모 계정 1개 자동 연결</li>
+          <li>학부모는 별도 구독료를 결제하지 않음</li>
+        </ul>
         {user.role === "parent" ? (
+          <button className="mobile-action-button" type="button" onClick={() => router.push("/mobile")}>대시보드로 이동</button>
+        ) : active ? (
           <>
-            <p>자녀가 Premium을 결제하면 학부모 계정은 자동 연결되며 별도 결제가 없습니다.</p>
-            <button className="mobile-action-button" onClick={() => router.push("/mobile")}>대시보드</button>
+            <div className="mobile-billing-success">현재 Premium 구독이 활성 상태입니다.</div>
+            <button className="mobile-action-button" type="button" onClick={() => router.push("/mobile")}>대시보드로 이동</button>
+            <div className="mobile-refund-box">
+              <strong>환불 신청</strong>
+              <p>환불은 신청 후 결제 확인을 거쳐 처리됩니다.</p>
+              <textarea value={refundReason} onChange={(e) => setRefundReason(e.target.value)} placeholder="환불 사유를 입력하세요." disabled={refundRequested} />
+              <button type="button" className="mobile-secondary-button" onClick={requestRefund} disabled={refundRequested}>{refundRequested ? "환불 신청 접수됨" : "환불 신청"}</button>
+            </div>
           </>
         ) : (
-          <>
-            <p>선수 본인이 결제합니다. 결제 후 입력한 학부모 계정이 자동 등록·연결되며 학부모는 추가 결제를 하지 않습니다.</p>
-            <button className="mobile-action-button" onClick={() => router.push("/billing")}>선수 Premium 결제하기 ›</button>
-          </>
+          <form onSubmit={startCheckout}>
+            <label className="mobile-billing-field">학부모 이름<input value={parentName} onChange={(e) => setParentName(e.target.value)} placeholder="홍길동 보호자" /></label>
+            <label className="mobile-billing-field">학부모 이메일<input type="email" required value={parentEmail} onChange={(e) => setParentEmail(e.target.value)} placeholder="parent@example.com" /></label>
+            <button className="mobile-action-button" type="submit" disabled={loading}>{loading ? "결제 페이지 준비 중…" : `${price.toLocaleString("ko-KR")}원 결제하기`}</button>
+          </form>
         )}
+        {message && <p className="mobile-billing-message" role="status">{message}</p>}
+        <button className="mobile-billing-back" type="button" onClick={() => router.push("/mobile")}>← 대시보드</button>
       </section>
+      <style jsx global>{`
+        .mobile-billing-page{padding-top:0!important}
+        .mobile-billing-page .mobile-page-title{max-width:720px;margin:0 auto 16px;padding:18px 2px 0}
+        .mobile-billing-eyebrow{font-size:9px;letter-spacing:.14em;color:#2563eb;font-weight:800}
+        .mobile-billing-page .mobile-page-title h1{margin:6px 0;font-size:28px}
+        .mobile-billing-page .mobile-page-title p{margin:0;color:#64748b;font-size:12px;line-height:1.6}
+        .mobile-billing-card{margin-bottom:90px}
+        .mobile-billing-price{display:flex;align-items:baseline;gap:5px;margin:18px 0 12px}
+        .mobile-billing-price strong{font-size:30px;color:#101827}.mobile-billing-price span{font-size:12px;color:#64748b}
+        .mobile-billing-benefits{margin:0 0 18px;padding:14px 16px;border-radius:12px;background:#f7f4ec;color:#475569;font-size:11px;line-height:1.9}
+        .mobile-billing-benefits li{margin-left:14px}
+        .mobile-billing-field{display:grid;gap:7px;margin-top:12px;color:#475569;font-size:11px;font-weight:700}
+        .mobile-billing-field input,.mobile-refund-box textarea{width:100%;box-sizing:border-box;border:1px solid #d6d1c6;border-radius:10px;background:#fffdf8;padding:11px 12px;color:#111827;font:inherit}
+        .mobile-action-button{width:100%;min-height:46px;margin-top:16px;border:0;border-radius:11px;background:#2563eb;color:#fff;font-weight:800;font-size:13px}
+        .mobile-action-button:disabled,.mobile-secondary-button:disabled{opacity:.55}
+        .mobile-billing-success{padding:12px;border-radius:10px;background:#eaf8ef;color:#16824a;font-size:11px;font-weight:700}
+        .mobile-refund-box{margin-top:18px;padding-top:18px;border-top:1px solid #e2ddd3}.mobile-refund-box strong{font-size:14px}.mobile-refund-box p{margin:6px 0 10px}
+        .mobile-refund-box textarea{min-height:82px;resize:vertical}.mobile-secondary-button{width:100%;min-height:42px;margin-top:8px;border:1px solid #cfc9bd;border-radius:10px;background:#fffdf8;color:#111827;font-weight:700}
+        .mobile-billing-message{padding:11px 12px!important;border-radius:10px;background:#f3f5f8;color:#475569!important}
+        .mobile-billing-back{display:block;margin:14px auto 0;border:0;background:transparent;color:#64748b;font-size:11px}
+      `}</style>
     </main>
   );
 }
