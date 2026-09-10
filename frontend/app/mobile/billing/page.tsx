@@ -28,7 +28,7 @@ export default function MobileBillingPage() {
       <header className="mobile-subheader">
         <div className="mobile-desktop-header">
           <div className="mobile-desktop-header-left">
-            <button onClick={() => router.push("/mobile")} aria-label="뒤로">←</button>
+            <button onClick={() => { if (window.history.length > 1) window.history.back(); else router.push("/mobile/dashboard"); }} aria-label="뒤로">←</button>
             <div className="mobile-desktop-brand">
               <strong>N O V A</strong>
               <span>AI SPORTS PERFORMANCE PLATFORM</span>
