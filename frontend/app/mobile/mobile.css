@@ -206,18 +206,19 @@
 .mobile-desktop-header-left > a,
 .mobile-desktop-header-left > button {
   flex:0 0 auto;
-  width:40px;
-  height:40px;
-  display:grid;
-  place-items:center;
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   box-sizing:border-box;
-  border:1px solid rgba(23,23,23,.12);
-  border-radius:12px;
-  background:rgba(255,255,255,.72);
-  color:inherit;
+  border:1px solid #ddd6ca;
+  border-radius:10px;
+  background:#fffdf9;
+  color:#111827;
   text-decoration:none;
   font:inherit;
-  font-size:20px;
+  font-size:22px;
   line-height:1;
   cursor:pointer;
   padding:0;
@@ -261,8 +262,9 @@
 .theme-dark .mobile-desktop-header { border-color:rgba(255,255,255,.14); }
 .theme-dark .mobile-desktop-header-left > a,
 .theme-dark .mobile-desktop-header-left > button {
-  background:rgba(255,255,255,.07);
-  border-color:rgba(255,255,255,.14);
+  background:#0d1420;
+  border-color:#243247;
+  color:#f5f7fb;
 }
 .theme-dark .mobile-desktop-brand span { color:#91a8c2; }
 .mobile-subheader h1 { margin:0; font-size:25px; line-height:1.15; }
@@ -732,3 +734,11 @@
 .mobile-notice-dots button.active { width:16px; border-radius:999px; background:#2563eb; }
 .theme-dark .mobile-notice-dots button { background:#475569; }
 .theme-dark .mobile-notice-dots button.active { background:#5790ff; }
+
+@media (max-width:600px) {
+  .mobile-desktop-header-left > a,
+  .mobile-desktop-header-left > button {
+    width:40px;
+    height:40px;
+  }
+}
