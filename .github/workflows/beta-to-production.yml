@@ -38,9 +38,11 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-      - name: Promote beta to main
+      - name: Promote beta to main and publish update notice
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          COMMIT_SUBJECT: ${{ github.event.head_commit.message }}
+          GITHUB_SHA_VALUE: ${{ github.sha }}
         run: |
           set -e
           git config user.name "github-actions[bot]"
@@ -48,6 +50,43 @@ jobs:
 
           git fetch origin main beta
 
+          changed_files="$(git diff --name-only origin/main...origin/beta | sed '/^$/d' | head -80)"
+          commit_subject="${COMMIT_SUBJECT%%$'\n'*}"
+          if [ -z "$commit_subject" ]; then
+            commit_subject="Beta 업데이트"
+          fi
+
           git checkout -B main origin/main
           git merge --no-edit --no-ff origin/beta -m "Promote beta to Production"
+
+          mkdir -p frontend/public
+          export NOTICE_CHANGED_FILES="$changed_files"
+          export NOTICE_COMMIT_SUBJECT="$commit_subject"
+          export NOTICE_SHA="$GITHUB_SHA_VALUE"
+          export NOTICE_CREATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          python - <<'PY'
+          import json, os
+
+          files = [line for line in os.environ.get("NOTICE_CHANGED_FILES", "").splitlines() if line.strip()]
+          subject = os.environ.get("NOTICE_COMMIT_SUBJECT", "Beta 업데이트").strip() or "Beta 업데이트"
+          body = "이번 서비스 업데이트가 반영되었습니다.\n\n변경 내용:\n- " + subject
+          if files:
+              body += "\n\n수정 파일:\n" + "\n".join(f"- {path}" for path in files)
+
+          notice = {
+              "notice": {
+                  "id": f"UPDATE-{os.environ.get('NOTICE_SHA', 'unknown')[:12]}",
+                  "title": "서비스 업데이트 안내",
+                  "body": body,
+                  "type": "update",
+                  "createdAt": os.environ.get("NOTICE_CREATED_AT", ""),
+              }
+          }
+          with open("frontend/public/latest-notice.json", "w", encoding="utf-8") as f:
+              json.dump(notice, f, ensure_ascii=False, indent=2)
+          PY
+
+          git add frontend/public/latest-notice.json
+          git commit --allow-empty -m "docs: publish service update notice"
           git push origin main

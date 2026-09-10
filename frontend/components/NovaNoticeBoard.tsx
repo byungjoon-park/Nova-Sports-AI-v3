@@ -15,12 +15,33 @@ export default function NovaNoticeBoard() {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/notices", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (active && data?.notices?.[0]) setNotice(data.notices[0]);
-      })
-      .catch(() => {});
+
+    const loadNotices = async () => {
+      const candidates: Notice[] = [];
+
+      try {
+        const response = await fetch(`/latest-notice.json?ts=${Date.now()}`, { cache: "no-store" });
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.notice?.title && data?.notice?.body) candidates.push(data.notice as Notice);
+        }
+      } catch {}
+
+      try {
+        const response = await fetch(`/api/notices?ts=${Date.now()}`, { cache: "no-store" });
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data?.notices)) candidates.push(...(data.notices as Notice[]));
+        }
+      } catch {}
+
+      if (active && candidates.length) {
+        candidates.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setNotice(candidates[0]);
+      }
+    };
+
+    loadNotices();
 
     const onLocalNotice = (event: Event) => {
       const detail = (event as CustomEvent<Notice>).detail;
