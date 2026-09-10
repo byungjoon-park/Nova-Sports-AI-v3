@@ -8,6 +8,7 @@ import { FilesetResolver, PoseLandmarker, type PoseLandmarkerResult } from "@med
 import { getCurrentUser, type NovaUserRole } from "../../../lib/nova-auth";
 import { readNovaAthleteData, writeNovaAthleteData, type NovaAthleteData } from "../../../lib/nova-data";
 import { useNovaSettings } from "../../settings-context";
+import NovaTopBar from "../../../components/NovaTopBar";
 
 export type MobileSection =
   | "dashboard" | "camera-ai" | "players" | "analysis" | "growth-analysis" | "measurements"
@@ -282,7 +283,8 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
 }
 
 function MobileShell({ title, subtitle, active, children }: { title: string; subtitle: string; active: string; children: ReactNode }) {
-  return <div className="mobile-page"><header className="mobile-subheader"><div className="mobile-desktop-header"><div className="mobile-desktop-header-left"><Link href="/mobile/dashboard" aria-label="뒤로" onClick={(event) => { event.preventDefault(); if (window.history.length > 1) window.history.back(); else window.location.assign("/mobile/dashboard"); }}>←</Link><div className="mobile-desktop-brand"><strong>N O V A</strong><span>AI SPORTS PERFORMANCE PLATFORM</span></div></div><div className="mobile-ai-status"><i></i> AI 시스템 준비</div></div><div className="mobile-page-title"><h1>{title}</h1><p>{subtitle}</p></div></header>{children}<nav className="mobile-bottom-nav"><Link className={active === "dashboard" ? "active" : ""} href="/mobile">홈</Link><Link className={active === "analysis" ? "active" : ""} href="/mobile/analysis">분석</Link><Link className={active === "training" ? "active" : ""} href="/mobile/training">훈련</Link><Link className={active === "rehab" ? "active" : ""} href="/mobile/rehab">재활</Link><Link className={active === "report" ? "active" : ""} href="/mobile/report">리포트</Link></nav></div>;
+  return <div className="mobile-page"><NovaTopBar />
+    <div className="mobile-page-title"><h1>{title}</h1><p>{subtitle}</p></div>{children}<nav className="mobile-bottom-nav"><Link className={active === "dashboard" ? "active" : ""} href="/mobile">홈</Link><Link className={active === "analysis" ? "active" : ""} href="/mobile/analysis">분석</Link><Link className={active === "training" ? "active" : ""} href="/mobile/training">훈련</Link><Link className={active === "rehab" ? "active" : ""} href="/mobile/rehab">재활</Link><Link className={active === "report" ? "active" : ""} href="/mobile/report">리포트</Link></nav></div>;
 }
 
 
