@@ -26,6 +26,7 @@ const menuItems: MobileMenuItem[] = [
   { label: "리포트", description: "선수 분석 리포트", href: "/mobile/report", section: "health" },
   { label: "감독·코치", description: "선수와 훈련 관리", href: "/mobile/team", section: "management", roles: ["admin", "director", "coach"] },
   { label: "팀", description: "팀 구성과 단체 운영 문의", href: "/mobile/inquiry", section: "management", roles: ["admin", "director", "coach"] },
+  { label: "팀 전체 결제", description: "감독·코치용 팀 전체 구독 문의", href: "/mobile/team-billing", section: "management", roles: ["director", "coach"] },
   { label: "프로필", description: "내 계정·선수 정보 수정", href: "/mobile/profile", section: "system" },
   { label: "결제", description: "개인 Premium 구독 및 결제", href: "/mobile/billing", section: "system", roles: ["athlete"] },
   { label: "1:1 문의", description: "NOVA 고객지원 문의", href: "/mobile/inquiry", section: "system" },
@@ -58,7 +59,6 @@ export default function MobileBetaPage() {
       }
       setBooting(false);
     }, 250);
-
     return () => window.clearTimeout(timer);
   }, [router]);
 
@@ -144,19 +144,10 @@ export default function MobileBetaPage() {
       {(() => {
         const notice = notices[noticeIndex];
         return <section className="mobile-notice-card" aria-label="공지사항">
-          <div className="mobile-notice-top">
-            <span className="mobile-notice-label">공지사항</span>
-            <time>{notice.date}</time>
-          </div>
-          <strong>{notice.title}</strong>
-          <p>{notice.body}</p>
-          <div className="mobile-notice-actions">
-            <button type="button" onClick={() => go(notice.href)}>자세히 보기</button>
-            <button type="button" onClick={() => setMenuOpen(true)}>전체 기능</button>
-          </div>
-          <div className="mobile-notice-dots" aria-label="공지사항 순서">
-            {notices.map((item, index) => <button key={item.title} type="button" className={index === noticeIndex ? "active" : ""} aria-label={`${index + 1}번 공지`} onClick={() => setNoticeIndex(index)} />)}
-          </div>
+          <div className="mobile-notice-top"><span className="mobile-notice-label">공지사항</span><time>{notice.date}</time></div>
+          <strong>{notice.title}</strong><p>{notice.body}</p>
+          <div className="mobile-notice-actions"><button type="button" onClick={() => go(notice.href)}>자세히 보기</button><button type="button" onClick={() => setMenuOpen(true)}>전체 기능</button></div>
+          <div className="mobile-notice-dots" aria-label="공지사항 순서">{notices.map((item, index) => <button key={item.title} type="button" className={index === noticeIndex ? "active" : ""} aria-label={`${index + 1}번 공지`} onClick={() => setNoticeIndex(index)} />)}</div>
         </section>;
       })()}
 
