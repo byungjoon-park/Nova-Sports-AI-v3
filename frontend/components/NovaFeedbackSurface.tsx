@@ -7,6 +7,7 @@ import {
   createNovaFeedback,
   formatNovaFeedbackDate,
   getNovaFeedbackForUser,
+  syncNovaFeedbackForUser,
   getNovaFeedbackTargets,
   updateNovaFeedback,
   type NovaFeedback,
@@ -26,7 +27,7 @@ function direction(item: NovaFeedback) {
   return `${roleLabel[item.fromRole]} → ${roleLabel[item.toRole]}`;
 }
 
-export default function NovaFeedbackSurface() {
+export default function NovaFeedbackSurface({ placement = "dashboard" }: { placement?: "dashboard" | "players" }) {
   const pathname = usePathname();
   const [user, setUser] = useState<NovaUser | null>(null);
   const [records, setRecords] = useState<NovaFeedback[]>([]);
@@ -36,8 +37,8 @@ export default function NovaFeedbackSurface() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingBody, setEditingBody] = useState("");
 
-  const visible = pathname === "/players";
-  const playersMode = pathname === "/players";
+  const playersMode = placement === "players";
+  const visible = playersMode ? pathname === "/players" : pathname === "/dashboard" || pathname === "/mobile";
 
   const reload = () => {
     const current = getCurrentUser();
@@ -52,10 +53,18 @@ export default function NovaFeedbackSurface() {
   useEffect(() => {
     if (!visible) return;
     reload();
+    let cancelled = false;
+    const current = getCurrentUser();
+    if (current) {
+      void syncNovaFeedbackForUser(current).then((next) => {
+        if (!cancelled) setRecords(next);
+      });
+    }
     const onUpdate = () => reload();
     window.addEventListener("nova-feedback-updated", onUpdate);
     window.addEventListener("storage", onUpdate);
     return () => {
+      cancelled = true;
       window.removeEventListener("nova-feedback-updated", onUpdate);
       window.removeEventListener("storage", onUpdate);
     };
@@ -129,7 +138,7 @@ export default function NovaFeedbackSurface() {
               ) : (
                 <>
                   <p>{item.body}</p>
-                  {item.fromUserId === user.id && <button type="button" className="nova-feedback-edit-link" onClick={() => { setEditingId(item.id); setEditingBody(item.body); }}>수정</button>}
+                  {(item.fromUserId === user.id || (item.fromEmail || "").toLowerCase() === user.email.toLowerCase()) && <button type="button" className="nova-feedback-edit-link" onClick={() => { setEditingId(item.id); setEditingBody(item.body); }}>수정</button>}
                 </>
               )}
             </article>
