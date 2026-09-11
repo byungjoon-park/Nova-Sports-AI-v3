@@ -23,7 +23,6 @@ type MobileMenuItem = {
 };
 
 const menuItems: MobileMenuItem[] = [
-  { label: "대시보드", description: "퍼포먼스·회복·훈련 현황", href: "/mobile/dashboard", section: "main" },
   { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai", section: "main", roles: ["admin", "director", "coach", "athlete"] },
   { label: "GPS", description: "GPS 데이터와 피로 분석", href: "/mobile/gps-test", section: "main" },
   { label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players", section: "main", roles: ["admin", "director", "coach"] },
@@ -34,6 +33,7 @@ const menuItems: MobileMenuItem[] = [
   { label: "리포트", description: "선수 분석 리포트", href: "/mobile/report", section: "health" },
   { label: "감독·코치", description: "선수와 훈련 관리", href: "/mobile/team", section: "management", roles: ["admin", "director", "coach"] },
   { label: "팀", description: "팀 구성과 단체 운영 문의", href: "/mobile/inquiry", section: "management", roles: ["admin", "director", "coach"] },
+  { label: "팀 전체 결제", description: "감독·코치용 팀 전체 결제", href: "/mobile/team-billing", section: "management", roles: ["director", "coach"] },
   { label: "프로필", description: "내 계정·선수 정보 수정", href: "/mobile/profile", section: "system" },
   { label: "결제", description: "개인 Premium 구독 및 결제", href: "/mobile/billing", section: "system", roles: ["athlete"] },
   { label: "1:1 문의", description: "NOVA 고객지원 문의", href: "/mobile/inquiry", section: "system" },
