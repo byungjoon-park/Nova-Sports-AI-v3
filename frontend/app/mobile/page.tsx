@@ -7,6 +7,13 @@ import { getAthleteProfile, getCurrentUser, signOutUser, type NovaUser, type Nov
 import { getMeasurementRange } from "../../lib/nova-measurements";
 import { useNovaSettings } from "../settings-context";
 
+type MobileNotice = {
+  date: string;
+  title: string;
+  body: string;
+  href?: string;
+};
+
 type MobileMenuItem = {
   label: string;
   description: string;
@@ -16,6 +23,7 @@ type MobileMenuItem = {
 };
 
 const menuItems: MobileMenuItem[] = [
+  { label: "대시보드", description: "퍼포먼스·회복·훈련 현황", href: "/mobile/dashboard", section: "main" },
   { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai", section: "main", roles: ["admin", "director", "coach", "athlete"] },
   { label: "GPS", description: "GPS 데이터와 피로 분석", href: "/mobile/gps-test", section: "main" },
   { label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players", section: "main", roles: ["admin", "director", "coach"] },
@@ -26,7 +34,6 @@ const menuItems: MobileMenuItem[] = [
   { label: "리포트", description: "선수 분석 리포트", href: "/mobile/report", section: "health" },
   { label: "감독·코치", description: "선수와 훈련 관리", href: "/mobile/team", section: "management", roles: ["admin", "director", "coach"] },
   { label: "팀", description: "팀 구성과 단체 운영 문의", href: "/mobile/inquiry", section: "management", roles: ["admin", "director", "coach"] },
-  { label: "팀 전체 결제", description: "감독·코치용 팀 전체 구독 문의", href: "/mobile/team-billing", section: "management", roles: ["director", "coach"] },
   { label: "프로필", description: "내 계정·선수 정보 수정", href: "/mobile/profile", section: "system" },
   { label: "결제", description: "개인 Premium 구독 및 결제", href: "/mobile/billing", section: "system", roles: ["athlete"] },
   { label: "1:1 문의", description: "NOVA 고객지원 문의", href: "/mobile/inquiry", section: "system" },
@@ -46,7 +53,8 @@ export default function MobileBetaPage() {
   const [user, setUser] = useState<NovaUser | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [booting, setBooting] = useState(true);
-  const [noticeIndex, setNoticeIndex] = useState(2);
+  const [noticeIndex, setNoticeIndex] = useState(0);
+  const [liveNotices, setLiveNotices] = useState<MobileNotice[]>([]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -59,14 +67,54 @@ export default function MobileBetaPage() {
       }
       setBooting(false);
     }, 250);
+
     return () => window.clearTimeout(timer);
   }, [router]);
 
-  const notices = [
+  const fallbackNotices = [
     { date: "2026. 8. 29.", title: "NOVA V3 AI 분석 시스템 업데이트 안내", body: "카메라 AI 분석과 선수 퍼포먼스 분석 기능이 업데이트되었습니다.", href: "/mobile/dashboard" },
     { date: "2026. 8. 29.", title: "GPS 연동 가능 제품 안내", body: "스포츠 GPS 장비 연동을 준비하고 있습니다. 실제 지원 범위는 데이터/API 확인 후 적용됩니다.", href: "/mobile/gps-test" },
     { date: "2026. 8. 29.", title: "GPS 데이터 · AI 분석 연계 안내", body: "GPS 이동거리·고속주행·최고속도·스프린트 데이터를 AI 분석과 함께 확인할 수 있도록 연동 범위를 확대합니다.", href: "/mobile/gps-test" },
   ];
+
+  useEffect(() => {
+    let active = true;
+    const loadNotices = async () => {
+      const notices: MobileNotice[] = [];
+      try {
+        const response = await fetch(`/latest-notice.json?ts=${Date.now()}`, { cache: "no-store" });
+        if (response.ok) {
+          const data = await response.json();
+          const notice = data?.notice;
+          if (notice?.title && notice?.body) notices.push({
+            date: notice.createdAt ? new Date(notice.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "numeric", day: "numeric" }) : "",
+            title: notice.title,
+            body: notice.body,
+            href: "/mobile",
+          });
+        }
+      } catch {}
+      try {
+        const response = await fetch(`/api/notices?ts=${Date.now()}`, { cache: "no-store" });
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data?.notices)) {
+            notices.push(...data.notices.filter((item: { title?: string; body?: string }) => item?.title && item?.body).map((item: { title: string; body: string; createdAt?: string }) => ({
+              date: item.createdAt ? new Date(item.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "numeric", day: "numeric" }) : "",
+              title: item.title,
+              body: item.body,
+              href: "/mobile",
+            })));
+          }
+        }
+      } catch {}
+      if (active && notices.length) setLiveNotices(notices);
+    };
+    loadNotices();
+    return () => { active = false; };
+  }, []);
+
+  const notices = liveNotices.length ? liveNotices : fallbackNotices;
 
   const mobileRole = user?.role ?? null;
   const mobileUser = user && mobileRole !== "admin" ? user : null;
@@ -134,7 +182,7 @@ export default function MobileBetaPage() {
 
       <header className="mobile-header">
         <div>
-          <span className="mobile-eyebrow">NOVA AI SPORTS</span>
+          <span className="mobile-eyebrow">NOVA SPORTS AI · MOBILE BETA</span>
           <h1>{mobileDisplayName}</h1>
           <p>{roleDescription}</p>
         </div>
@@ -144,10 +192,19 @@ export default function MobileBetaPage() {
       {(() => {
         const notice = notices[noticeIndex];
         return <section className="mobile-notice-card" aria-label="공지사항">
-          <div className="mobile-notice-top"><span className="mobile-notice-label">공지사항</span><time>{notice.date}</time></div>
-          <strong>{notice.title}</strong><p>{notice.body}</p>
-          <div className="mobile-notice-actions"><button type="button" onClick={() => go(notice.href)}>자세히 보기</button><button type="button" onClick={() => setMenuOpen(true)}>전체 기능</button></div>
-          <div className="mobile-notice-dots" aria-label="공지사항 순서">{notices.map((item, index) => <button key={item.title} type="button" className={index === noticeIndex ? "active" : ""} aria-label={`${index + 1}번 공지`} onClick={() => setNoticeIndex(index)} />)}</div>
+          <div className="mobile-notice-top">
+            <span className="mobile-notice-label">공지사항</span>
+            <time>{notice.date}</time>
+          </div>
+          <strong>{notice.title}</strong>
+          <p>{notice.body}</p>
+          <div className="mobile-notice-actions">
+            <button type="button" onClick={() => go(notice.href || "/mobile")}>자세히 보기</button>
+            <button type="button" onClick={() => setMenuOpen(true)}>전체 기능</button>
+          </div>
+          <div className="mobile-notice-dots" aria-label="공지사항 순서">
+            {notices.map((item, index) => <button key={item.title} type="button" className={index === noticeIndex ? "active" : ""} aria-label={`${index + 1}번 공지`} onClick={() => setNoticeIndex(index)} />)}
+          </div>
         </section>;
       })()}
 

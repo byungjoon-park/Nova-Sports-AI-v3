@@ -52,9 +52,6 @@ jobs:
 
           changed_files="$(git diff --name-only origin/main...origin/beta | sed '/^$/d' | head -80)"
           commit_subject="${COMMIT_SUBJECT%%$'\n'*}"
-          if [ -z "$commit_subject" ]; then
-            commit_subject="Beta 업데이트"
-          fi
 
           git checkout -B main origin/main
           git merge --no-edit --no-ff origin/beta -m "Promote beta to Production"
@@ -68,11 +65,41 @@ jobs:
           python - <<'PY'
           import json, os
 
-          files = [line for line in os.environ.get("NOTICE_CHANGED_FILES", "").splitlines() if line.strip()]
-          subject = os.environ.get("NOTICE_COMMIT_SUBJECT", "Beta 업데이트").strip() or "Beta 업데이트"
-          body = "이번 서비스 업데이트가 반영되었습니다.\n\n변경 내용:\n- " + subject
-          if files:
-              body += "\n\n수정 파일:\n" + "\n".join(f"- {path}" for path in files)
+          files = [line.strip() for line in os.environ.get("NOTICE_CHANGED_FILES", "").splitlines() if line.strip()]
+          subject = os.environ.get("NOTICE_COMMIT_SUBJECT", "").strip()
+
+          def feature_name(path):
+              if path.startswith("frontend/app/api/billing/") or "billing" in path:
+                  return "결제 기능"
+              if path.startswith("frontend/app/mobile/") or "Mobile" in path or "/mobile-" in path:
+                  return "모바일 기능"
+              if "notice" in path.lower() or "공지" in path:
+                  return "공지사항 기능"
+              if path.startswith("frontend/app/admin/"):
+                  return "관리자 기능"
+              if path.startswith("frontend/components/"):
+                  return "서비스 화면 및 기능"
+              if path.startswith("frontend/app/api/"):
+                  return "서비스 API 기능"
+              return "서비스 기능"
+
+          features = []
+          for path in files:
+              name = feature_name(path)
+              if name not in features:
+                  features.append(name)
+
+          if not features:
+              features = ["서비스 기능"]
+
+          # Keep the notice user-facing: describe the updated feature, never the source filenames.
+          feature_text = " · ".join(features[:4])
+          body = f"이번 업데이트로 {feature_text}이 업데이트되었습니다."
+          if subject:
+              clean_subject = subject.split(":", 1)[1].strip() if ":" in subject and subject.split(":", 1)[0].lower() in {"feat", "fix", "refactor", "chore", "docs"} else subject
+              # Keep commit text only when it is already user-facing Korean.
+              if clean_subject and any("가" <= ch <= "힣" for ch in clean_subject) and clean_subject not in {"Beta 업데이트"}:
+                  body += f"\n\n업데이트 내용: {clean_subject}"
 
           notice = {
               "notice": {
