@@ -3,7 +3,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { registerUser, NovaUserRole } from "../../lib/nova-auth";
+import { getAuthStore, registerUser, requestTeamJoin, NovaUserRole } from "../../lib/nova-auth";
 import { useNovaSettings } from "../settings-context";
 import "./signup.css";
 
@@ -20,10 +20,13 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setSignupRole] = useState<Exclude<NovaUserRole, "admin">>("athlete");
+  const [inviteCode, setInviteCode] = useState("");
   const [terms, setTerms] = useState(false);
   const [privacy, setPrivacy] = useState(false);
   const [message, setMessage] = useState("");
   const [kakaoConnected, setKakaoConnected] = useState(false);
+
+  const requiresCode = role === "coach" || role === "athlete" || role === "parent";
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -47,7 +50,32 @@ export default function SignupPage() {
       setMessage("이름과 이메일을 입력하세요.");
       return;
     }
+    if (requiresCode && !inviteCode.trim()) {
+      setMessage(role === "parent" ? "학부모 인증번호를 입력하세요." : "팀 인증번호를 입력하세요.");
+      return;
+    }
+
+    if (role === "coach" || role === "athlete") {
+      const normalizedCode = inviteCode.trim().toUpperCase();
+      const invite = getAuthStore().invites.find(
+        (item) =>
+          item.code === normalizedCode &&
+          item.status === "pending" &&
+          item.role === role &&
+          new Date(item.expiresAt).getTime() >= Date.now(),
+      );
+      if (!invite) {
+        setMessage("유효하지 않거나 만료된 팀 인증번호입니다.");
+        return;
+      }
+    }
+
     const user = registerUser({ name, email, role });
+
+    if (role === "coach" || role === "athlete") {
+      requestTeamJoin(inviteCode, user.id);
+    }
+
     setRole(user.role);
     try {
       localStorage.setItem("nova-active-role", user.role);
@@ -87,12 +115,34 @@ export default function SignupPage() {
             <legend>사용자 유형</legend>
             <div className="role-grid">
               {roles.map((item) => (
-                <button key={item.value} type="button" className={role === item.value ? "selected" : ""} onClick={() => setSignupRole(item.value)}>
+                <button
+                  key={item.value}
+                  type="button"
+                  className={role === item.value ? "selected" : ""}
+                  onClick={() => {
+                    setSignupRole(item.value);
+                    setInviteCode("");
+                    setMessage("");
+                  }}
+                >
                   {item.label}
                 </button>
               ))}
             </div>
           </fieldset>
+
+          {requiresCode && (
+            <label>
+              {role === "parent" ? "학부모 인증번호" : "팀 인증번호"}
+              <input
+                value={inviteCode}
+                onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+                placeholder={role === "parent" ? "자녀에게 받은 인증번호" : "감독에게 받은 팀 인증번호"}
+                autoComplete="one-time-code"
+                required
+              />
+            </label>
+          )}
 
           <div className="terms-box">
             <label className="check"><input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} />
