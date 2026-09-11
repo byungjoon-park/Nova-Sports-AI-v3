@@ -133,23 +133,6 @@ export default function MobileAnalysisPage() {
             <div className="mobile-analysis-empty">퍼포먼스 측정 기록이 없습니다.</div>
           )}
         </section>
-
-        <section className="mobile-analysis-card">
-          <div className="mobile-analysis-card-heading">
-            <div><span>AI TOOLS</span><h2>분석 바로가기</h2></div>
-          </div>
-          <div className="mobile-analysis-links">
-            <button type="button" onClick={() => router.push("/mobile/camera-ai")}>
-              <span>◎</span><div><strong>카메라 AI</strong><small>동작 촬영과 AI 분석</small></div><b>›</b>
-            </button>
-            <button type="button" onClick={() => router.push("/mobile/report")}>
-              <span>▤</span><div><strong>리포트</strong><small>선수 데이터 요약과 보고서</small></div><b>›</b>
-            </button>
-            <button type="button" onClick={() => router.push("/mobile/growth-analysis")}>
-              <span>↗</span><div><strong>성장·체력</strong><small>신체와 체력 측정 변화</small></div><b>›</b>
-            </button>
-          </div>
-        </section>
       </div>
     </main>
   );
