@@ -1,6 +1,7 @@
 "use client";
 
 import "./mobile.css";
+import NovaFeedbackSurface from "../../components/NovaFeedbackSurface";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAthleteProfile, getAuthStore, getCurrentUser, signOutUser, type NovaUser, type NovaUserRole } from "../../lib/nova-auth";
@@ -246,6 +247,8 @@ export default function MobileBetaPage() {
         <article className="mobile-metric-card"><span>Recovery</span><strong>{recovery ?? "-"}</strong><small>/100</small></article>
         <article className="mobile-metric-card"><span>Fatigue</span><strong>{fatigue ?? "-"}</strong><small>/100</small></article>
       </section>
+
+      <NovaFeedbackSurface />
 
       <section className="mobile-content-grid">
         <article className="mobile-content-card mobile-insight-card">
