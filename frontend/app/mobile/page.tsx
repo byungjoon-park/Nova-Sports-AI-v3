@@ -3,8 +3,9 @@
 import "./mobile.css";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAthleteProfile, getCurrentUser, signOutUser, type NovaUser, type NovaUserRole } from "../../lib/nova-auth";
+import { getAthleteProfile, getAuthStore, getCurrentUser, signOutUser, type NovaUser, type NovaUserRole } from "../../lib/nova-auth";
 import { getMeasurementRange } from "../../lib/nova-measurements";
+import { readNovaAthleteData } from "../../lib/nova-data";
 import { useNovaSettings } from "../settings-context";
 
 type MobileNotice = {
@@ -24,11 +25,11 @@ type MobileMenuItem = {
 
 const menuItems: MobileMenuItem[] = [
   { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai", section: "main", roles: ["admin", "director", "coach", "athlete"] },
-  { label: "GPS", description: "GPS 데이터와 피로 분석", href: "/mobile/gps-test", section: "main" },
+  { label: "GPS", description: "GPS 데이터와 피로 분석", href: "/mobile/gps-test", section: "main", roles: ["admin", "director", "coach", "athlete"] },
   { label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players", section: "main", roles: ["admin", "director", "coach"] },
   { label: "AI 분석", description: "퍼포먼스와 신체 분석", href: "/mobile/analysis", section: "main" },
-  { label: "성장·체력", description: "성장 및 체력 측정", href: "/mobile/growth-analysis", section: "main" },
-  { label: "측정 기록", description: "측정값과 이력 확인", href: "/mobile/measurements", section: "main" },
+  { label: "성장·체력", description: "성장 및 체력 측정", href: "/mobile/growth-analysis", section: "main", roles: ["admin", "director", "coach", "athlete"] },
+  { label: "측정 기록", description: "측정값과 이력 확인", href: "/mobile/measurements", section: "main", roles: ["admin", "director", "coach", "athlete"] },
   { label: "의료·재활", description: "진료·부상·재활 기록", href: "/mobile/medical", section: "health" },
   { label: "리포트", description: "선수 분석 리포트", href: "/mobile/report", section: "health" },
   { label: "감독·코치", description: "선수와 훈련 관리", href: "/mobile/team", section: "management", roles: ["admin", "director", "coach"] },
@@ -36,6 +37,7 @@ const menuItems: MobileMenuItem[] = [
   { label: "팀 전체 결제", description: "감독·코치용 팀 전체 결제", href: "/mobile/team-billing", section: "management", roles: ["director", "coach"] },
   { label: "프로필", description: "내 계정·선수 정보 수정", href: "/mobile/profile", section: "system" },
   { label: "결제", description: "개인 Premium 구독 및 결제", href: "/mobile/billing", section: "system", roles: ["athlete"] },
+  { label: "피드백", description: "허용된 상대와 피드백 메시지", href: "/mobile/feedback", section: "system", roles: ["director", "coach", "athlete", "parent"] },
   { label: "1:1 문의", description: "NOVA 고객지원 문의", href: "/mobile/inquiry", section: "system" },
 ];
 
@@ -120,6 +122,16 @@ export default function MobileBetaPage() {
   const mobileUser = user && mobileRole !== "admin" ? user : null;
   const mobileDisplayName = mobileUser?.name ?? "사용자";
   const profile = useMemo(() => (mobileRole === "athlete" ? getAthleteProfile() : null), [mobileRole]);
+  const parentChild = useMemo(() => {
+    if (mobileRole !== "parent" || !user) return null;
+    const store = getAuthStore();
+    const link = store.guardianLinks.find((item) => item.guardianUserId === user.id && item.status === "active");
+    if (!link) return null;
+    const child = store.users.find((item) => item.id === link.athleteUserId && item.role === "athlete");
+    const data = readNovaAthleteData();
+    if (!child || data.athlete.id !== child.id) return { child, data: null };
+    return { child, data };
+  }, [mobileRole, user]);
   const measurementData = useMemo(() => {
     const end = new Date();
     const start = new Date(end);
@@ -137,10 +149,15 @@ export default function MobileBetaPage() {
     const sorted = [...items].sort((a, b) => a.date.localeCompare(b.date));
     return sorted.at(-1)?.score;
   };
-  const performance = latest(measurementData.performanceRecords);
-  const recovery = latest(measurementData.recoveryRecords);
-  const fatigue = latest(measurementData.fatigueRecords);
-  const trend = [...measurementData.performanceRecords].sort((a, b) => a.date.localeCompare(b.date)).slice(-7);
+  const parentData = mobileRole === "parent" ? parentChild?.data : null;
+  const emptyRecords = { performanceRecords: [], recoveryRecords: [], fatigueRecords: [] };
+  const dashboardRecords = mobileRole === "parent"
+    ? (parentData ? { performanceRecords: parentData.performanceRecords, recoveryRecords: parentData.recoveryRecords, fatigueRecords: parentData.fatigueRecords } : emptyRecords)
+    : measurementData;
+  const performance = latest(dashboardRecords.performanceRecords);
+  const recovery = latest(dashboardRecords.recoveryRecords);
+  const fatigue = latest(dashboardRecords.fatigueRecords);
+  const trend = [...dashboardRecords.performanceRecords].sort((a, b) => a.date.localeCompare(b.date)).slice(-7);
   const trendMax = Math.max(...trend.map((item) => item.score), 100);
   const trendMin = Math.min(...trend.map((item) => item.score), 0);
 
@@ -183,8 +200,8 @@ export default function MobileBetaPage() {
       <header className="mobile-header">
         <div>
           <span className="mobile-eyebrow">NOVA AI SPORTS</span>
-          <h1>{mobileDisplayName}</h1>
-          <p>{roleDescription}</p>
+          <h1>{mobileRole === "parent" && parentChild?.child ? `${parentChild.child.name} 보호자` : mobileDisplayName}</h1>
+          <p>{mobileRole === "parent" ? "연결된 자녀의 퍼포먼스·회복·훈련 현황을 확인합니다." : roleDescription}</p>
         </div>
         <button type="button" onClick={() => setMenuOpen(true)} className="mobile-menu-trigger" aria-label="전체 메뉴 열기">☰</button>
       </header>
@@ -207,6 +224,22 @@ export default function MobileBetaPage() {
           </div>
         </section>;
       })()}
+
+      {mobileRole === "parent" && !parentChild?.data && (
+        <section className="mobile-content-card">
+          <div className="mobile-card-heading"><span>PARENT ACCESS</span><strong>자녀 데이터 연결 확인</strong></div>
+          <p>{parentChild?.child ? "연결된 자녀의 데이터가 현재 기기에서 확인되지 않습니다." : "연결된 자녀가 없습니다. 선수 계정과 보호자 연결을 먼저 확인하세요."}</p>
+        </section>
+      )}
+
+      {mobileRole === "parent" && parentChild?.data && (
+        <section className="mobile-content-card">
+          <div className="mobile-card-heading"><span>CHILD</span><strong>{parentChild.child?.name} 데이터 보기</strong><button type="button" onClick={() => go("/mobile/feedback")}>피드백 ›</button></div>
+          <p>학부모 계정은 연결된 자녀의 데이터를 조회만 할 수 있으며 측정값을 입력하거나 수정할 수 없습니다.</p>
+        </section>
+      )}
+
+      {mobileRole === "parent" && !parentChild?.data ? null : null}
 
       <section className="mobile-metric-grid" aria-label="주요 지표">
         <article className="mobile-metric-card"><span>Performance</span><strong>{performance ?? "-"}</strong><small>/100</small></article>
