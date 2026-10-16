@@ -26,14 +26,19 @@ declare global {
 
 let html2canvasLoader: Promise<Html2Canvas> | null = null;
 
-function collectPrintCss() {
+function collectPrintCss(): string {
   const chunks: string[] = [];
 
   for (const sheet of Array.from(document.styleSheets)) {
     try {
       for (const rule of Array.from(sheet.cssRules)) {
-        if (rule instanceof CSSMediaRule && rule.conditionText.includes("print")) {
-          for (const nested of Array.from(rule.cssRules)) chunks.push(nested.cssText);
+        if (
+          rule instanceof CSSMediaRule &&
+          rule.conditionText.includes("print")
+        ) {
+          for (const nested of Array.from(rule.cssRules)) {
+            chunks.push(nested.cssText);
+          }
         }
       }
     } catch {
@@ -45,34 +50,76 @@ function collectPrintCss() {
 }
 
 function loadHtml2Canvas(): Promise<Html2Canvas> {
-  if (window.html2canvas) return Promise.resolve(window.html2canvas);
-  if (html2canvasLoader) return html2canvasLoader;
+  const loadedHtml2Canvas = window.html2canvas;
 
-  html2canvasLoader = new Promise((resolve, reject) => {
+  if (loadedHtml2Canvas) {
+    return Promise.resolve(loadedHtml2Canvas);
+  }
+
+  if (html2canvasLoader) {
+    return html2canvasLoader;
+  }
+
+  html2canvasLoader = new Promise<Html2Canvas>((resolve, reject) => {
     const existing = document.querySelector<HTMLScriptElement>(
       'script[data-nova-html2canvas="true"]',
     );
 
     if (existing) {
-      existing.addEventListener("load", () => {
-        if (window.html2canvas) resolve(window.html2canvas);
-        else reject(new Error("PNG 변환 모듈을 불러오지 못했습니다."));
-      }, { once: true });
-      existing.addEventListener("error", () => reject(new Error("PNG 변환 모듈을 불러오지 못했습니다.")), { once: true });
+      const existingModule = window.html2canvas;
+
+      if (existingModule) {
+        resolve(existingModule);
+        return;
+      }
+
+      existing.addEventListener(
+        "load",
+        () => {
+          const loadedModule = window.html2canvas;
+
+          if (loadedModule) {
+            resolve(loadedModule);
+          } else {
+            reject(new Error("PNG 변환 모듈을 불러오지 못했습니다."));
+          }
+        },
+        { once: true },
+      );
+
+      existing.addEventListener(
+        "error",
+        () => reject(
+          new Error("PNG 변환 모듈을 불러오지 못했습니다."),
+        ),
+        { once: true },
+      );
+
       return;
     }
 
     const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+    script.src =
+      "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
     script.async = true;
     script.dataset.novaHtml2canvas = "true";
+
     script.onload = () => {
-      if (window.html2canvas) resolve(window.html2canvas);
-      else reject(new Error("PNG 변환 모듈을 불러오지 못했습니다."));
+      const loadedModule = window.html2canvas;
+
+      if (loadedModule) {
+        resolve(loadedModule);
+      } else {
+        reject(new Error("PNG 변환 모듈을 불러오지 못했습니다."));
+      }
     };
-    script.onerror = () => reject(new Error("PNG 변환 모듈을 불러오지 못했습니다."));
+
+    script.onerror = () => {
+      reject(new Error("PNG 변환 모듈을 불러오지 못했습니다."));
+    };
+
     document.head.appendChild(script);
-  }).catch((error) => {
+  }).catch((error: unknown) => {
     html2canvasLoader = null;
     throw error;
   });
@@ -80,24 +127,35 @@ function loadHtml2Canvas(): Promise<Html2Canvas> {
   return html2canvasLoader;
 }
 
-async function waitForImages(root: HTMLElement) {
+async function waitForImages(root: HTMLElement): Promise<void> {
   const images = Array.from(root.querySelectorAll("img"));
+
   await Promise.all(
-    images.map(
-      (image) =>
-        image.complete
-          ? Promise.resolve()
-          : new Promise<void>((resolve) => {
-              image.addEventListener("load", () => resolve(), { once: true });
-              image.addEventListener("error", () => resolve(), { once: true });
-            }),
-    ),
+    images.map((image) => {
+      if (image.complete) {
+        return Promise.resolve();
+      }
+
+      return new Promise<void>((resolve) => {
+        image.addEventListener("load", () => resolve(), {
+          once: true,
+        });
+        image.addEventListener("error", () => resolve(), {
+          once: true,
+        });
+      });
+    }),
   );
 }
 
-async function elementToPng(element: HTMLElement, html2canvas: Html2Canvas): Promise<Blob> {
-  const width = Math.ceil(element.getBoundingClientRect().width) || 794;
-  const height = Math.ceil(element.getBoundingClientRect().height) || 1123;
+async function elementToPng(
+  element: HTMLElement,
+  html2canvas: Html2Canvas,
+): Promise<Blob> {
+  const rect = element.getBoundingClientRect();
+  const width = Math.ceil(rect.width) || 794;
+  const height = Math.ceil(rect.height) || 1123;
+
   const clone = element.cloneNode(true) as HTMLElement;
 
   clone.classList.add("nova-share-capture-page");
@@ -125,10 +183,28 @@ async function elementToPng(element: HTMLElement, html2canvas: Html2Canvas): Pro
   host.style.pointerEvents = "none";
 
   const style = document.createElement("style");
-  style.textContent = `${collectPrintCss()}
-    .nova-share-capture-host, .nova-share-capture-host * { box-sizing: border-box; }
-    .nova-share-capture-host .nova-share-capture-page { display: block !important; width: ${width}px !important; height: ${height}px !important; min-height: ${height}px !important; max-height: ${height}px !important; overflow: hidden !important; background: #fff !important; }
-    .nova-share-capture-host .print-result-page { break-after: auto !important; page-break-after: auto !important; }
+  style.textContent = `
+    ${collectPrintCss()}
+
+    .nova-share-capture-host,
+    .nova-share-capture-host * {
+      box-sizing: border-box;
+    }
+
+    .nova-share-capture-host .nova-share-capture-page {
+      display: block !important;
+      width: ${width}px !important;
+      height: ${height}px !important;
+      min-height: ${height}px !important;
+      max-height: ${height}px !important;
+      overflow: hidden !important;
+      background: #fff !important;
+    }
+
+    .nova-share-capture-host .print-result-page {
+      break-after: auto !important;
+      page-break-after: auto !important;
+    }
   `;
 
   host.append(style, clone);
@@ -136,7 +212,12 @@ async function elementToPng(element: HTMLElement, html2canvas: Html2Canvas): Pro
 
   try {
     await waitForImages(clone);
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
 
     const canvas = await html2canvas(clone, {
       backgroundColor: "#ffffff",
@@ -146,13 +227,25 @@ async function elementToPng(element: HTMLElement, html2canvas: Html2Canvas): Pro
       logging: false,
       width,
       height,
-      windowWidth: Math.max(document.documentElement.clientWidth, width),
-      windowHeight: Math.max(document.documentElement.clientHeight, height),
+      windowWidth: Math.max(
+        document.documentElement.clientWidth,
+        width,
+      ),
+      windowHeight: Math.max(
+        document.documentElement.clientHeight,
+        height,
+      ),
     });
 
     return await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error("PNG 변환에 실패했습니다."))),
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("PNG 변환에 실패했습니다."));
+          }
+        },
         "image/png",
         1,
       );
@@ -176,7 +269,12 @@ async function createReportImages(): Promise<File[]> {
 
   for (let index = 0; index < pages.length; index += 1) {
     const blob = await elementToPng(pages[index], html2canvas);
-    files.push(new File([blob], `NOVA-Report-${index + 1}.png`, { type: "image/png" }));
+
+    files.push(
+      new File([blob], `NOVA-Report-${index + 1}.png`, {
+        type: "image/png",
+      }),
+    );
   }
 
   return files;
@@ -187,8 +285,12 @@ export default function MobileReportPage() {
   const sharingRef = useRef(false);
 
   useEffect(() => {
-    const printButton = document.querySelector<HTMLButtonElement>(".print-button");
-    if (!printButton) return;
+    const printButton =
+      document.querySelector<HTMLButtonElement>(".print-button");
+
+    if (!printButton) {
+      return;
+    }
 
     const originalText = printButton.textContent;
     const originalClassName = printButton.className;
@@ -198,7 +300,10 @@ export default function MobileReportPage() {
       event.stopPropagation();
       event.stopImmediatePropagation();
 
-      if (sharingRef.current) return;
+      if (sharingRef.current) {
+        return;
+      }
+
       sharingRef.current = true;
       setSharing(true);
 
@@ -211,24 +316,40 @@ export default function MobileReportPage() {
             text: "NOVA 리포트 결과지 3페이지",
             files,
           });
+
           return;
         }
 
         for (const file of files) {
           const url = URL.createObjectURL(file);
           const anchor = document.createElement("a");
+
           anchor.href = url;
           anchor.download = file.name;
+
           document.body.appendChild(anchor);
           anchor.click();
           anchor.remove();
-          URL.revokeObjectURL(url);
+
+          window.setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
 
-        window.alert("결과지 3페이지 이미지를 저장했습니다. 저장된 이미지를 카카오톡에서 공유해 주세요.");
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") return;
-        window.alert(error instanceof Error ? error.message : "결과지 이미지를 공유하지 못했습니다.");
+        window.alert(
+          "결과지 3페이지 이미지를 저장했습니다. 저장된 이미지를 카카오톡에서 공유해 주세요.",
+        );
+      } catch (error: unknown) {
+        if (
+          error instanceof DOMException &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        window.alert(
+          error instanceof Error
+            ? error.message
+            : "결과지 이미지를 공유하지 못했습니다.",
+        );
       } finally {
         sharingRef.current = false;
         setSharing(false);
@@ -237,7 +358,8 @@ export default function MobileReportPage() {
 
     printButton.textContent = sharing ? "변환 중…" : "카톡 공유";
     printButton.classList.add("kakao-share-button");
-    printButton.disabled = false;
+    printButton.disabled = sharing;
+
     printButton.addEventListener("click", handleShare, true);
 
     return () => {
@@ -251,13 +373,17 @@ export default function MobileReportPage() {
   return (
     <>
       <style>{`
-        .dashboard-link { display: none !important; }
+        .dashboard-link {
+          display: none !important;
+        }
+
         .print-button.kakao-share-button {
           background: #fee500 !important;
           color: #191919 !important;
           border-color: #fee500 !important;
           font-weight: 800;
         }
+
         .print-button.kakao-share-button::before {
           content: "T";
           display: inline-flex;
@@ -273,8 +399,14 @@ export default function MobileReportPage() {
           font-weight: 900;
           line-height: 1;
         }
-        @media print { .print-button.kakao-share-button { display: none !important; } }
+
+        @media print {
+          .print-button.kakao-share-button {
+            display: none !important;
+          }
+        }
       `}</style>
+
       <DesktopPage />
     </>
   );
