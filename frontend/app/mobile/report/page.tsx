@@ -178,6 +178,116 @@ async function elementToPng(
       break-after: auto !important;
       page-break-after: auto !important;
     }
+
+    /* Stabilize the motion radar chart during PNG capture.
+       Print CSS uses physical mm units that can be mis-scaled by canvas capture. */
+    .nova-share-capture-host .motion-radar {
+      position: relative !important;
+      width: 220px !important;
+      height: 220px !important;
+      min-width: 220px !important;
+      min-height: 220px !important;
+      margin: 0 auto !important;
+      overflow: visible !important;
+    }
+
+    .nova-share-capture-host .motion-radar-ring {
+      position: absolute !important;
+      left: 50% !important;
+      top: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      border: 1px solid #d9e0ea !important;
+      border-radius: 50% !important;
+    }
+
+    .nova-share-capture-host .motion-radar-ring.ring-1 {
+      width: 64px !important;
+      height: 64px !important;
+    }
+
+    .nova-share-capture-host .motion-radar-ring.ring-2 {
+      width: 116px !important;
+      height: 116px !important;
+    }
+
+    .nova-share-capture-host .motion-radar-ring.ring-3 {
+      width: 168px !important;
+      height: 168px !important;
+    }
+
+    .nova-share-capture-host .motion-radar-ring.ring-4 {
+      width: 220px !important;
+      height: 220px !important;
+    }
+
+    .nova-share-capture-host .motion-radar-axis {
+      position: absolute !important;
+      left: 50% !important;
+      top: 50% !important;
+      width: 110px !important;
+      height: 1px !important;
+      background: #d9e0ea !important;
+      transform-origin: left center !important;
+    }
+
+    .nova-share-capture-host .motion-radar-axis.axis-v {
+      transform: rotate(-90deg) !important;
+    }
+
+    .nova-share-capture-host .motion-radar-axis.axis-h {
+      transform: rotate(0deg) !important;
+    }
+
+    .nova-share-capture-host .motion-radar-axis.axis-d1 {
+      transform: rotate(-36deg) !important;
+    }
+
+    .nova-share-capture-host .motion-radar-axis.axis-d2 {
+      transform: rotate(36deg) !important;
+    }
+
+    .nova-share-capture-host .motion-radar svg {
+      position: absolute !important;
+      left: 10px !important;
+      top: 10px !important;
+      width: 200px !important;
+      height: 200px !important;
+      inset: auto !important;
+    }
+
+    .nova-share-capture-host .motion-radar .radar-label {
+      position: absolute !important;
+      font-size: 11px !important;
+      line-height: 1.2 !important;
+      white-space: nowrap !important;
+      color: #64748b !important;
+    }
+
+    .nova-share-capture-host .motion-radar .radar-top {
+      top: -14px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+    }
+
+    .nova-share-capture-host .motion-radar .radar-right-top {
+      top: 42px !important;
+      right: -38px !important;
+    }
+
+    .nova-share-capture-host .motion-radar .radar-right-bottom {
+      bottom: 35px !important;
+      right: -24px !important;
+    }
+
+    .nova-share-capture-host .motion-radar .radar-left-bottom {
+      bottom: 35px !important;
+      left: -24px !important;
+    }
+
+    .nova-share-capture-host .motion-radar .radar-left-top {
+      top: 42px !important;
+      left: -38px !important;
+    }
   `;
 
   host.append(style, clone);
