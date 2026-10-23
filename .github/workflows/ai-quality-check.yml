@@ -1,0 +1,51 @@
+name: NOVA AI 품질 검사
+
+on:
+  pull_request:
+    branches: [main, beta]
+  push:
+    branches: [main, beta]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nova-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend-quality:
+    name: Frontend tests, scoped lint, types, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Lint AI support files
+        run: npx eslint app/api/assistant/support/route.ts app/mobile/inquiry/page.tsx lib/support-ai-rules.mjs lib/support-ai-rules.d.mts tests/support-ai-rules.test.mjs
+
+      - name: Check AI reviewer script syntax
+        run: node --check ../.github/scripts/ai-pr-review.mjs
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Production build
+        run: npm run build

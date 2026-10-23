@@ -742,3 +742,23 @@
     height:40px;
   }
 }
+
+
+/* AI support chat */
+.mobile-support-consent { display:grid; gap:7px; margin:13px 0; padding:11px; border-radius:10px; background:rgba(245,244,239,.82); }
+.mobile-support-consent label { display:flex; align-items:flex-start; gap:8px; font-size:10px; line-height:1.55; }
+.mobile-support-consent input { flex:0 0 auto; margin:2px 0 0; accent-color:#2563eb; }
+.mobile-support-consent small { color:#64748b; font-size:9px; line-height:1.5; }
+.mobile-support-messages { display:grid; gap:8px; max-height:340px; overflow:auto; margin:12px 0; }
+.mobile-support-message { max-width:92%; padding:10px 12px; border-radius:12px; background:rgba(245,244,239,.88); }
+.mobile-support-message.user { justify-self:end; background:rgba(37,99,235,.09); }
+.mobile-support-message strong { font-size:9px; color:#2563eb; }
+.mobile-support-message p { margin:4px 0 0; font-size:11px; line-height:1.6; white-space:pre-wrap; }
+.mobile-support-chat-form { display:grid; gap:7px; margin-top:12px; }
+.mobile-support-chat-form label { font-size:11px; font-weight:700; }
+.mobile-support-chat-form textarea { width:100%; box-sizing:border-box; padding:11px; border:1px solid rgba(23,23,23,.14); border-radius:10px; background:rgba(255,255,255,.8); color:inherit; font:inherit; resize:vertical; }
+.mobile-support-human-link { width:100%; margin-top:8px; }
+.theme-dark .mobile-support-consent,.theme-dark .mobile-support-message { background:#111a28; }
+.theme-dark .mobile-support-message.user { background:rgba(37,99,235,.18); }
+.theme-dark .mobile-support-consent small { color:#94a3b8; }
+
