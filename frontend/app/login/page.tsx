@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect, @next/next/no-location-assign-relative-destination */
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";

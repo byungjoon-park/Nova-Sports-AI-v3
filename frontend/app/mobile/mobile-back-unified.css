@@ -1,0 +1,46 @@
+/* Unify mobile content back controls with NovaTopBar. */
+.mobile-desktop-header-left > a,
+.mobile-desktop-header-left > button {
+  box-sizing: border-box;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  flex: 0 0 42px;
+  border: 1px solid #ddd6ca;
+  border-radius: 10px;
+  background: #fffdf9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111827;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+.mobile-desktop-header-left > a:hover,
+.mobile-desktop-header-left > button:hover { background: #f5f1e9; }
+html[data-nova-theme="dark"] .mobile-desktop-header-left > a,
+html[data-nova-theme="dark"] .mobile-desktop-header-left > button {
+  background: #0d1420;
+  border-color: #243247;
+  color: #f5f7fb;
+}
+html[data-nova-theme="dark"] .mobile-desktop-header-left > a:hover,
+html[data-nova-theme="dark"] .mobile-desktop-header-left > button:hover { background: #132033; }
+html[data-nova-theme="white"] .mobile-desktop-header-left > a,
+html[data-nova-theme="white"] .mobile-desktop-header-left > button {
+  background: #fff;
+  border-color: #dbe1e8;
+}
+@media (max-width: 600px) {
+  .mobile-desktop-header-left > a,
+  .mobile-desktop-header-left > button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    flex-basis: 40px;
+  }
+}

@@ -17,8 +17,10 @@ export default function ProfilePage() {
   useEffect(() => {
     const current = getCurrentUser();
     if (!current) { router.replace("/login"); return; }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUser(current); setName(current.name); setEmail(current.email);
     const p = getAthleteProfile(current.id);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (p) setAthlete({ height:p.height == null ? "" : String(p.height), weight:p.weight == null ? "" : String(p.weight), bodyFat:p.bodyFat == null ? "" : String(p.bodyFat), position:p.position ?? "", injuryHistory:p.injuryHistory ?? "" });
   }, [router]);
 

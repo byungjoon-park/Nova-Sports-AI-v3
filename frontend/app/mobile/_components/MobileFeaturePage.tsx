@@ -8,6 +8,7 @@ import { FilesetResolver, PoseLandmarker, type PoseLandmarkerResult } from "@med
 import { getCurrentUser, type NovaUserRole } from "../../../lib/nova-auth";
 import { readNovaAthleteData, writeNovaAthleteData, type NovaAthleteData } from "../../../lib/nova-data";
 import { useNovaSettings } from "../../settings-context";
+import NovaTopBar from "../../../components/NovaTopBar";
 
 export type MobileSection =
   | "dashboard" | "camera-ai" | "players" | "analysis" | "growth-analysis" | "measurements"
@@ -74,6 +75,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
     return () => window.removeEventListener("nova:gps-connect", connect);
   }, []);
 
+  const role = user?.role;
   const activeTheme = theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
   const config = CONFIG[section];
   const forbidden = Boolean(config.roles && user && !config.roles.includes(user.role));
@@ -281,7 +283,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
 }
 
 function MobileShell({ title, subtitle, active, children }: { title: string; subtitle: string; active: string; children: ReactNode }) {
-  return <div className="mobile-page"><header className="mobile-subheader"><div className="mobile-desktop-header"><div className="mobile-desktop-header-left"><Link href="/mobile" aria-label="모바일 홈" onClick={active === "camera-ai" ? (event) => { event.preventDefault(); window.history.back(); } : undefined}>←</Link><div className="mobile-desktop-brand"><strong>N O V A</strong><span>AI SPORTS PERFORMANCE PLATFORM</span></div></div><div className="mobile-ai-status"><i></i> AI 시스템 준비</div></div><div className="mobile-page-title"><h1>{title}</h1><p>{subtitle}</p></div></header>{children}<nav className="mobile-bottom-nav"><Link className={active === "dashboard" ? "active" : ""} href="/mobile">홈</Link><Link className={active === "analysis" ? "active" : ""} href="/mobile/analysis">분석</Link><Link className={active === "training" ? "active" : ""} href="/mobile/training">훈련</Link><Link className={active === "rehab" ? "active" : ""} href="/mobile/rehab">재활</Link><Link className={active === "report" ? "active" : ""} href="/mobile/report">리포트</Link></nav></div>;
+  return <div className="mobile-page"><NovaTopBar statusText="AI 시스템 준비" /><div className="mobile-page-title"><h1>{title}</h1><p>{subtitle}</p></div>{children}<nav className="mobile-bottom-nav"><Link className={active === "dashboard" ? "active" : ""} href="/mobile">홈</Link><Link className={active === "analysis" ? "active" : ""} href="/mobile/analysis">분석</Link><Link className={active === "training" ? "active" : ""} href="/mobile/training">훈련</Link><Link className={active === "rehab" ? "active" : ""} href="/mobile/rehab">재활</Link><Link className={active === "report" ? "active" : ""} href="/mobile/report">리포트</Link></nav></div>;
 }
 
 
@@ -329,6 +331,8 @@ function MobileCameraPanel() {
   const startedAtRef = useRef<number | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedJoints, setSelectedJoints] = useState<string[]>([]);
+  const [gpsConnected, setGpsConnected] = useState(false);
+  const [gpsMetrics, setGpsMetrics] = useState({ distance: "-- km", highSpeed: "-- km", maxSpeed: "-- km/h", sprints: "--" });
 
 
   const [cameraOn, setCameraOn] = useState(false);
@@ -812,3 +816,4 @@ function RecordSummary({ data }: { data: NovaAthleteData | null }) {
 function RecordList({ title, records }: { title: string; records: Array<{ title: string; text: string; status: string }> }) {
   return <section className="mobile-list"><h2 className="mobile-section-title">{title}</h2>{records.length ? records.map((r, i) => <article className="mobile-list-row" key={`${r.title}-${i}`}><div><strong>{r.title}</strong><span>{r.text}</span></div><b>{r.status}</b></article>) : <div className="mobile-empty-card">기록이 없습니다.</div>}</section>;
 }
+

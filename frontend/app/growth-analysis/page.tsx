@@ -1,9 +1,11 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/preserve-manual-memoization */
 "use client";
+/* eslint-disable react-hooks/preserve-manual-memoization */
 
 import { useEffect, useState } from "react";
-import { readNovaAthleteData } from "../../lib/nova-data";
+import { getAthleteProfile, readNovaAthleteData } from "../../lib/nova-data";
 import { useNovaSettings } from "../settings-context";
+import { useRouter } from "next/navigation";
 import NovaTopBar from "../../components/NovaTopBar";
 import "./growth-analysis.css";
 
@@ -17,6 +19,7 @@ function change(current?: number, previous?: number) {
 }
 
 export default function GrowthAnalysisPage() {
+  const router = useRouter();
   const { theme } = useNovaSettings();
   const activeTheme = theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
   const [data, setData] = useState<ReturnType<typeof readNovaAthleteData> | null>(null);

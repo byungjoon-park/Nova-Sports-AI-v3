@@ -1,18 +1,13 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getBetaConfig, regenerateBetaCode, saveBetaConfig, type NovaBetaConfig } from "../../lib/nova-beta";
 import { betaConfig } from "../../lib/beta-config";
 
 export default function BetaPanel() {
-  const [config, setConfig] = useState<NovaBetaConfig>({ enabled: false, code: "", updatedAt: "" });
-  const [origin, setOrigin] = useState("");
-
-  useEffect(() => {
-    setConfig(getBetaConfig());
-    setOrigin(window.location.origin);
-  }, []);
+  const [config, setConfig] = useState<NovaBetaConfig>(() => getBetaConfig());
+  const [origin] = useState(() => (typeof window === "undefined" ? "" : window.location.origin));
 
   const toggle = () => setConfig(saveBetaConfig({ enabled: !config.enabled, code: config.code }));
   const regenerate = () => setConfig(regenerateBetaCode());

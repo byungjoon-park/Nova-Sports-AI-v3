@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect */
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,6 +8,7 @@ import { useNovaSettings } from "../settings-context";
 import { getAthleteProfile, getAuthStore, getCurrentUser, getUserTeams, saveAthleteProfile, signOutUser } from "../../lib/nova-auth";
 import { getMeasurementRange } from "../../lib/nova-measurements";
 import "./dashboard.css";
+import NovaFeedbackSurface from "../../components/NovaFeedbackSurface";
 
 type Metric = {
   key: "performance" | "recovery" | "fatigue" | "risk";
@@ -767,7 +769,32 @@ export default function DashboardPage() {
 
         <section className="metrics-grid">
           {dashboardMetrics.map((metric) => (
-            <article className="metric-card" key={metric.key}>
+            <article
+              className="metric-card dashboard-clickable-card"
+              key={metric.key}
+              role="link"
+              tabIndex={0}
+              onClick={(event) => {
+                if ((event.target as HTMLElement).closest("button, a, input, select, textarea")) return;
+                const route = metric.key === "performance"
+                  ? "/analysis"
+                  : metric.key === "recovery" || metric.key === "fatigue" || metric.key === "risk"
+                    ? "/medical"
+                    : "/analysis";
+                router.push(route);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  const route = metric.key === "performance"
+                    ? "/analysis"
+                    : metric.key === "recovery" || metric.key === "fatigue" || metric.key === "risk"
+                      ? "/medical"
+                      : "/analysis";
+                  router.push(route);
+                }
+              }}
+            >
               <div className="metric-top">
                 <div className="metric-icon">{metric.icon}</div>
                 <span>{metricsText[metric.key]}</span>
@@ -876,8 +903,24 @@ export default function DashboardPage() {
           </section>
         )}
 
+        <NovaFeedbackSurface />
+
         <section className="dashboard-grid">
-          <article className="dashboard-card insight-card">
+          <article
+            className="dashboard-card insight-card dashboard-clickable-card"
+            role="link"
+            tabIndex={0}
+            onClick={(event) => {
+              if ((event.target as HTMLElement).closest("button, a, input, select, textarea")) return;
+              router.push("/analysis");
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                router.push("/analysis");
+              }
+            }}
+          >
             <div className="card-header">
               <div>
                 <span className="card-eyebrow">{t.insight}</span>
@@ -894,7 +937,21 @@ export default function DashboardPage() {
             </div>
           </article>
 
-          <article className="dashboard-card trend-card">
+          <article
+            className="dashboard-card trend-card dashboard-clickable-card"
+            role="link"
+            tabIndex={0}
+            onClick={(event) => {
+              if ((event.target as HTMLElement).closest("button, a, input, select, textarea")) return;
+              router.push("/analysis");
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                router.push("/analysis");
+              }
+            }}
+          >
             <div className="card-header">
               <div>
                 <span className="card-eyebrow">{t.performance}</span>
@@ -937,7 +994,21 @@ export default function DashboardPage() {
             )}
           </article>
 
-          <article className="dashboard-card schedule-card">
+          <article
+            className="dashboard-card schedule-card dashboard-clickable-card"
+            role="link"
+            tabIndex={0}
+            onClick={(event) => {
+              if ((event.target as HTMLElement).closest("button, a, input, select, textarea")) return;
+              router.push("/team");
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                router.push("/team");
+              }
+            }}
+          >
             <div className="card-header">
               <div>
                 <span className="card-eyebrow">{t.training}</span>
@@ -954,7 +1025,21 @@ export default function DashboardPage() {
           </article>
         </section>
 
-        <section className="dashboard-card activity-card">
+        <section
+          className="dashboard-card activity-card dashboard-clickable-card"
+          role="link"
+          tabIndex={0}
+          onClick={(event) => {
+            if ((event.target as HTMLElement).closest("button, a, input, select, textarea")) return;
+            router.push("/analysis");
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              router.push("/analysis");
+            }
+          }}
+        >
           <div className="card-header">
             <div>
               <span className="card-eyebrow">{t.activity}</span>

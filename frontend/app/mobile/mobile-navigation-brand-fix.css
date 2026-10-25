@@ -1,0 +1,161 @@
+/* NOVA mobile final presentation fix.
+   Keep theme behavior unchanged. Fix only menu visibility, header scale, and login persistence UI. */
+
+/* The old local menus remain the source of truth; make their real triggers visible. */
+.mobile-header {
+  position: relative !important;
+  padding-right: 76px !important;
+  box-sizing: border-box !important;
+}
+
+.mobile-header .mobile-menu-trigger {
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top, 0px) + 14px) !important;
+  right: 14px !important;
+  z-index: 100001 !important;
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  min-height: 58px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 2px solid #cfc8bb !important;
+  border-radius: 16px !important;
+  background: #fffdf8 !important;
+  color: #171717 !important;
+  box-shadow: 0 8px 26px rgba(15, 23, 42, .20) !important;
+  font-size: 27px !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  cursor: pointer !important;
+}
+
+.mobile-nova-sidebar-button {
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top, 0px) + 14px) !important;
+  right: 14px !important;
+  z-index: 100001 !important;
+  width: 58px !important;
+  height: 58px !important;
+  min-width: 58px !important;
+  min-height: 58px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 2px solid #cfc8bb !important;
+  border-radius: 16px !important;
+  background: #fffdf8 !important;
+  color: #171717 !important;
+  box-shadow: 0 8px 26px rgba(15, 23, 42, .20) !important;
+  font-size: 27px !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  cursor: pointer !important;
+}
+
+.mobile-menu-backdrop,
+.mobile-nova-sidebar-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 100000 !important;
+  border: 0 !important;
+}
+
+.mobile-menu,
+.mobile-nova-sidebar-panel {
+  z-index: 100002 !important;
+}
+
+/* Root mobile header: enlarge the actual NOVA label that exists on the page. */
+.mobile-header .mobile-eyebrow {
+  font-size: 14px !important;
+  line-height: 1.15 !important;
+  letter-spacing: .10em !important;
+  font-weight: 900 !important;
+  opacity: .95 !important;
+}
+
+.mobile-header h1 {
+  font-size: clamp(28px, 7.5vw, 36px) !important;
+  line-height: 1.1 !important;
+}
+
+/* Feature-page header brand, where the real NOVA wordmark is rendered. */
+.mobile-desktop-brand {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.mobile-desktop-brand strong {
+  font-size: clamp(40px, 10vw, 58px) !important;
+  line-height: .95 !important;
+  letter-spacing: .24em !important;
+  font-weight: 900 !important;
+}
+
+.mobile-desktop-brand span {
+  font-size: clamp(17px, 4.8vw, 23px) !important;
+  line-height: 1.2 !important;
+  letter-spacing: .10em !important;
+  font-weight: 800 !important;
+}
+
+.mobile-subheader {
+  padding-right: 78px !important;
+  box-sizing: border-box !important;
+}
+
+/* Splash brand uses the real NOVA element, too. */
+.mobile-splash-brand {
+  font-size: clamp(58px, 18vw, 104px) !important;
+  line-height: .92 !important;
+  font-weight: 900 !important;
+  letter-spacing: .16em !important;
+}
+
+/* Keep old global-navigation styles from affecting layout if the stale component file remains. */
+.nova-mobile-global-menu-button,
+.nova-mobile-global-menu-panel,
+.nova-mobile-global-menu-backdrop,
+.nova-mobile-global-logout,
+.nova-mobile-auto-login-control {
+  display: none !important;
+}
+
+@media (max-width: 390px) {
+  .mobile-header {
+    padding-right: 68px !important;
+  }
+
+  .mobile-header .mobile-menu-trigger,
+  .mobile-nova-sidebar-button {
+    top: calc(env(safe-area-inset-top, 0px) + 10px) !important;
+    right: 10px !important;
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+    font-size: 24px !important;
+    border-radius: 14px !important;
+  }
+
+  .mobile-header .mobile-eyebrow {
+    font-size: 12px !important;
+  }
+
+  .mobile-subheader {
+    padding-right: 68px !important;
+  }
+
+  .mobile-desktop-brand strong {
+    font-size: 34px !important;
+  }
+
+  .mobile-desktop-brand span {
+    font-size: 15px !important;
+  }
+}

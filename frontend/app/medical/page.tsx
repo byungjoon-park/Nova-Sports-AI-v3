@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect */
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -107,7 +107,6 @@ export default function MedicalPage() {
       const resolvedId = resolveLegacyAthleteUserId(record.athlete);
       return Boolean(resolvedId && visibleAthleteIds.has(resolvedId));
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [records, visibleAthleteIds, authStore, currentUser],
   );
 
@@ -192,7 +191,6 @@ export default function MedicalPage() {
     } catch {
       // Keep built-in records if saved data is unavailable.
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

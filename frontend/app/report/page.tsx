@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect, @typescript-eslint/no-unused-vars, @next/next/no-img-element */
+/* eslint-disable react-hooks/set-state-in-effect */
  "use client";
 
 import { useRouter } from "next/navigation";
@@ -156,8 +156,6 @@ export default function ReportPage() {
   const fatigueScore = averageScore(measurementHistory.fatigueRecords.map((item) => item.score));
   const manualPerformanceScore = averageScore(measurementHistory.performanceRecords.map((item) => item.score));
   const recoveryScore = averageScore(measurementHistory.recoveryRecords.map((item) => item.score));
-  const hasLowFatigue = typeof fatigueScore === "number" && fatigueScore < 50;
-  const hasLowRecovery = typeof recoveryScore === "number" && recoveryScore < 60;
   const fatigueTrend = [...measurementHistory.fatigueRecords]
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(-7);
@@ -514,9 +512,9 @@ export default function ReportPage() {
           <div className="analysis-note">
             <strong>권장사항</strong>
             <span>
-              {hasLowFatigue
+              {fatigueScore !== null && fatigueScore < 50
                 ? "피로도가 높은 구간입니다. 훈련 강도와 회복 상태를 함께 확인하세요."
-                : hasLowRecovery
+                : recoveryScore !== null && recoveryScore < 60
                 ? "회복 점수가 낮은 구간입니다. 다음 훈련 전 회복 상태를 확인하세요."
                 : "현재 점수 흐름을 유지하면서 퍼포먼스와 회복 추이를 지속적으로 확인하세요."}
             </span>

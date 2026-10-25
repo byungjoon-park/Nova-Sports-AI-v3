@@ -1,0 +1,2 @@
+// In frontend/app/mobile/page.tsx, add this item to menuItems:
+{ label: "팀 전체 결제", description: "감독·코치용 팀 전체 구독 문의", href: "/mobile/team-billing", section: "management", roles: ["director", "coach"] },
