@@ -233,6 +233,9 @@ export default function MobileBetaPage() {
           </div>
         </section>;
       })()}
+
+      <NovaFeedbackSurface />
+
       <section className="mobile-metric-grid" aria-label="주요 지표">
         <article className="mobile-metric-card"><span>Performance</span><strong>{performance ?? "-"}</strong><small>/100</small></article>
         <article className="mobile-metric-card"><span>Recovery</span><strong>{recovery ?? "-"}</strong><small>/100</small></article>
@@ -295,15 +298,7 @@ export default function MobileBetaPage() {
         </article>
       </section>
 
-      <section className="mobile-card-grid" aria-label="전체 주요 기능">
-        {groupedItems("main").slice(0, 6).map((item) => (
-          <button key={`${item.href}-${item.label}`} type="button" className="mobile-feature-card" onClick={() => go(item.href)}>
-            <strong>{item.label}</strong><span>{item.description}</span><span className="mobile-card-arrow" aria-hidden="true">›</span>
-          </button>
-        ))}
-      </section>
 
-      <NovaFeedbackSurface />
 
       <nav className="mobile-bottom-nav" aria-label="모바일 메뉴">
         <button type="button" onClick={() => go("/mobile")} className="active">홈</button>
