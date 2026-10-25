@@ -903,8 +903,6 @@ export default function DashboardPage() {
           </section>
         )}
 
-        <NovaFeedbackSurface />
-
         <section className="dashboard-grid">
           <article
             className="dashboard-card insight-card dashboard-clickable-card"
@@ -1055,6 +1053,8 @@ export default function DashboardPage() {
           </div>
         </section>
       </section>
+
+      <NovaFeedbackSurface />
     </main>
   );
 }
