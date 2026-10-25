@@ -48,21 +48,27 @@ export default function MobileBetaPage() {
   const [noticeIndex, setNoticeIndex] = useState(0);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      let loggedIn = false;
-      try {
-        loggedIn = sessionStorage.getItem("nova-mobile-login-complete") === "1";
-      } catch {}
-      if (loggedIn) {
-        setUser(getCurrentUser());
-      } else {
-        router.replace("/mobile/login");
-      }
-      setBooting(false);
-    }, 900);
+    const currentUser = getCurrentUser();
 
-    return () => window.clearTimeout(timer);
-  }, [router]);
+    if (!currentUser) {
+      try {
+        sessionStorage.removeItem("nova-mobile-login-complete");
+      } catch {}
+      window.location.replace("/mobile/login");
+      return;
+    }
+
+    if (currentUser.role === "admin") {
+      window.location.replace("/admin");
+      return;
+    }
+
+    try {
+      sessionStorage.setItem("nova-mobile-login-complete", "1");
+    } catch {}
+    setUser(currentUser);
+    setBooting(false);
+  }, []);
 
   const notices = [
     {
@@ -103,7 +109,7 @@ export default function MobileBetaPage() {
     start.setDate(start.getDate() - 30);
     const iso = (date: Date) => date.toISOString().slice(0, 10);
     return getMeasurementRange(iso(start), iso(end));
-  }, []);
+  }, [user]);
 
   const activeTheme = theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
   const visibleMenuItems = mobileUser
