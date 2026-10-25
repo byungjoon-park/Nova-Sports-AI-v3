@@ -12,7 +12,7 @@ import {
 import "./camera-ai.css";
 import NovaTopBar from "../../components/NovaTopBar";
 import { getCurrentUser } from "../../lib/nova-auth";
-import { getJumpFatigueRecord, upsertJumpFatigueRecord, readNovaAthleteData, writeNovaAthleteData } from "../../lib/nova-data";
+import { getJumpFatigueRecord, upsertJumpFatigueRecord, readNovaAthleteData, upsertCameraAIResult, type NovaCameraAIResult } from "../../lib/nova-data";
 
 type Chapter = {
   id: string;
@@ -265,6 +265,103 @@ type AnalysisResults = {
   bodyControl: string;
 };
 
+type PreventionReview = {
+  status: "양호" | "관리" | "주의";
+  baselineCount: number;
+  baselineText: string;
+  findings: string[];
+  exercises: string[];
+  index: number | null;
+};
+
+function readMetricNumber(record: NovaCameraAIResult, key: string): number | null {
+  const metric = record.metrics.find((item) => item.label === key);
+  if (!metric) return null;
+  const value = Number.parseFloat(metric.value.replace(/,/g, ""));
+  return Number.isFinite(value) ? value : null;
+}
+
+function assessPreventionReference(
+  result: AnalysisResults,
+  chapterId: string,
+  title: string,
+  history: NovaCameraAIResult[],
+  lang: Language,
+): PreventionReview {
+  const current = {
+    control: Number.parseFloat(result.bodyControl),
+    landing: Number.parseFloat(result.landingStability),
+    kneeDifference: Number.parseFloat(result.kneeDifference),
+  };
+  const usesLandingMetric = chapterId === "jump";
+  const comparable = history.filter((record) => record.analysisKey === chapterId || (!record.analysisKey && record.title === title)).slice(-12);
+  const controlBaseline = comparable.map((record) => readMetricNumber(record, "bodyControl")).filter((value): value is number => value !== null);
+  const landingBaseline = comparable.map((record) => readMetricNumber(record, "landingStability")).filter((value): value is number => value !== null);
+  const kneeBaseline = comparable.map((record) => readMetricNumber(record, "kneeDifference")).filter((value): value is number => value !== null);
+  const baselineCount = usesLandingMetric ? Math.min(kneeBaseline.length, landingBaseline.length) : kneeBaseline.length;
+  const mean = (values: number[]) => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+  const controlMean = mean(controlBaseline);
+  const landingMean = mean(landingBaseline);
+  const kneeMean = mean(kneeBaseline);
+  const hasBaseline = baselineCount >= 3;
+  const findings: string[] = [];
+  const exercises = new Set<string>();
+  const hasUsableCurrentData = Number.isFinite(current.control) || Number.isFinite(current.kneeDifference);
+
+  if (!hasUsableCurrentData) {
+    return {
+      status: "관리",
+      baselineCount,
+      baselineText: lang === "en" ? `Personal baseline is building (${baselineCount}/3 comparable sessions)` : `개인 기준점 설정 중 (${baselineCount}/3회 비교 기록)`,
+      findings: [lang === "en" ? "Not enough camera data for a reliable movement comparison. Record another clear full-body capture." : "비교에 필요한 동작 정보가 부족합니다. 전신이 선명하게 보이도록 다시 촬영해주세요."],
+      exercises: [],
+      index: null,
+    };
+  }
+
+  const controlConcern = Number.isFinite(current.control) && (hasBaseline ? controlMean !== null && current.control <= controlMean - 10 : current.control < 70);
+  const kneeConcern = Number.isFinite(current.kneeDifference) && (hasBaseline ? kneeMean !== null && current.kneeDifference >= kneeMean + 8 : current.kneeDifference > 15);
+  const lowerBodyConcern = controlConcern || kneeConcern;
+  const landingConcern = usesLandingMetric && Number.isFinite(current.landing)
+    && (hasBaseline ? landingMean !== null && current.landing <= landingMean - 10 : current.landing < 70);
+
+  if (lowerBodyConcern) {
+    findings.push(lang === "en" ? "Lower-body movement control differs from the comparison range." : "하체 움직임 제어가 개인 비교 기준과 다릅니다.");
+    exercises.add(lang === "en" ? "Glute bridge · 2 sets of 10" : "글루트 브리지 · 10회씩 2세트");
+    exercises.add(lang === "en" ? "Supported single-leg balance · 2 sets of 20 sec per side" : "지지물을 잡고 한발 균형 · 좌우 20초씩 2회");
+  }
+  if (landingConcern) {
+    findings.push(lang === "en" ? "Landing-stability indicator is below the comparison range." : "착지 안정성 지표가 개인 비교 기준보다 낮습니다.");
+    exercises.add(lang === "en" ? "Calf raise · 2 sets of 12" : "카프 레이즈 · 12회씩 2세트");
+    exercises.add(lang === "en" ? "Low-height controlled landing · 5 reps" : "낮은 높이에서 착지 자세 연습 · 5회");
+  }
+  if (!findings.length) {
+    findings.push(lang === "en"
+      ? "No notable change from the current reference was flagged. This does not rule out discomfort or injury."
+      : "이번 촬영에서 설정한 참고 기준을 벗어난 뚜렷한 변화는 표시되지 않았습니다. 불편감이나 부상이 없다는 뜻은 아닙니다.");
+    exercises.add(lang === "en" ? "Single-leg balance · 2 sets of 20 sec per side" : "한발 균형 잡기 · 좌우 20초씩 2회");
+    exercises.add(lang === "en" ? "Calf raise · 2 sets of 12" : "카프 레이즈 · 12회씩 2세트");
+  }
+
+  const index = Math.max(0, Math.min(100, Math.round(
+    100
+      - (Number.isFinite(current.control) ? Math.max(0, 75 - current.control) * 0.7 : 0)
+      - (landingConcern ? Math.max(0, 75 - current.landing) * 0.5 : 0)
+      - (Number.isFinite(current.kneeDifference) ? Math.max(0, current.kneeDifference - 10) * 1.2 : 0),
+  )));
+  const baselineText = hasBaseline
+    ? (lang === "en" ? `Compared with your last ${baselineCount} matching sessions` : `동일 동작 최근 ${baselineCount}회 기록과 비교`)
+    : (lang === "en" ? `Personal baseline is building (${baselineCount}/3 comparable sessions)` : `개인 기준점 설정 중 (${baselineCount}/3회 비교 기록)`);
+
+  return {
+    status: (lowerBodyConcern ? 1 : 0) + (landingConcern ? 1 : 0) >= 2 ? "주의" : lowerBodyConcern || landingConcern ? "관리" : "양호",
+    baselineCount,
+    baselineText,
+    findings,
+    exercises: [...exercises],
+    index,
+  };
+}
 const chapters: Chapter[] = [
   {
     id: "sprint",
@@ -635,6 +732,9 @@ export default function CameraAIPage() {
       null,
     );
 
+  const [preventionReview, setPreventionReview] = useState<PreventionReview | null>(null);
+  const [cameraHistory, setCameraHistory] = useState<NovaCameraAIResult[]>([]);
+
   const [squatAssessment, setSquatAssessment] = useState<SquatAssessment>({
     score: null,
     phase: "waiting",
@@ -643,6 +743,15 @@ export default function CameraAIPage() {
     hipSymmetry: null,
   });
 
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (!user || user.role !== "athlete") return;
+
+    const records = readNovaAthleteData().cameraAIResults
+      .filter((record) => !record.athleteId || record.athleteId === user.id)
+      .sort((a, b) => b.completedAt.localeCompare(a.completedAt));
+    setCameraHistory(records);
+  }, []);
   const [athleteHeight, setAthleteHeight] =
     useState("175");
 
@@ -1553,6 +1662,7 @@ export default function CameraAIPage() {
         setAnalysisResults(
           null,
         );
+    setPreventionReview(null);
 
         setAnalysisComplete(
           false,
@@ -1667,6 +1777,7 @@ export default function CameraAIPage() {
       setAnalysisResults(
         null,
       );
+    setPreventionReview(null);
 
       return;
     }
@@ -1707,6 +1818,7 @@ export default function CameraAIPage() {
     setAnalysisResults(
       null,
     );
+    setPreventionReview(null);
   };
 
   useEffect(() => {
@@ -1736,6 +1848,26 @@ export default function CameraAIPage() {
 
   const calculateAnalysis =
     (): AnalysisResults => {
+      if (selectedChapter && selectedChapter.id !== "jump") {
+        const reliable = poseHistoryRef.current.filter((sample) => sample.confidence >= 70);
+        const kneeAngles = reliable.map((sample) => sample.kneeAngle).filter((value): value is number => value !== null && value >= 20 && value <= 170);
+        const sideDifferences = reliable
+          .filter((sample) => sample.leftKnee !== null && sample.rightKnee !== null)
+          .map((sample) => Math.abs(sample.leftKnee! - sample.rightKnee!));
+        const averageKnee = median(kneeAngles);
+        const kneeDifference = median(sideDifferences);
+        const bodyControl = kneeDifference === null ? null : Math.max(0, Math.min(100, Math.round(100 - kneeDifference * 1.1)));
+        return {
+          jumpHeight: "해당 동작 분석 항목 아님",
+          flightTime: "해당 동작 분석 항목 아님",
+          landingStability: "해당 동작 분석 항목 아님",
+          averageKnee: averageKnee === null ? "측정 부족" : `${Math.round(averageKnee)}°`,
+          kneeDifference: kneeDifference === null ? "측정 부족" : `${Math.round(kneeDifference)}°`,
+          confidence: `${bodyDetectionScore}%`,
+          fatigue: "--",
+          bodyControl: bodyControl === null ? "측정 부족" : `${bodyControl}%`,
+        };
+      }
       const samples =
         poseHistoryRef.current;
 
@@ -1766,7 +1898,7 @@ export default function CameraAIPage() {
             "측정 부족",
           confidence:
             `${bodyDetectionScore}%`,
-          fatigue: "--",
+            fatigue: "--",
           bodyControl:
             "--",
         };
@@ -1795,7 +1927,7 @@ export default function CameraAIPage() {
             "전신 인식 부족",
           confidence:
             `${bodyDetectionScore}%`,
-          fatigue: "--",
+            fatigue: "--",
           bodyControl:
             "--",
         };
@@ -2254,26 +2386,37 @@ export default function CameraAIPage() {
       );
 
       const currentUser = getCurrentUser();
-      if (currentUser?.role === "athlete") {
-        const currentData = readNovaAthleteData();
-        writeNovaAthleteData({
-          ...currentData,
-          cameraAIResults: [
-            ...currentData.cameraAIResults,
-            {
-              id: `camera-${selectedChapter?.id || "analysis"}-${Date.now()}`,
-              title: selectedChapter?.title || "Camera AI",
-              category: selectedChapter?.category || "Camera AI",
-              score: Math.max(0, Math.min(100, Number(result.bodyControl.replace(/[^0-9.]/g, "")) || 0)),
-              status: "양호" as const,
-              summary: `${selectedChapter?.title || "동작"} 분석이 완료되었습니다.`,
-              recommendation: "동일한 촬영 조건으로 반복 측정하여 변화 추이를 확인하세요.",
-              metrics: Object.entries(result).map(([label, value]) => ({ label, value })),
-              completedAt: new Date().toISOString(),
-              source: "camera-ai" as const,
-            },
+      if (currentUser?.role === "athlete" && selectedChapter) {
+        const existingRecords = readNovaAthleteData().cameraAIResults;
+        const athleteHistory = existingRecords.filter((record) => record.athleteId === currentUser.id);
+        const review = assessPreventionReference(result, selectedChapter.id, selectedChapter.title, athleteHistory, lang);
+        setPreventionReview(review);
+        const completedAt = new Date().toISOString();
+        const record = upsertCameraAIResult({
+          id: `camera-${selectedChapter.id}-${Date.now()}`,
+          athleteId: currentUser.id,
+          analysisKey: selectedChapter.id,
+          title: selectedChapter.title,
+          category: selectedChapter.category,
+          score: review.index ?? 0,
+          status: review.status,
+          summary: review.findings.join(" "),
+          recommendation: review.exercises.length
+            ? review.exercises.join(" · ")
+            : (lang === "en" ? "Record another reliable camera session before suggesting exercises." : "신뢰할 수 있는 촬영 기록을 추가한 뒤 보강 운동을 제안합니다."),
+          metrics: [
+            ...Object.entries(result).map(([label, value]) => ({ label, value })),
+            { label: "personalBaseline", value: review.baselineText },
+            { label: "preventionReferenceIndex", value: review.index === null ? "측정 부족" : `${review.index}/100` },
+            { label: "recommendedExercises", value: review.exercises.join("; ") },
           ],
+          completedAt,
+          source: "camera-ai",
         });
+        const nextHistory = record.cameraAIResults
+          .filter((item) => !item.athleteId || item.athleteId === currentUser.id)
+          .sort((a, b) => b.completedAt.localeCompare(a.completedAt));
+        setCameraHistory(nextHistory);
       }
       saveJumpFatigueFromResult(result);
 
@@ -2886,12 +3029,39 @@ export default function CameraAIPage() {
             )}
 
             {selectedChapter && currentGuide && (
-              <section className="desktop-bottom-guide">
-                <div className="desktop-bottom-guide-head"><span className="panel-label">GUIDE</span><h2>측정 데이터 대기</h2></div>
-                <p>전신 인식이 완료되면 관절 각도와 좌우 밸런스를 함께 해석해 현재 자세 특성과 보강 운동을 제안합니다.</p>
+              <section className="desktop-bottom-guide prevention-guide">
+                <div className="desktop-bottom-guide-head"><span className="panel-label">PERSONAL BASELINE</span><h2>{lang === "en" ? "Injury-prevention reference" : "개인 기준점 · 부상 예방 참고"}</h2></div>
+                <p>{lang === "en" ? "Camera indicators are compared with this athlete’s matching movement history. This is a sports reference, not a diagnosis or an injury prediction." : "같은 선수의 동일 동작 기록과 비교해 움직임 변화를 보여줍니다. 운동 참고 정보이며 진단이나 부상 확정 예측이 아닙니다."}</p>
+                {analysisResults && preventionReview ? (
+                  <>
+                    <div className={`prevention-summary prevention-${preventionReview.status}`}>
+                      <div><span>{lang === "en" ? "Reference status" : "움직임 참고 상태"}</span><strong>{lang === "en" ? (preventionReview.index === null ? "Data needed" : preventionReview.status === "주의" ? "Review" : preventionReview.status === "관리" ? "Monitor" : "No flag") : (preventionReview.index === null ? "데이터 부족" : preventionReview.status === "주의" ? "확인 권장" : preventionReview.status === "관리" ? "추이 관찰" : "참고 범위")}</strong></div>
+                      <div><span>{lang === "en" ? "Reference index" : "참고 지표"}</span><strong>{preventionReview.index === null ? "-" : `${preventionReview.index}/100`}</strong></div>
+                    </div>
+                    <p className="prevention-baseline-note">{preventionReview.baselineText}</p>
+                    <ul className="prevention-findings">{preventionReview.findings.map((finding) => <li key={finding}>{finding}</li>)}</ul>
+                    <div className="desktop-bottom-guide-divider" />
+                    <strong>{lang === "en" ? "Suggested strengthening exercises" : "추천 보강 운동"}</strong>
+                    {preventionReview.exercises.length ? (
+                      <ul className="prevention-exercises">{preventionReview.exercises.map((exercise) => <li key={exercise}>{exercise}</li>)}</ul>
+                    ) : <p>{lang === "en" ? "Record a reliable camera session before exercise suggestions are shown." : "신뢰할 수 있는 카메라 측정 기록이 쌓이면 운동을 제안합니다."}</p>}
+                    <p className="prevention-disclaimer">{lang === "en" ? "Stop if discomfort occurs. Ask a qualified coach or health professional for individual guidance." : "불편감이 있으면 운동을 중단하고, 개인별 지도는 자격을 갖춘 지도자 또는 전문가에게 확인해주세요."}</p>
+                  </>
+                ) : <p>{lang === "en" ? "Complete a camera analysis to see personal comparisons and exercise suggestions." : "카메라 분석을 완료하면 개인 기준 비교 결과와 보강 운동을 확인할 수 있습니다."}</p>}
                 <div className="desktop-bottom-guide-divider" />
-                <strong>추천 보강 운동</strong>
-                <button type="button" disabled={!analysisResults}>측정 후 자동 추천</button>
+                <div className="prevention-history-heading"><strong>{lang === "en" ? "Saved camera history" : "누적 카메라 분석 기록"}</strong><span>{cameraHistory.length}{lang === "en" ? " records" : "회"}</span></div>
+                {cameraHistory.length ? (
+                  <ol className="prevention-history-list">
+                    {cameraHistory.slice(0, 5).map((record) => (
+                      <li key={record.id}>
+                        <div><strong>{record.title}</strong><span>{new Date(record.completedAt).toLocaleString(lang === "en" ? "en-US" : "ko-KR")}</span></div>
+                        <b>{record.status === "주의" ? (lang === "en" ? "Review" : "확인 권장") : record.status === "관리" ? (lang === "en" ? "Monitor" : "추이 관찰") : (lang === "en" ? "Reference" : "참고 범위")}</b>
+                        <div className="prevention-history-metrics"><span>{lang === "en" ? "Reference index" : "참고 지표"} {record.score}/100</span><span>{lang === "en" ? "Knee side difference" : "무릎 좌우 차"} {record.metrics.find((metric) => metric.label === "kneeDifference")?.value ?? "-"}</span></div>
+                        <p>{record.summary}</p>
+                      </li>
+                    ))}
+                  </ol>
+                ) : <p>{lang === "en" ? "History will be saved after an analysis while signed in as an athlete." : "선수 계정으로 분석하면 기록이 이곳에 쌓입니다."}</p>}
               </section>
             )}
 

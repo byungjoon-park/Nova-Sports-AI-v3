@@ -26,6 +26,8 @@ export type NovaAthleteProfile = {
 
 export type NovaCameraAIResult = {
   id: string;
+  athleteId?: string;
+  analysisKey?: string;
   title: string;
   category: string;
   score: number;
@@ -97,6 +99,8 @@ function normalizeCameraResult(value: unknown): NovaCameraAIResult | null {
   const rawScore = finiteNumber(value.score) ?? 0;
   return {
     id: value.id,
+    athleteId: typeof value.athleteId === "string" ? value.athleteId : undefined,
+    analysisKey: typeof value.analysisKey === "string" ? value.analysisKey : undefined,
     title: value.title,
     category: typeof value.category === "string" ? value.category : "Camera AI",
     score: Math.max(0, Math.min(100, Math.round(rawScore))),
