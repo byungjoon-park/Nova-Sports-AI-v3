@@ -16,7 +16,8 @@ const roles: Array<{ value: Exclude<NovaUserRole, "admin">; label: string }> = [
 
 export default function SignupPage() {
   const router = useRouter();
-  const { setRole } = useNovaSettings();
+  const { setRole, theme } = useNovaSettings();
+  const activeTheme = theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setSignupRole] = useState<Exclude<NovaUserRole, "admin">>("athlete");
@@ -91,7 +92,7 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="nova-signup-page theme-ivory" data-theme="ivory">
+    <main className={`nova-signup-page theme-${activeTheme}`} data-theme={activeTheme}>
       <section className="signup-card">
         <button className="signup-back" type="button" onClick={() => router.push("/login")}>← 로그인</button>
         <span className="signup-eyebrow">NOVA SPORTS AI</span>

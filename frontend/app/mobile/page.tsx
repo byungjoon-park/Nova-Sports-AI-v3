@@ -60,19 +60,27 @@ export default function MobileBetaPage() {
   const [liveNotices, setLiveNotices] = useState<MobileNotice[]>([]);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const current = getCurrentUser();
-      if (current) {
-        setUser(current);
-        try { sessionStorage.setItem("nova-mobile-login-complete", "1"); } catch {}
-      } else {
-        router.replace("/mobile/login");
-      }
-      setBooting(false);
-    }, 250);
+    const current = getCurrentUser();
 
-    return () => window.clearTimeout(timer);
-  }, [router]);
+    if (!current) {
+      try {
+        sessionStorage.removeItem("nova-mobile-login-complete");
+      } catch {}
+      window.location.replace("/mobile/login");
+      return;
+    }
+
+    if (current.role === "admin") {
+      window.location.replace("/admin");
+      return;
+    }
+
+    try {
+      sessionStorage.setItem("nova-mobile-login-complete", "1");
+    } catch {}
+    setUser(current);
+    setBooting(false);
+  }, []);
 
   const fallbackNotices = [
     { date: "2026. 8. 29.", title: "NOVA V3 AI 분석 시스템 업데이트 안내", body: "카메라 AI 분석과 선수 퍼포먼스 분석 기능이 업데이트되었습니다.", href: "/mobile/dashboard" },

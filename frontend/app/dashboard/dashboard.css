@@ -714,7 +714,14 @@
   }
 
   .dashboard-nav {
-    display: none;
+    display: block;
+    max-height: none;
+    margin-top: 18px;
+    overflow: visible;
+  }
+
+  .dashboard-nav .nav-section {
+    margin-bottom: 14px;
   }
 
   .sidebar-user {
@@ -969,4 +976,14 @@
 
 @media (max-width: 900px) {
   .team-summary-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+
+/* Dashboard card navigation: preserve existing layout and theme. */
+.dashboard-clickable-card {
+  cursor: pointer;
+}
+.dashboard-clickable-card:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }

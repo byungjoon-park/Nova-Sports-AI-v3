@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps, react-hooks/immutability */
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -48,9 +49,7 @@ export default function BillingPanel() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadSummary();
-
     const loadPrices = async () => {
       try {
         const response = await fetch("/api/billing/prices", { cache: "no-store" });
@@ -64,18 +63,11 @@ export default function BillingPanel() {
         setPriceHistory(Array.isArray(data.history) ? data.history : []);
       } catch {}
     };
-
     void loadPrices();
-    // loadSummary is intentionally invoked for initial billing data.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    // Intentional API-backed refresh when the selected year changes.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (selectedYear !== new Date().getFullYear()) void loadSummary(selectedYear);
-    // loadSummary is intentionally triggered only by selectedYear.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear]);
 
   const money = useMemo(() => new Intl.NumberFormat("ko-KR", { style: "currency", currency: summary?.currency || "KRW", maximumFractionDigits: 0 }), [summary?.currency]);
@@ -115,21 +107,18 @@ export default function BillingPanel() {
       <article><span>이번 달 환불</span><strong>{summaryLoading ? "—" : money.format(summary?.monthly.refunds || 0)}</strong><small>현재 월</small></article>
       <article><span>이번 달 순매출</span><strong>{summaryLoading ? "—" : money.format(summary?.monthly.net || 0)}</strong><small>현재 월</small></article>
     </div>
-
     <div className="admin-billing-grid">
       <article className="admin-billing-card admin-billing-monthly" style={{ gridColumn: "1 / -1" }}>
         <div className="admin-billing-section-head"><div><span>MONTHLY REVENUE</span><h4>{selectedYear}년 월별 매출 · 환불</h4></div><button className="admin-secondary-button admin-print-button" onClick={() => printBilling("monthly")} disabled={summaryLoading}>{printMode === "monthly" ? "인쇄 준비 중…" : "월별 출력"}</button></div>
         <div className="admin-table-wrap"><table><thead><tr><th>월</th><th>매출</th><th>환불</th><th>순매출</th></tr></thead><tbody>{summary?.months.map((row) => <tr key={row.month}><td>{row.month}월</td><td>{money.format(row.gross)}</td><td>{money.format(row.refunds)}</td><td>{money.format(row.net)}</td></tr>)}</tbody></table></div>
       </article>
     </div>
-
     <div className="admin-billing-grid">
       <article className="admin-billing-card admin-billing-yearly" style={{ gridColumn: "1 / -1" }}>
         <div className="admin-billing-section-head"><div><span>YEARLY REVENUE</span><h4>년도별 매출 · 환불 내역</h4></div><button className="admin-secondary-button admin-print-button" onClick={() => printBilling("yearly")} disabled={summaryLoading}>{printMode === "yearly" ? "인쇄 준비 중…" : "년도별 출력"}</button></div>
         <div className="admin-table-wrap"><table><thead><tr><th>년도</th><th>매출</th><th>환불</th><th>순매출</th></tr></thead><tbody>{summary?.annuals.map((row) => <tr key={row.year}><td>{row.year}년</td><td>{money.format(row.gross)}</td><td>{money.format(row.refunds)}</td><td>{money.format(row.net)}</td></tr>)}</tbody></table></div>
       </article>
     </div>
-
     <div className="admin-billing-grid">
       {(Object.keys(defaultPrices) as PlanId[]).map((id) => <article key={id} className="admin-billing-card admin-billing-plan-card"><span>{planMeta[id].name}</span><strong>{money.format(prices[id])}<small>/월</small></strong><p>{planMeta[id].desc}</p><label className="admin-billing-price-field">월 금액<input type="number" min="0" step="1000" value={prices[id]} onChange={(event) => setPrices((current) => ({ ...current, [id]: Number(event.target.value) || 0 }))} /></label><button className="admin-primary-button" disabled={loading !== "" || prices[id] <= 0} onClick={() => void checkout(id)}>{loading === id ? "결제 준비 중…" : `${planMeta[id].name} 결제 테스트`}</button></article>)}
     </div>

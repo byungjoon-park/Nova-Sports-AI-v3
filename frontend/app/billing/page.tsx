@@ -3,10 +3,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  activatePersonalSubscription, findUserByEmail, getAthleteSubscription,
-  getCurrentUser, type NovaUser,
-} from "../../lib/nova-auth";
+import { activatePersonalSubscription, findUserByEmail, getAthleteSubscription, getCurrentUser, type NovaUser } from "../../lib/nova-auth";
 import { useNovaSettings } from "../settings-context";
 import "./billing.css";
 
@@ -432,3 +429,5 @@ export default function BillingPage() {
     </main>
   );
 }
+
+

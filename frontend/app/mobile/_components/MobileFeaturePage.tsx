@@ -55,6 +55,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
   const { theme } = useNovaSettings();
   const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null);
   const [data, setData] = useState<NovaAthleteData | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [gpsConnected, setGpsConnected] = useState(false);
   const [gpsMetrics, setGpsMetrics] = useState({ distance: "-- km", highSpeed: "-- km", maxSpeed: "-- km/h", sprints: "--" });
 
@@ -89,8 +90,77 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
   if (!user) return <main className={`mobile-page theme-${activeTheme}`}><div className="mobile-loading">로그인 확인 중...</div></main>;
   if (forbidden) return <MobileShell title="접근 제한" subtitle="현재 계정에서 사용할 수 없는 기능입니다." active="dashboard"><div className="mobile-empty-card">{roleLabel(user.role)} 계정에는 이 메뉴의 권한이 없습니다.</div></MobileShell>;
 
+  const novaSidebarItems = [
+    { label: "대시보드", description: "퍼포먼스·회복·훈련 현황", href: "/mobile/dashboard" },
+    { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai" },
+    ...(user.role === "admin" || user.role === "director" || user.role === "coach"
+      ? [{ label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players" }]
+      : []),
+    { label: "AI 분석", description: "퍼포먼스·회복·피로도 분석", href: "/mobile/analysis" },
+    { label: "재활관리", description: "부상·진료·재활 기록", href: "/mobile/medical" },
+    { label: "리포트", description: "선수 데이터 요약과 보고서", href: "/mobile/report" },
+    ...(user.role === "admin" || user.role === "director" || user.role === "coach"
+      ? [
+          { label: "감독 / 코치", description: "선수와 훈련 관리", href: "/mobile/team" },
+          { label: "팀", description: "팀·선수 구성과 운영", href: "/mobile/team" },
+        ]
+      : []),
+    ...(user.role === "admin"
+      ? [{ label: "연구·매출 통계", description: "연구·플랫폼·매출 현황", href: "/admin" }]
+      : []),
+  ];
+
   return (
     <>
+      <button
+        type="button"
+        className="mobile-nova-sidebar-button"
+        aria-label="NOVA 사이드바 열기"
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        ☰
+      </button>
+
+      {menuOpen && (
+        <button
+          type="button"
+          className="mobile-nova-sidebar-backdrop"
+          aria-label="메뉴 닫기"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
+      <aside className={`mobile-nova-sidebar-panel ${menuOpen ? "is-open" : ""}`} aria-label={`${roleLabel(user.role)} NOVA 메뉴`}>
+        <div className="mobile-nova-sidebar-header">
+          <div>
+            <span>NOVA SPORTS AI</span>
+            <strong>{roleLabel(user.role)} 메뉴</strong>
+          </div>
+          <button type="button" onClick={() => setMenuOpen(false)} aria-label="메뉴 닫기">×</button>
+        </div>
+
+        <nav className="mobile-nova-sidebar-nav">
+          {novaSidebarItems.map((item) => (
+            <button
+              key={`${item.href}-${item.label}`}
+              type="button"
+              className="mobile-nova-sidebar-item"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push(item.href);
+              }}
+            >
+              <span>
+                <strong>{item.label}</strong>
+                <small>{item.description}</small>
+              </span>
+              <b aria-hidden="true">›</b>
+            </button>
+          ))}
+        </nav>
+      </aside>
+
       <MobileShell title={config.title} subtitle={config.subtitle} active={section === "dashboard" ? "dashboard" : section}>
       {section === "dashboard" && (
         <>
@@ -336,6 +406,7 @@ function MobileCameraPanel() {
     setSelectedSpeedTestId(MOBILE_SPEED_AGILITY_TESTS[group][0].id);
     setSpeedTestRunning(false); setSpeedTestElapsed(0); setSpeedTestSplits([]);
   }, [selectedId]);
+
 
 
   useEffect(() => () => {
@@ -745,3 +816,4 @@ function RecordSummary({ data }: { data: NovaAthleteData | null }) {
 function RecordList({ title, records }: { title: string; records: Array<{ title: string; text: string; status: string }> }) {
   return <section className="mobile-list"><h2 className="mobile-section-title">{title}</h2>{records.length ? records.map((r, i) => <article className="mobile-list-row" key={`${r.title}-${i}`}><div><strong>{r.title}</strong><span>{r.text}</span></div><b>{r.status}</b></article>) : <div className="mobile-empty-card">기록이 없습니다.</div>}</section>;
 }
+

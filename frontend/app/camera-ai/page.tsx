@@ -1721,7 +1721,6 @@ export default function CameraAIPage() {
 
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChapter]);
 
   /*
@@ -2690,7 +2689,6 @@ export default function CameraAIPage() {
                             ? "tool-active"
                             : ""
                         }
-                        style={{ color: "#fff" }}
                         onClick={() =>
                           setSkeletonEnabled(
                             (
@@ -2712,7 +2710,6 @@ export default function CameraAIPage() {
                             ? "tool-active"
                             : ""
                         }
-                        style={{ color: "#fff" }}
                         onClick={() =>
                           setAngleEnabled(
                             (

@@ -8,6 +8,8 @@ import { getAthleteProfile } from "../../../lib/nova-data";
 import "../measurements.css";
 import "./history.css";
 
+const today = "";
+const monthAgo = "";
 
 export default function MeasurementHistoryPage() {
   const athlete = getAthleteProfile();

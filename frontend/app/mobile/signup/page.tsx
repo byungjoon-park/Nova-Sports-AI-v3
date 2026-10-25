@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect */
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -47,7 +47,6 @@ export default function MobileSignupPage() {
       localStorage.setItem("nova-login-role", user.role);
       localStorage.setItem("nova-mobile-signup", "1");
     } catch {}
-    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/mobile";
   };
 
@@ -81,7 +80,6 @@ export default function MobileSignupPage() {
           <button type="submit" className="mobile-login-primary">회원가입</button>
         </form>
 
-        {/* eslint-disable-next-line @next/next/no-location-assign-relative-destination */}
         <button type="button" className="mobile-login-secondary" onClick={() => { window.location.href = "/api/auth/kakao?mode=signup"; }}>카카오로 회원가입</button>
         <button type="button" className="mobile-login-link" onClick={() => router.push("/mobile/login")}>이미 계정이 있습니다. 로그인</button>
         {message && <div className="mobile-login-message" role="alert">{message}</div>}
