@@ -233,30 +233,11 @@ export default function MobileBetaPage() {
           </div>
         </section>;
       })()}
-
-      {mobileRole === "parent" && !parentChild?.data && (
-        <section className="mobile-content-card">
-          <div className="mobile-card-heading"><span>PARENT ACCESS</span><strong>자녀 데이터 연결 확인</strong></div>
-          <p>{parentChild?.child ? "연결된 자녀의 데이터가 현재 기기에서 확인되지 않습니다." : "연결된 자녀가 없습니다. 선수 계정과 보호자 연결을 먼저 확인하세요."}</p>
-        </section>
-      )}
-
-      {mobileRole === "parent" && parentChild?.data && (
-        <section className="mobile-content-card">
-          <div className="mobile-card-heading"><span>CHILD</span><strong>{parentChild.child?.name} 데이터 보기</strong><button type="button" onClick={() => go("/mobile/feedback")}>피드백 ›</button></div>
-          <p>학부모 계정은 연결된 자녀의 데이터를 조회만 할 수 있으며 측정값을 입력하거나 수정할 수 없습니다.</p>
-        </section>
-      )}
-
-      {mobileRole === "parent" && !parentChild?.data ? null : null}
-
       <section className="mobile-metric-grid" aria-label="주요 지표">
         <article className="mobile-metric-card"><span>Performance</span><strong>{performance ?? "-"}</strong><small>/100</small></article>
         <article className="mobile-metric-card"><span>Recovery</span><strong>{recovery ?? "-"}</strong><small>/100</small></article>
         <article className="mobile-metric-card"><span>Fatigue</span><strong>{fatigue ?? "-"}</strong><small>/100</small></article>
       </section>
-
-      <NovaFeedbackSurface />
 
       <section className="mobile-content-grid">
         <article className="mobile-content-card mobile-insight-card">
@@ -264,20 +245,73 @@ export default function MobileBetaPage() {
           <div className="mobile-insight-status"><span className="mobile-status-dot" />{performance == null ? "측정 기록이 없습니다." : performance >= 80 ? "현재 퍼포먼스 상태가 좋습니다." : "최근 퍼포먼스 데이터를 확인하세요."}</div>
           <p>{recovery == null ? "측정값을 입력하면 퍼포먼스와 회복 분석이 시작됩니다." : `회복 점수 ${recovery}/100 기준으로 오늘의 컨디션을 확인할 수 있습니다.`}</p>
         </article>
+
         <article className="mobile-content-card">
           <div className="mobile-card-heading"><span>PERFORMANCE</span><strong>최근 추이</strong><button type="button" onClick={() => go("/mobile/analysis")}>더보기 ›</button></div>
-          {trend.length > 0 ? <div className="mobile-trend" aria-label="최근 퍼포먼스 추이">{trend.map((item) => { const ratio = trendMax === trendMin ? 0.55 : (item.score - trendMin) / (trendMax - trendMin); return <div className="mobile-trend-bar" key={item.date}><span style={{ height: `${Math.max(18, Math.round(ratio * 82))}%` }} /><small>{item.score}</small></div>; })}</div> : <div className="mobile-empty">퍼포먼스 측정 기록이 없습니다.</div>}
+          {trend.length > 0 ? (
+            <div className="mobile-trend" aria-label="최근 퍼포먼스 추이">
+              {trend.map((item) => {
+                const ratio = trendMax === trendMin ? 0.55 : (item.score - trendMin) / (trendMax - trendMin);
+                return <div className="mobile-trend-bar" key={item.date}><span style={{ height: `${Math.max(18, Math.round(ratio * 82))}%` }} /><small>{item.score}</small></div>;
+              })}
+            </div>
+          ) : <div className="mobile-empty">퍼포먼스 측정 기록이 없습니다.</div>}
         </article>
-        {mobileUser.role === "athlete" && <article className="mobile-content-card"><div className="mobile-card-heading"><span>PLAYER PROFILE</span><strong>선수 프로필</strong><button type="button" onClick={() => go("/mobile/player-profile")}>보기 ›</button></div><div className="mobile-profile-list"><div><span>종목</span><strong>{profile?.sport ?? "미등록"}</strong></div><div><span>포지션</span><strong>{profile?.position ?? "미등록"}</strong></div><div><span>신장</span><strong>{profile?.height ? `${profile.height} cm` : "미등록"}</strong></div><div><span>체중</span><strong>{profile?.weight ? `${profile.weight} kg` : "미등록"}</strong></div></div></article>}
+
+        {mobileUser.role === "athlete" ? (
+          <article className="mobile-content-card">
+            <div className="mobile-card-heading"><span>PLAYER PROFILE</span><strong>선수 프로필</strong><button type="button" onClick={() => go("/mobile/player-profile")}>보기 ›</button></div>
+            <div className="mobile-profile-list">
+              <div><span>종목</span><strong>{profile?.sport ?? "미등록"}</strong></div>
+              <div><span>포지션</span><strong>{profile?.position ?? "미등록"}</strong></div>
+              <div><span>신장</span><strong>{profile?.height ? `${profile.height} cm` : "미등록"}</strong></div>
+              <div><span>체중</span><strong>{profile?.weight ? `${profile.weight} kg` : "미등록"}</strong></div>
+            </div>
+          </article>
+        ) : (
+          <article className="mobile-content-card">
+            <div className="mobile-card-heading"><span>{mobileUser.role === "parent" ? "CHILD" : "TEAM"}</span><strong>{mobileUser.role === "parent" ? "자녀 상태" : "팀·선수 관리"}</strong><button type="button" onClick={() => go(mobileUser.role === "parent" ? "/mobile/feedback" : "/mobile/players")}>{mobileUser.role === "parent" ? "피드백 ›" : "선수 ›"}</button></div>
+            <div className="mobile-role-summary">
+              <strong>{mobileUser.role === "parent" ? "선수 상태" : "팀 운영"}</strong>
+              <span>{mobileUser.role === "parent" ? "자녀의 퍼포먼스·회복·리포트를 확인하세요." : "선수 관리, 훈련, AI 분석 기능을 바로 사용할 수 있습니다."}</span>
+              {mobileUser.role === "parent" && <span>{parentChild?.child ? parentChild.data ? `연결된 자녀: ${parentChild.child.name}` : `${parentChild.child.name} 계정의 이 기기 데이터가 확인되지 않습니다.` : "연결된 자녀가 없습니다. 선수 계정과 보호자 연결을 확인하세요."}</span>}
+            </div>
+          </article>
+        )}
+
+        <article className="mobile-content-card">
+          <div className="mobile-card-heading"><span>HEALTH</span><strong>의료·재활</strong><button type="button" onClick={() => go("/mobile/medical")}>보기 ›</button></div>
+          <div className="mobile-health-timeline">
+            <div><i /><span>최근 진료·재활 기록</span><strong>{mobileUser.role === "athlete" ? (profile?.injuryHistory || "기록 없음") : "선수별 기록 확인"}</strong></div>
+            <div><i /><span>회복 상태</span><strong>{recovery == null ? "측정 필요" : `${recovery}/100`}</strong></div>
+          </div>
+        </article>
+
+        <article className="mobile-content-card mobile-report-card">
+          <div className="mobile-card-heading"><span>REPORT</span><strong>리포트</strong><button type="button" onClick={() => go("/mobile/report")}>전체 ›</button></div>
+          <button type="button" onClick={() => go("/mobile/report")} className="mobile-report-row"><span>퍼포먼스 리포트</span><b>›</b></button>
+          <button type="button" onClick={() => go("/mobile/report")} className="mobile-report-row"><span>신체 측정 리포트</span><b>›</b></button>
+          <button type="button" onClick={() => go("/mobile/report")} className="mobile-report-row"><span>재활 진행 리포트</span><b>›</b></button>
+        </article>
       </section>
 
-      <section className="mobile-bottom-nav">
+      <section className="mobile-card-grid" aria-label="전체 주요 기능">
+        {groupedItems("main").slice(0, 6).map((item) => (
+          <button key={`${item.href}-${item.label}`} type="button" className="mobile-feature-card" onClick={() => go(item.href)}>
+            <strong>{item.label}</strong><span>{item.description}</span><span className="mobile-card-arrow" aria-hidden="true">›</span>
+          </button>
+        ))}
+      </section>
+
+      <NovaFeedbackSurface />
+
+      <nav className="mobile-bottom-nav" aria-label="모바일 메뉴">
         <button type="button" onClick={() => go("/mobile")} className="active">홈</button>
         <button type="button" onClick={() => go("/mobile/analysis")}>분석</button>
         <button type="button" onClick={() => go("/mobile/training")}>훈련</button>
         <button type="button" onClick={() => go("/mobile/rehab")}>재활</button>
-        <button type="button" onClick={() => go("/mobile/report")}>리포트</button>
-      </section>
+        <button type="button" onClick={() => setMenuOpen(true)}>메뉴</button>
+      </nav>
     </main>
   );
 }
