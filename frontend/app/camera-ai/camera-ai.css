@@ -378,8 +378,8 @@
   color: #fff;
 }
 
-.camera-ai-page.theme-ivory .camera-toolbar button,
-.camera-ai-page.theme-white .camera-toolbar button {
+.camera-ai-page.theme-ivory .camera-toolbar button:not(.guide-badge),
+.camera-ai-page.theme-white .camera-toolbar button:not(.guide-badge) {
   color: #fff;
 }
 
