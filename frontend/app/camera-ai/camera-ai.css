@@ -378,6 +378,11 @@
   color: #fff;
 }
 
+.camera-ai-page.theme-ivory .camera-toolbar button,
+.camera-ai-page.theme-white .camera-toolbar button {
+  color: #fff;
+}
+
 .camera-status {
   position: absolute;
   top: 17px;
