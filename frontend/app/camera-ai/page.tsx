@@ -154,8 +154,8 @@ type GpsMetrics = {
 
 const CAMERA_COPY = {
   ko: {
-    eyebrow: "CAMERA AI 분석", choose: "동작분석", chooseDesc: "분석할 동작을 선택하면 카메라 촬영 화면으로 전환됩니다.", back: "이전", ready: "AI 시스템 준비", online: "AI 시스템 온라인", analysis: "실시간 분석", calibration: "보정", athleteHeight: "선수 신장", usedForJump: "점프 높이 보정에 사용됩니다.", liveMeasurements: "실시간 측정", analysisResults: "분석 결과", display: "화면 표시", skeleton: "스켈레톤", angle: "관절 각도", startCamera: "카메라 시작", loading: "AI 모델 불러오는 중...", fullBody: "전신 촬영 준비", fullBodyDesc: "머리부터 양쪽 발목까지 화면 안에 들어오도록 촬영해주세요.", guide: "촬영 가이드", joints: "관절 설정", selectAll: "전체 선택", clear: "전체 해제", view: "권장 촬영 방향", distance: "권장 거리", action: "촬영 동작", tips: "촬영 팁", live: "LIVE AI", bodyMoveBack: "전신이 보이도록 뒤로 이동하세요", detected: "전신 인식 완료 — 분석 가능합니다", bodyFrame: "머리부터 양쪽 발목까지 화면에 넣어주세요", analyzing: "AI 분석 중", analyzingDesc: "신체 움직임과 관절 데이터를 분석하고 있습니다.", complete: "분석 완료", completeDesc: "동작 분석 결과가 생성되었습니다.", result: "결과 확인", cameraEnd: "카메라 종료", analysisStart: "분석 시작", needBody: "전신 인식 필요", caution: "주의", cautionText: "본 분석은 운동 수행 및 훈련 관리를 위한 참고 정보입니다. 의료적 진단 또는 진료 결과가 아닙니다.", kneeLeft: "왼쪽 무릎", kneeRight: "오른쪽 무릎", hipLeft: "왼쪽 고관절", hipRight: "오른쪽 고관절", jumpHeight: "점프 높이", flightTime: "체공시간", landing: "착지 안정성", confidence: "인식 신뢰도" },
-  en: { eyebrow: "CAMERA AI ANALYSIS", choose: "Motion Analysis", chooseDesc: "Select an analysis to open the camera screen.", back: "Back", ready: "AI System Ready", online: "AI System Online", analysis: "LIVE ANALYSIS", calibration: "CALIBRATION", athleteHeight: "Athlete Height", usedForJump: "Used to calibrate jump height.", liveMeasurements: "LIVE MEASUREMENTS", analysisResults: "ANALYSIS RESULTS", display: "DISPLAY", skeleton: "Skeleton", angle: "Joint Angles", startCamera: "Start Camera", loading: "Loading AI model...", fullBody: "Full-body capture", fullBodyDesc: "Keep your head and both ankles inside the frame.", guide: "Capture Guide", joints: "Joint Settings", selectAll: "Select all", clear: "Clear all", view: "Recommended view", distance: "Recommended distance", action: "Capture action", tips: "Capture tips", live: "LIVE AI", bodyMoveBack: "Move back until your full body is visible", detected: "Full body detected — ready for analysis", bodyFrame: "Keep your head and both ankles inside the frame", analyzing: "AI analysis in progress", analyzingDesc: "Analyzing body movement and joint data.", complete: "Analysis complete", completeDesc: "Your motion analysis result is ready.", result: "View result", cameraEnd: "Stop Camera", analysisStart: "Start Analysis", needBody: "Full body required", caution: "Caution", cautionText: "This analysis is for sports performance and training management reference only. It is not a medical diagnosis or treatment result.", kneeLeft: "Left Knee", kneeRight: "Right Knee", hipLeft: "Left Hip", hipRight: "Right Hip", jumpHeight: "Jump Height", flightTime: "Flight Time", landing: "Landing Stability", confidence: "Detection Confidence" },
+    eyebrow: "CAMERA AI 분석", choose: "동작분석", chooseDesc: "분석할 동작을 선택하면 카메라 촬영 화면으로 전환됩니다.", back: "이전", ready: "AI 시스템 준비", online: "AI 시스템 온라인", analysis: "동작 촬영", calibration: "보정", athleteHeight: "선수 신장", usedForJump: "점프 높이 보정에 사용됩니다.", liveMeasurements: "측정 결과", analysisResults: "분석 결과", display: "화면 표시", skeleton: "스켈레톤", angle: "관절 각도", startCamera: "카메라 시작", loading: "AI 모델 불러오는 중...", fullBody: "전신 촬영 준비", fullBodyDesc: "머리부터 양쪽 발목까지 화면 안에 들어오도록 촬영해주세요.", guide: "촬영 가이드", joints: "관절 설정", selectAll: "전체 선택", clear: "전체 해제", view: "권장 촬영 방향", distance: "권장 거리", action: "촬영 동작", tips: "촬영 팁", live: "CAMERA ON", bodyMoveBack: "전신이 보이도록 뒤로 이동하세요", detected: "전신 인식 완료 — 측정할 수 있습니다", bodyFrame: "머리부터 양쪽 발목까지 화면에 넣어주세요", analyzing: "분석 결과 생성 중", analyzingDesc: "종료 시점까지 확보한 움직임 데이터를 정리하고 있습니다.", complete: "분석 완료", completeDesc: "동작 분석 결과가 생성되었습니다.", result: "결과 확인", cameraEnd: "측정 종료", analysisStart: "측정 종료 · 결과 생성", needBody: "측정 종료", caution: "안내", cautionText: "본 분석은 운동 수행 및 훈련 관리를 위한 참고 정보입니다. 의료적 진단 또는 진료 결과가 아닙니다.", kneeLeft: "왼쪽 무릎", kneeRight: "오른쪽 무릎", hipLeft: "왼쪽 고관절", hipRight: "오른쪽 고관절", jumpHeight: "점프 높이", flightTime: "체공시간", landing: "착지 안정성", confidence: "인식 신뢰도" },
+  en: { eyebrow: "CAMERA AI ANALYSIS", choose: "Motion Analysis", chooseDesc: "Select an analysis to open the camera screen.", back: "Back", ready: "AI System Ready", online: "AI System Online", analysis: "CAMERA CAPTURE", calibration: "CALIBRATION", athleteHeight: "Athlete Height", usedForJump: "Used to calibrate jump height.", liveMeasurements: "ANALYSIS RESULTS", analysisResults: "ANALYSIS RESULTS", display: "DISPLAY", skeleton: "Skeleton", angle: "Joint Angles", startCamera: "Start Camera", loading: "Loading AI model...", fullBody: "Full-body capture", fullBodyDesc: "Keep your head and both ankles inside the frame.", guide: "Capture Guide", joints: "Joint Settings", selectAll: "Select all", clear: "Clear all", view: "Recommended view", distance: "Recommended distance", action: "Capture action", tips: "Capture tips", live: "CAMERA ON", bodyMoveBack: "Move back until your full body is visible", detected: "Full body detected — ready for analysis", bodyFrame: "Keep your head and both ankles inside the frame", analyzing: "AI analysis in progress", analyzingDesc: "Analyzing body movement and joint data.", complete: "Analysis complete", completeDesc: "Your motion analysis result is ready.", result: "View result", cameraEnd: "Stop Camera", analysisStart: "Start Analysis", needBody: "Full body required", caution: "Caution", cautionText: "This analysis is for sports performance and training management reference only. It is not a medical diagnosis or treatment result.", kneeLeft: "Left Knee", kneeRight: "Right Knee", hipLeft: "Left Hip", hipRight: "Right Hip", jumpHeight: "Jump Height", flightTime: "Flight Time", landing: "Landing Stability", confidence: "Detection Confidence" },
 } as const;
 
 type Landmark = {
@@ -180,12 +180,6 @@ type JointAngles = {
   rightAnkle: number | null;
 };
 
-type LiveMetrics = JointAngles & {
-  kneeDifference: number | null;
-  balance: number | null;
-  confidence: number | null;
-};
-
 type PoseSample = {
   time: number;
   hipY: number;
@@ -194,64 +188,6 @@ type PoseSample = {
   rightKnee: number | null;
   kneeAngle: number | null;
   confidence: number;
-};
-
-type SquatAssessment = {
-  score: number | null;
-  phase: "stand" | "descent" | "bottom" | "ascent" | "waiting";
-  kneeSymmetry: number | null;
-  depth: number | null;
-  hipSymmetry: number | null;
-};
-
-const calculateSquatAssessment = (
-  leftKnee: number | null,
-  rightKnee: number | null,
-  leftHip: number | null,
-  rightHip: number | null,
-): SquatAssessment => {
-  if (
-    leftKnee === null ||
-    rightKnee === null
-  ) {
-    return {
-      score: null,
-      phase: "waiting",
-      kneeSymmetry: null,
-      depth: null,
-      hipSymmetry: null,
-    };
-  }
-
-  const knee = (leftKnee + rightKnee) / 2;
-  const kneeSymmetry = Math.max(0, Math.round(100 - Math.abs(leftKnee - rightKnee) * 5));
-  const hipSymmetry =
-    leftHip !== null && rightHip !== null
-      ? Math.max(0, Math.round(100 - Math.abs(leftHip - rightHip) * 4))
-      : null;
-
-  const depth =
-    Math.max(0, Math.min(100, Math.round(((155 - knee) / 75) * 100)));
-
-  const phase =
-    knee > 155
-      ? "stand"
-      : knee > 110
-        ? "descent"
-        : "bottom";
-
-  const depthScore = knee >= 75 && knee <= 115 ? 100 : Math.max(0, 100 - Math.abs(knee - 95) * 2);
-  const symmetryScore = kneeSymmetry;
-  const hipScore = hipSymmetry ?? 80;
-  const score = Math.round(depthScore * 0.5 + symmetryScore * 0.3 + hipScore * 0.2);
-
-  return {
-    score: Math.max(0, Math.min(100, score)),
-    phase,
-    kneeSymmetry,
-    depth,
-    hipSymmetry,
-  };
 };
 
 type AnalysisResults = {
@@ -264,6 +200,10 @@ type AnalysisResults = {
   fatigue: string;
   bodyControl: string;
 };
+
+type SelectedJointAverage = { label: string; value: string };
+type ScreenWakeLock = { release: () => Promise<void>; addEventListener: (type: "release", listener: () => void) => void };
+type NavigatorWithWakeLock = Navigator & { wakeLock?: { request: (type: "screen") => Promise<ScreenWakeLock> } };
 
 type PreventionReview = {
   status: "양호" | "관리" | "주의";
@@ -306,6 +246,9 @@ function assessPreventionReference(
   const hasBaseline = baselineCount >= 3;
   const findings: string[] = [];
   const exercises = new Set<string>();
+  const defaultExercises = lang === "en"
+    ? ["Glute bridge · 2 sets of 10", "Bodyweight squat · 2 sets of 8", "Calf raise · 2 sets of 12", "Supported single-leg balance · 20 sec each side × 2", "Dead bug · 2 sets of 8 each side"]
+    : ["글루트 브리지 · 10회씩 2세트", "맨몸 스쿼트 · 8회씩 2세트", "카프 레이즈 · 12회씩 2세트", "지지물 잡고 한발 균형 · 좌우 20초씩 2회", "데드버그 · 좌우 8회씩 2세트"];
   const hasUsableCurrentData = Number.isFinite(current.control) || Number.isFinite(current.kneeDifference);
 
   if (!hasUsableCurrentData) {
@@ -314,7 +257,7 @@ function assessPreventionReference(
       baselineCount,
       baselineText: lang === "en" ? `Personal baseline is building (${baselineCount}/3 comparable sessions)` : `개인 기준점 설정 중 (${baselineCount}/3회 비교 기록)`,
       findings: [lang === "en" ? "Not enough camera data for a reliable movement comparison. Record another clear full-body capture." : "비교에 필요한 동작 정보가 부족합니다. 전신이 선명하게 보이도록 다시 촬영해주세요."],
-      exercises: [],
+      exercises: defaultExercises,
       index: null,
     };
   }
@@ -343,6 +286,11 @@ function assessPreventionReference(
     exercises.add(lang === "en" ? "Calf raise · 2 sets of 12" : "카프 레이즈 · 12회씩 2세트");
   }
 
+  for (const exercise of defaultExercises) {
+    if (exercises.size >= 5) break;
+    exercises.add(exercise);
+  }
+
   const index = Math.max(0, Math.min(100, Math.round(
     100
       - (Number.isFinite(current.control) ? Math.max(0, 75 - current.control) * 0.7 : 0)
@@ -358,7 +306,7 @@ function assessPreventionReference(
     baselineCount,
     baselineText,
     findings,
-    exercises: [...exercises],
+    exercises: [...exercises].slice(0, 5),
     index,
   };
 }
@@ -576,26 +524,6 @@ function calculateJointAngles(landmarks: Landmark[]): JointAngles {
   };
 }
 
-function emptyMetrics(): LiveMetrics {
-  return {
-    leftShoulder: null,
-    rightShoulder: null,
-    leftElbow: null,
-    rightElbow: null,
-    leftWrist: null,
-    rightWrist: null,
-    leftHip: null,
-    rightHip: null,
-    leftKnee: null,
-    rightKnee: null,
-    leftAnkle: null,
-    rightAnkle: null,
-    kneeDifference: null,
-    balance: null,
-    confidence: null,
-  };
-}
-
 export default function CameraAIPage() {
   const router = useRouter();
   const { language, theme } = useNovaSettings();
@@ -686,6 +614,32 @@ export default function CameraAIPage() {
   const poseHistoryRef =
     useRef<PoseSample[]>([]);
 
+  const jointAngleHistoryRef = useRef<JointAngles[]>([]);
+  const screenWakeLockRef = useRef<ScreenWakeLock | null>(null);
+  const screenWakeLockRequestedRef = useRef(false);
+
+  const releaseScreenWakeLock = () => {
+    const lock = screenWakeLockRef.current;
+    screenWakeLockRef.current = null;
+    screenWakeLockRequestedRef.current = false;
+    if (lock) void lock.release().catch(() => undefined);
+  };
+
+  const requestScreenWakeLock = () => {
+    const wakeLock = (navigator as NavigatorWithWakeLock).wakeLock;
+    if (!wakeLock || screenWakeLockRequestedRef.current) return;
+    screenWakeLockRequestedRef.current = true;
+    void wakeLock.request("screen").then((lock) => {
+      screenWakeLockRef.current = lock;
+      lock.addEventListener("release", () => {
+        if (screenWakeLockRef.current === lock) {
+          screenWakeLockRef.current = null;
+          screenWakeLockRequestedRef.current = false;
+        }
+      });
+    }).catch(() => { screenWakeLockRequestedRef.current = false; });
+  };
+
   const [selectedChapter, setSelectedChapter] =
     useState<Chapter | null>(null);
 
@@ -722,26 +676,15 @@ export default function CameraAIPage() {
   const [bodyDetectionScore, setBodyDetectionScore] =
     useState(0);
 
-  const [metrics, setMetrics] =
-    useState<LiveMetrics>(
-      emptyMetrics(),
-    );
-
   const [analysisResults, setAnalysisResults] =
     useState<AnalysisResults | null>(
       null,
     );
 
+  const [selectedJointAverages, setSelectedJointAverages] = useState<SelectedJointAverage[]>([]);
+
   const [preventionReview, setPreventionReview] = useState<PreventionReview | null>(null);
   const [cameraHistory, setCameraHistory] = useState<NovaCameraAIResult[]>([]);
-
-  const [squatAssessment, setSquatAssessment] = useState<SquatAssessment>({
-    score: null,
-    phase: "waiting",
-    kneeSymmetry: null,
-    depth: null,
-    hipSymmetry: null,
-  });
 
   useEffect(() => {
     const user = getCurrentUser();
@@ -1135,6 +1078,11 @@ export default function CameraAIPage() {
     const jointAngles =
       calculateJointAngles(landmarks);
 
+    if (bodyStatus.detected) {
+      jointAngleHistoryRef.current.push(jointAngles);
+      if (jointAngleHistoryRef.current.length > 3600) jointAngleHistoryRef.current.shift();
+    }
+
     const {
       leftShoulder,
       rightShoulder,
@@ -1149,17 +1097,6 @@ export default function CameraAIPage() {
       leftAnkle,
       rightAnkle,
     } = jointAngles;
-
-    if (selectedChapter?.id === "squat") {
-      setSquatAssessment(
-        calculateSquatAssessment(
-          leftKnee,
-          rightKnee,
-          leftHip,
-          rightHip,
-        ),
-      );
-    }
 
     if (skeletonEnabled) {
       ctx.lineWidth = 3;
@@ -1402,62 +1339,6 @@ export default function CameraAIPage() {
       }
     }
 
-    const visiblePoints =
-      landmarks.filter(
-        (point) =>
-          (point.visibility ?? 0) >=
-          0.45,
-      );
-
-    const confidence =
-      visiblePoints.length
-        ? Math.round(
-            (visiblePoints.reduce(
-              (sum, point) =>
-                sum +
-                (point.visibility ??
-                  0),
-              0,
-            ) /
-              visiblePoints.length) *
-              100,
-          )
-        : 0;
-
-    const kneeDifference =
-      leftKnee !== null &&
-      rightKnee !== null
-        ? Math.abs(
-            leftKnee -
-              rightKnee,
-          )
-        : null;
-
-    const shoulderDifference =
-      Math.abs(
-        (landmarks[11]?.y ?? 0) -
-          (landmarks[12]?.y ?? 0),
-      );
-
-    const balance = Math.max(
-      0,
-      Math.min(
-        100,
-        Math.round(
-          100 -
-            shoulderDifference *
-              250,
-        ),
-      ),
-    );
-
-    setMetrics({
-      ...jointAngles,
-      kneeDifference,
-      balance,
-      confidence,
-    });
-
     /*
      * 전신이 제대로 잡힌 상태에서만
      * 분석 데이터를 축적한다.
@@ -1538,7 +1419,7 @@ export default function CameraAIPage() {
 
     const cutoff =
       performance.now() -
-      20000;
+      120000;
 
     poseHistoryRef.current =
       poseHistoryRef.current.filter(
@@ -1622,9 +1503,19 @@ export default function CameraAIPage() {
     recordingStartRef.current = null;
   };
 
+  useEffect(() => {
+    if (!cameraActive) return;
+    const reacquireWakeLock = () => {
+      if (document.visibilityState === "visible") requestScreenWakeLock();
+    };
+    document.addEventListener("visibilitychange", reacquireWakeLock);
+    return () => document.removeEventListener("visibilitychange", reacquireWakeLock);
+  }, [cameraActive]);
+
   const startCamera =
     async () => {
       try {
+        requestScreenWakeLock();
         setCameraError("");
 
         await initializeAI();
@@ -1658,6 +1549,8 @@ export default function CameraAIPage() {
 
         poseHistoryRef.current =
           [];
+        jointAngleHistoryRef.current = [];
+        setSelectedJointAverages([]);
 
         setAnalysisResults(
           null,
@@ -1687,6 +1580,7 @@ export default function CameraAIPage() {
           );
       } catch (error) {
         console.error(error);
+        releaseScreenWakeLock();
 
         setCameraError(
           "카메라를 사용할 수 없습니다. 브라우저 카메라 권한을 확인해주세요.",
@@ -1694,8 +1588,9 @@ export default function CameraAIPage() {
       }
     };
 
-  const stopCamera = () => {
+  const stopCamera = (preserveMeasurements = false) => {
     stopRecordingTimer();
+    releaseScreenWakeLock();
 
     if (
       animationRef.current
@@ -1743,22 +1638,13 @@ export default function CameraAIPage() {
       false,
     );
 
-    setRecordingSeconds(0);
-
-    setFullBodyDetected(
-      false,
-    );
-
-    setBodyDetectionScore(
-      0,
-    );
-
-    setMetrics(
-      emptyMetrics(),
-    );
-
-    poseHistoryRef.current =
-      [];
+    if (!preserveMeasurements) {
+      setRecordingSeconds(0);
+      setFullBodyDetected(false);
+      setBodyDetectionScore(0);
+      poseHistoryRef.current = [];
+      jointAngleHistoryRef.current = [];
+    }
   };
 
   const goBack = () => {
@@ -2362,6 +2248,7 @@ export default function CameraAIPage() {
     }
 
     setCameraError("");
+    stopCamera(true);
 
     setAnalyzing(true);
     setAnalysisComplete(
@@ -2369,8 +2256,8 @@ export default function CameraAIPage() {
     );
 
     /*
-     * 1.8초 동안 현재 움직임을
-     * 추가 확보한 뒤 계산.
+     * 측정 종료 시점까지 저장한 프레임을
+     * 평균과 동작 결과를 계산합니다.
      */
     if (analysisTimeoutRef.current) {
       clearTimeout(analysisTimeoutRef.current);
@@ -2381,42 +2268,66 @@ export default function CameraAIPage() {
       const result =
         calculateAnalysis();
 
+      const angleKeys: Record<JointId, (keyof JointAngles)[]> = {
+        head: [], shoulders: ["leftShoulder", "rightShoulder"],
+        elbows: ["leftElbow", "rightElbow"], wrists: ["leftWrist", "rightWrist"],
+        hips: ["leftHip", "rightHip"], knees: ["leftKnee", "rightKnee"],
+        ankles: ["leftAnkle", "rightAnkle"], feet: [],
+      };
+      const angleLabels: Partial<Record<keyof JointAngles, string>> = {
+        leftShoulder: lang === "en" ? "Left shoulder" : "왼쪽 어깨", rightShoulder: lang === "en" ? "Right shoulder" : "오른쪽 어깨",
+        leftElbow: lang === "en" ? "Left elbow" : "왼쪽 팔꿈치", rightElbow: lang === "en" ? "Right elbow" : "오른쪽 팔꿈치",
+        leftWrist: lang === "en" ? "Left wrist" : "왼쪽 손목", rightWrist: lang === "en" ? "Right wrist" : "오른쪽 손목",
+        leftHip: lang === "en" ? "Left hip" : "왼쪽 고관절", rightHip: lang === "en" ? "Right hip" : "오른쪽 고관절",
+        leftKnee: lang === "en" ? "Left knee" : "왼쪽 무릎", rightKnee: lang === "en" ? "Right knee" : "오른쪽 무릎",
+        leftAnkle: lang === "en" ? "Left ankle" : "왼쪽 발목", rightAnkle: lang === "en" ? "Right ankle" : "오른쪽 발목",
+      };
+      const averages: SelectedJointAverage[] = selectedJoints.flatMap((joint) => angleKeys[joint].map((key) => {
+        const values = jointAngleHistoryRef.current.map((sample) => sample[key]).filter((value): value is number => value !== null && value >= 20 && value <= 170);
+        const average = values.length ? Math.round(values.reduce((sum, value) => sum + value, 0) / values.length) : null;
+        return { label: angleLabels[key] ?? String(key), value: average === null ? (lang === "en" ? "Insufficient data" : "측정 부족") : String(average) + "°" };
+      }));
+      setSelectedJointAverages(averages);
+
       setAnalysisResults(
         result,
       );
 
       const currentUser = getCurrentUser();
-      if (currentUser?.role === "athlete" && selectedChapter) {
+      if (selectedChapter) {
         const existingRecords = readNovaAthleteData().cameraAIResults;
-        const athleteHistory = existingRecords.filter((record) => record.athleteId === currentUser.id);
+        const athleteHistory = currentUser?.role === "athlete"
+          ? existingRecords.filter((record) => record.athleteId === currentUser.id)
+          : [];
         const review = assessPreventionReference(result, selectedChapter.id, selectedChapter.title, athleteHistory, lang);
         setPreventionReview(review);
-        const completedAt = new Date().toISOString();
-        const record = upsertCameraAIResult({
-          id: `camera-${selectedChapter.id}-${Date.now()}`,
-          athleteId: currentUser.id,
-          analysisKey: selectedChapter.id,
-          title: selectedChapter.title,
-          category: selectedChapter.category,
-          score: review.index ?? 0,
-          status: review.status,
-          summary: review.findings.join(" "),
-          recommendation: review.exercises.length
-            ? review.exercises.join(" · ")
-            : (lang === "en" ? "Record another reliable camera session before suggesting exercises." : "신뢰할 수 있는 촬영 기록을 추가한 뒤 보강 운동을 제안합니다."),
-          metrics: [
-            ...Object.entries(result).map(([label, value]) => ({ label, value })),
-            { label: "personalBaseline", value: review.baselineText },
-            { label: "preventionReferenceIndex", value: review.index === null ? "측정 부족" : `${review.index}/100` },
-            { label: "recommendedExercises", value: review.exercises.join("; ") },
-          ],
-          completedAt,
-          source: "camera-ai",
-        });
-        const nextHistory = record.cameraAIResults
-          .filter((item) => !item.athleteId || item.athleteId === currentUser.id)
-          .sort((a, b) => b.completedAt.localeCompare(a.completedAt));
-        setCameraHistory(nextHistory);
+        if (currentUser?.role === "athlete") {
+          const completedAt = new Date().toISOString();
+          const record = upsertCameraAIResult({
+            id: `camera-${selectedChapter.id}-${Date.now()}`,
+            athleteId: currentUser.id,
+            analysisKey: selectedChapter.id,
+            title: selectedChapter.title,
+            category: selectedChapter.category,
+            score: review.index ?? 0,
+            status: review.status,
+            summary: review.findings.join(" "),
+            recommendation: review.exercises.join(" · "),
+            metrics: [
+              ...Object.entries(result).map(([label, value]) => ({ label, value })),
+              ...averages.map((item) => ({ label: "average:" + item.label, value: item.value })),
+              { label: "personalBaseline", value: review.baselineText },
+              { label: "preventionReferenceIndex", value: review.index === null ? "측정 부족" : `${review.index}/100` },
+              { label: "recommendedExercises", value: review.exercises.join("; ") },
+            ],
+            completedAt,
+            source: "camera-ai",
+          });
+          const nextHistory = record.cameraAIResults
+            .filter((item) => !item.athleteId || item.athleteId === currentUser.id)
+            .sort((a, b) => b.completedAt.localeCompare(a.completedAt));
+          setCameraHistory(nextHistory);
+        }
       }
       saveJumpFatigueFromResult(result);
 
@@ -2436,6 +2347,7 @@ export default function CameraAIPage() {
       }
 
       stopRecordingTimer();
+      releaseScreenWakeLock();
 
       if (
         animationRef.current
@@ -2620,41 +2532,6 @@ export default function CameraAIPage() {
             </section>
           )}
 
-          {selectedChapter?.id === "squat" && (
-            <section className="setup-card squat-assessment-card">
-              <div className="setup-card-header">
-                <div>
-                  <span className="panel-label">{lang === "en" ? "SQUAT ASSESSMENT" : "스쿼트 자세평가"}</span>
-                  <h3>{lang === "en" ? "Live full-body squat check" : "실시간 전신 스쿼트 평가"}</h3>
-                </div>
-                <strong style={{ fontSize: 22 }}>
-                  {squatAssessment.score !== null ? `${squatAssessment.score}/100` : "--"}
-                </strong>
-              </div>
-              <div className="guide-summary">
-                <div>
-                  <span>{lang === "en" ? "Phase" : "현재 구간"}</span>
-                  <strong>
-                    {lang === "en"
-                      ? ({ stand: "Stand", descent: "Descent", bottom: "Bottom", ascent: "Ascent", waiting: "Waiting" } as const)[squatAssessment.phase]
-                      : ({ stand: "서있는 자세", descent: "하강", bottom: "최저점", ascent: "상승", waiting: "측정 대기" } as const)[squatAssessment.phase]}
-                  </strong>
-                </div>
-                <div>
-                  <span>{lang === "en" ? "Knee symmetry" : "무릎 좌우 대칭"}</span>
-                  <strong>{squatAssessment.kneeSymmetry !== null ? `${squatAssessment.kneeSymmetry}%` : "--"}</strong>
-                </div>
-                <div>
-                  <span>{lang === "en" ? "Depth" : "하강 깊이"}</span>
-                  <strong>{squatAssessment.depth !== null ? `${squatAssessment.depth}%` : "--"}</strong>
-                </div>
-                <div>
-                  <span>{lang === "en" ? "Hip symmetry" : "고관절 좌우 대칭"}</span>
-                  <strong>{squatAssessment.hipSymmetry !== null ? `${squatAssessment.hipSymmetry}%` : "--"}</strong>
-                </div>
-              </div>
-            </section>
-          )}
 
           <div className="analysis-setup-grid">
             <section className="setup-card joint-settings-card">
@@ -2727,7 +2604,7 @@ export default function CameraAIPage() {
                   </select>
                 </label>
               </div>
-              <p className="speed-test-note">{selectedSpeedTest.distance} · 전신을 화면에 유지 · 자세분석 LIVE</p>
+              <p className="speed-test-note">{selectedSpeedTest.distance} · 전신을 화면에 유지 · 자세 확인</p>
               <div className="speed-test-actions">
                 {!speedTestRunning ? <button type="button" onClick={startSpeedAgilityTest}>측정 시작</button> : <button type="button" onClick={finishSpeedAgilityTest}>측정 종료</button>}
                 {speedTestRunning && selectedSpeedTest.split && <button type="button" onClick={recordSpeedAgilitySplit}>구간 기록</button>}
@@ -2871,7 +2748,7 @@ export default function CameraAIPage() {
 
                     <div className="camera-status">
                       <i />
-                      LIVE AI
+                      CAMERA ON
                     </div>
 
                     <div
@@ -2967,29 +2844,15 @@ export default function CameraAIPage() {
                   <>
                     <button
                       className="capture-button"
-                      onClick={
-                        runAnalysis
-                      }
-                      disabled={
-                        analyzing ||
-                        !canAnalyze
-                      }
+                      onClick={() => {
+                        if (canAnalyze) runAnalysis();
+                        else { stopCamera(true); setCameraError(lang === "en" ? "Session ended. There was not enough clear full-body data to create a result." : "측정을 종료했습니다. 선명한 전신 데이터가 부족해 분석 결과를 만들지 못했습니다."); }
+                      }}
+                      disabled={analyzing}
                     >
-                      {analyzing
-                        ? copy.analyzing
-                        : fullBodyDetected
-                          ? copy.analysisStart
-                          : copy.needBody}
+                      {analyzing ? copy.analyzing : canAnalyze ? (lang === "en" ? "End session · Create results" : "측정 종료 · 결과 생성") : (lang === "en" ? "End session" : "측정 종료")}
                     </button>
 
-                    <button
-                      className="secondary-camera-button"
-                      onClick={
-                        stopCamera
-                      }
-                    >
-                      {copy.cameraEnd}
-                    </button>
                   </>
                 ) : (
                   <button
@@ -3003,28 +2866,12 @@ export default function CameraAIPage() {
                 )}
               </div>
             {selectedChapter && (
-              <section className="desktop-live-analysis-card">
-                <div className="desktop-live-analysis-heading"><span className="panel-label">LIVE ANALYSIS</span><h2>분석 결과</h2></div>
-                <div className="desktop-result-grid">
-                  <div><span>신체 인식</span><strong>{bodyDetectionScore > 0 ? `${bodyDetectionScore}%` : "대기"}</strong></div>
-                  <div><span>평균 무릎 각도</span><strong>{analysisResults?.averageKnee ?? "-"}</strong></div>
-                  <div><span>왼쪽 무릎</span><strong>{metrics.leftKnee != null ? `${metrics.leftKnee}°` : "-"}</strong></div>
-                  <div><span>오른쪽 무릎</span><strong>{metrics.rightKnee != null ? `${metrics.rightKnee}°` : "-"}</strong></div>
-                  <div><span>평균 고관절</span><strong>{metrics.leftHip != null && metrics.rightHip != null ? `${Math.round((metrics.leftHip + metrics.rightHip) / 2)}°` : "-"}</strong></div>
-                  <div><span>평균 팔꿈치</span><strong>{metrics.leftElbow != null && metrics.rightElbow != null ? `${Math.round((metrics.leftElbow + metrics.rightElbow) / 2)}°` : "-"}</strong></div>
-                  <div><span>좌우 밸런스</span><strong>{analysisResults?.bodyControl ?? "-"}</strong></div>
-                  <div><span>자세 상태</span><strong>{analysisResults ? "분석 완료" : "측정 대기"}</strong></div>
-                </div>
-                <div className="desktop-result-detail">
-                  <div><span>자세분석</span><strong>{analysisResults ? "분석 완료" : "측정 대기"}</strong></div>
-                  <div><span>신체 인식</span><strong>{bodyDetectionScore}%</strong></div>
-                  <div><span>좌우 밸런스</span><strong>{analysisResults?.bodyControl ?? "-"}</strong></div>
-                </div>
-                <p className="desktop-result-note">카메라 하단에서 관절 각도, 전신 인식, 좌우 균형을 함께 확인합니다.</p>
-                <div className="desktop-result-rows">
-                  <div><span>{displayedMetrics[0] ?? "측정 항목 1"}</span><strong>{analysisResults ? "분석 완료" : "대기"}</strong><span>{displayedMetrics[1] ?? "측정 항목 2"}</span><strong>{analysisResults ? "분석 완료" : "대기"}</strong></div>
-                  <div><span>{displayedMetrics[2] ?? "측정 항목 3"}</span><strong>{analysisResults ? "분석 완료" : "대기"}</strong><span>{displayedMetrics[3] ?? "측정 항목 4"}</span><strong>{analysisResults ? "분석 완료" : "대기"}</strong></div>
-                </div>
+              <section className="desktop-live-analysis-card selected-angle-results">
+                <div className="desktop-live-analysis-heading"><span className="panel-label">ANALYSIS RESULT</span><h2>{lang === "en" ? "Average angles · selected joints" : "선택 부위 평균 각도"}</h2></div>
+                {analysisResults ? (selectedJointAverages.length ? (
+                  <div className="selected-angle-grid">{selectedJointAverages.map((item) => <div key={item.label}><span>{item.label}</span><strong>{item.value}</strong></div>)}</div>
+                ) : <p>{lang === "en" ? "No angle-capable joints were selected." : "각도를 표시할 수 있는 관절을 선택하지 않았습니다."}</p>) : <p>{lang === "en" ? "End the session to generate averages from the captured movement." : "측정 종료 버튼을 누르면 촬영 중 선택한 관절의 평균 각도를 표시합니다."}</p>}
+                {analysisResults && <p className="desktop-result-note">{lang === "en" ? "Averages use valid detected frames from this session." : "평균은 이번 측정에서 정상 인식된 프레임을 기준으로 계산합니다."}</p>}
               </section>
             )}
 
@@ -3056,7 +2903,7 @@ export default function CameraAIPage() {
                       <li key={record.id}>
                         <div><strong>{record.title}</strong><span>{new Date(record.completedAt).toLocaleString(lang === "en" ? "en-US" : "ko-KR")}</span></div>
                         <b>{record.status === "주의" ? (lang === "en" ? "Review" : "확인 권장") : record.status === "관리" ? (lang === "en" ? "Monitor" : "추이 관찰") : (lang === "en" ? "Reference" : "참고 범위")}</b>
-                        <div className="prevention-history-metrics"><span>{lang === "en" ? "Reference index" : "참고 지표"} {record.score}/100</span><span>{lang === "en" ? "Knee side difference" : "무릎 좌우 차"} {record.metrics.find((metric) => metric.label === "kneeDifference")?.value ?? "-"}</span></div>
+                        <div className="prevention-history-metrics"><span>{lang === "en" ? "Reference index" : "참고 지표"} {record.score}/100</span>{selectedJoints.includes("knees") && <span>{lang === "en" ? "Knee side difference" : "무릎 좌우 차"} {record.metrics.find((metric) => metric.label === "kneeDifference")?.value ?? "-"}</span>}</div>
                         <p>{record.summary}</p>
                       </li>
                     ))}
@@ -3070,18 +2917,11 @@ export default function CameraAIPage() {
             <aside className="camera-info-panel">
               <div className="info-panel-section">
                 <span className="panel-label">
-                  {copy.analysis}
+                  {lang === "en" ? "CAMERA CAPTURE" : "동작 촬영"}
                 </span>
 
-                <h2>
-                  {currentChapterCopy?.title}
-                </h2>
-
-                <p>
-                  {copy.analysis === "LIVE ANALYSIS"
-                    ? "Live body tracking information is shown here."
-                    : "카메라에서 인식된 신체 정보를 실시간으로 표시합니다."}
-                </p>
+                <h2>{currentChapterCopy?.title}</h2>
+                <p>{lang === "en" ? "Keep the athlete fully visible and end the session when ready." : "선수 전신이 화면에 들어오게 촬영하고, 측정자가 준비되었을 때 종료해주세요."}</p>
               </div>
 
               <div className="calibration-panel">
@@ -3119,141 +2959,15 @@ export default function CameraAIPage() {
                 </small>
               </div>
 
-              <div className="info-panel-section">
-                <span className="panel-label">
-                  {analysisResults
-                    ? "ANALYSIS RESULTS"
-                    : "LIVE MEASUREMENTS"}
-                </span>
 
-                <div className="live-measurement-grid">
-                  <LiveMetric
-                    label={copy.kneeLeft}
-                    value={
-                      metrics.leftKnee !==
-                      null
-                        ? `${metrics.leftKnee}°`
-                        : "--"
-                    }
-                  />
-
-                  <LiveMetric
-                    label={copy.kneeRight}
-                    value={
-                      metrics.rightKnee !==
-                      null
-                        ? `${metrics.rightKnee}°`
-                        : "--"
-                    }
-                  />
-
-                  <LiveMetric
-                    label={copy.hipLeft}
-                    value={
-                      metrics.leftHip !==
-                      null
-                        ? `${metrics.leftHip}°`
-                        : "--"
-                    }
-                  />
-
-                  <LiveMetric
-                    label={copy.hipRight}
-                    value={
-                      metrics.rightHip !==
-                      null
-                        ? `${metrics.rightHip}°`
-                        : "--"
-                    }
-                  />
-
-                  <LiveMetric
-                    label={lang === "en" ? "L Shoulder" : "왼쪽 어깨"}
-                    value={metrics.leftShoulder !== null ? `${metrics.leftShoulder}°` : "--"}
-                  />
-
-                  <LiveMetric
-                    label={lang === "en" ? "R Shoulder" : "오른쪽 어깨"}
-                    value={metrics.rightShoulder !== null ? `${metrics.rightShoulder}°` : "--"}
-                  />
-
-                  <LiveMetric
-                    label={lang === "en" ? "L Elbow" : "왼쪽 팔꿈치"}
-                    value={metrics.leftElbow !== null ? `${metrics.leftElbow}°` : "--"}
-                  />
-
-                  <LiveMetric
-                    label={lang === "en" ? "R Elbow" : "오른쪽 팔꿈치"}
-                    value={metrics.rightElbow !== null ? `${metrics.rightElbow}°` : "--"}
-                  />
-
-                  <LiveMetric
-                    label={lang === "en" ? "L Wrist" : "왼쪽 손목"}
-                    value={metrics.leftWrist !== null ? `${metrics.leftWrist}°` : "--"}
-                  />
-
-                  <LiveMetric
-                    label={lang === "en" ? "R Wrist" : "오른쪽 손목"}
-                    value={metrics.rightWrist !== null ? `${metrics.rightWrist}°` : "--"}
-                  />
-
-                  <LiveMetric
-                    label={lang === "en" ? "L Ankle" : "왼쪽 발목"}
-                    value={metrics.leftAnkle !== null ? `${metrics.leftAnkle}°` : "--"}
-                  />
-
-                  <LiveMetric
-                    label={lang === "en" ? "R Ankle" : "오른쪽 발목"}
-                    value={metrics.rightAnkle !== null ? `${metrics.rightAnkle}°` : "--"}
-                  />
-
-                  <LiveMetric
-                    label={copy.jumpHeight}
-                    value={
-                      analysisResults
-                        ? analysisResults.jumpHeight
-                        : "--"
-                    }
-                  />
-
-                  <LiveMetric
-                    label={copy.flightTime}
-                    value={
-                      analysisResults
-                        ? analysisResults.flightTime
-                        : "--"
-                    }
-                  />
-
-                  <LiveMetric
-                    label={copy.landing}
-                    value={
-                      analysisResults
-                        ? analysisResults.landingStability
-                        : "--"
-                    }
-                  />
-
-                  <LiveMetric
-                    label={copy.confidence}
-                    value={
-                      metrics.confidence !==
-                      null
-                        ? `${metrics.confidence}%`
-                        : "--"
-                    }
-                  />
-                </div>
-              </div>
-
-              {analysisResults && (
+              {analysisResults && selectedChapter.id === "jump" && (
                 <div className="analysis-result-card">
                   <span>
                     ANALYSIS RESULT
                   </span>
 
                   <h3>
-                    점프 분석 결과
+                    {lang === "en" ? `${selectedChapter.title} analysis result` : `${selectedChapter.title} 분석 결과`}
                   </h3>
 
                   <div className="result-row">
@@ -3280,29 +2994,7 @@ export default function CameraAIPage() {
                     </strong>
                   </div>
 
-                  <div className="result-row">
-                    <span>
-                      평균 무릎 각도
-                    </span>
 
-                    <strong>
-                      {
-                        analysisResults.averageKnee
-                      }
-                    </strong>
-                  </div>
-
-                  <div className="result-row">
-                    <span>
-                      좌우 무릎 차이
-                    </span>
-
-                    <strong>
-                      {
-                        analysisResults.kneeDifference
-                      }
-                    </strong>
-                  </div>
 
                   <div className="result-row">
                     <span>

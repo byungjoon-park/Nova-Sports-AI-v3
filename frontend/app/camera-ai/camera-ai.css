@@ -1842,3 +1842,46 @@
   .prevention-history-list li > div { display: grid; }
 }
 .prevention-history-metrics { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 7px; color: var(--text, #475569); font-size: 9px; }
+
+
+/* Camera capture readability and compact selected-joint results. */
+.camera-video.visible {
+  filter: brightness(1.2) contrast(1.05) saturate(1.04);
+}
+
+.selected-angle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.selected-angle-grid > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 14px;
+  border: 1px solid var(--camera-border, #ddd7ca);
+  border-radius: 10px;
+  background: var(--camera-panel, #fffdf8);
+}
+
+.selected-angle-grid span {
+  color: var(--camera-muted, #64748b);
+  font-size: 12px;
+}
+
+.selected-angle-grid strong {
+  color: var(--camera-text, #101828);
+  font-size: 18px;
+}
+
+@media (max-width: 700px) {
+  .camera-video.visible {
+    filter: brightness(1.24) contrast(1.05) saturate(1.04);
+  }
+  .selected-angle-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
