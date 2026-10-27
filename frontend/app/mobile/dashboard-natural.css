@@ -1,0 +1,32 @@
+/* Mobile dashboard cards: calm hierarchy and paired health summaries. */
+.mobile-page > .mobile-content-grid .mobile-content-card { border:1px solid #e4e0d7; border-radius:14px; background:#fffdf9; box-shadow:none; }
+.theme-dark.mobile-page > .mobile-content-grid .mobile-content-card { background:#111722; border-color:#2b3442; }
+.mobile-page > .mobile-content-grid .mobile-card-heading span { display:none; }
+.mobile-page > .mobile-content-grid .mobile-card-heading strong { color:#20252d; font-size:15px; font-weight:650; letter-spacing:0; }
+.theme-dark.mobile-page > .mobile-content-grid .mobile-card-heading strong { color:#f0f2f5; }
+.mobile-page > .mobile-content-grid .mobile-card-heading button { border-color:#e4e0d7; background:transparent; color:#536071; font-weight:500; }
+.theme-dark.mobile-page > .mobile-content-grid .mobile-card-heading button { border-color:#354052; color:#c2cad5; }
+.mobile-dashboard-feature-pair { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; grid-column:1/-1; }
+.mobile-dashboard-feature-pair > .mobile-content-card { min-width:0; margin:0; padding:14px; }
+.mobile-dashboard-feature-pair .mobile-card-heading { align-items:center; gap:6px; margin-bottom:10px; }
+.mobile-dashboard-feature-pair .mobile-card-heading strong { font-size:14px; }
+.mobile-dashboard-feature-pair .mobile-card-heading button { padding:5px 7px; white-space:nowrap; }
+.mobile-dashboard-feature-pair .mobile-profile-list { grid-template-columns:1fr; gap:0; }
+.mobile-dashboard-feature-pair .mobile-profile-list div { display:flex; align-items:flex-start; justify-content:space-between; gap:6px; padding:8px 0; border-top:1px solid #eeeae2; border-radius:0; background:transparent; }
+.mobile-dashboard-feature-pair .mobile-profile-list div:first-child { border-top:0; }
+.mobile-dashboard-feature-pair .mobile-profile-list span { flex:1 1 auto; min-width:0; font-size:10px; line-height:1.45; }
+.mobile-dashboard-feature-pair .mobile-profile-list strong { flex:0 1 auto; margin:0; text-align:right; font-size:11px; line-height:1.45; }
+.mobile-dashboard-feature-pair .mobile-note { margin:7px 0 0; font-size:10px; line-height:1.45; }
+.mobile-dashboard-feature-pair .mobile-health-timeline { gap:0; }
+.mobile-dashboard-feature-pair .mobile-health-timeline div { grid-template-columns:7px minmax(0,1fr); gap:5px 7px; padding:8px 0; border-top:1px solid #eeeae2; }
+.mobile-dashboard-feature-pair .mobile-health-timeline div:first-child { border-top:0; }
+.mobile-dashboard-feature-pair .mobile-health-timeline i { width:6px; height:6px; }
+.mobile-dashboard-feature-pair .mobile-health-timeline span { font-size:10px; }
+.mobile-dashboard-feature-pair .mobile-health-timeline strong { grid-column:2; overflow-wrap:anywhere; text-align:left; font-size:11px; line-height:1.4; }
+.mobile-page > .mobile-metric-grid .mobile-metric-card > span { color:#586274; font-size:11px; letter-spacing:0; }
+@media (max-width:360px) {
+  .mobile-dashboard-feature-pair { gap:8px; }
+  .mobile-dashboard-feature-pair > .mobile-content-card { padding:11px; }
+  .mobile-dashboard-feature-pair .mobile-card-heading strong { font-size:13px; }
+  .mobile-dashboard-feature-pair .mobile-profile-list span,.mobile-dashboard-feature-pair .mobile-health-timeline span { font-size:9px; }
+}
