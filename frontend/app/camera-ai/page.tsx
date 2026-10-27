@@ -529,6 +529,11 @@ export default function CameraAIPage() {
   const { language, theme } = useNovaSettings();
   const [externalLanguage, setExternalLanguage] = useState<Language>(language === "en" ? "en" : "ko");
   const [externalTheme, setExternalTheme] = useState<"dark" | "white" | "ivory">(theme === "dark" || theme === "white" || theme === "ivory" ? theme : "ivory");
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsAdmin(getCurrentUser()?.role === "admin");
+  }, []);
 
   // Keep this page synchronized with the global settings even when the page
   // was opened directly or the settings UI lives in another route.
@@ -2214,8 +2219,11 @@ export default function CameraAIPage() {
 
     const athleteId = currentUser.id;
     const today = new Date();
-    const currentDate = today.toISOString().slice(0, 10);
-    const previousDate = new Date(today.getTime() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    const dateKey = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    const currentDate = dateKey(today);
+    const previousDay = new Date(today);
+    previousDay.setDate(previousDay.getDate() - 1);
+    const previousDate = dateKey(previousDay);
     const previousRecord = getJumpFatigueRecord(athleteId, previousDate);
     const previousJumpCm = previousRecord?.currentJumpCm ?? 0;
     const fatiguePercent =
@@ -3034,6 +3042,7 @@ export default function CameraAIPage() {
                 </div>
               )}
 
+              {isAdmin && (
               <div className="gps-panel">
                 <div className="gps-panel-header">
                   <div>
@@ -3050,6 +3059,7 @@ export default function CameraAIPage() {
                   <LiveMetric label={lang === "en" ? "Sprints" : "스프린트 횟수"} value={gpsMetrics.sprintCount !== null ? `${gpsMetrics.sprintCount}` : "--"} />
                 </div>
               </div>
+              )}
 
               <div className="info-panel-section">
                 <span className="panel-label">

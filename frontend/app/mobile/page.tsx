@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAthleteProfile, getAuthStore, getCurrentUser, signOutUser, type NovaUser, type NovaUserRole } from "../../lib/nova-auth";
 import { getMeasurementRange } from "../../lib/nova-measurements";
-import { readNovaAthleteData } from "../../lib/nova-data";
+import { readNovaAthleteData, type NovaJumpFatigueRecord } from "../../lib/nova-data";
 import { useNovaSettings } from "../settings-context";
 
 type MobileNotice = {
@@ -26,7 +26,6 @@ type MobileMenuItem = {
 
 const menuItems: MobileMenuItem[] = [
   { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai", section: "main", roles: ["admin", "director", "coach", "athlete"] },
-  { label: "GPS", description: "GPS 데이터와 피로 분석", href: "/mobile/gps-test", section: "main", roles: ["admin", "director", "coach", "athlete"] },
   { label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players", section: "main", roles: ["admin", "director", "coach"] },
   { label: "AI 분석", description: "퍼포먼스와 신체 분석", href: "/mobile/analysis", section: "main" },
   { label: "성장·체력", description: "성장 및 체력 측정", href: "/mobile/growth-analysis", section: "main", roles: ["admin", "director", "coach", "athlete"] },
@@ -44,6 +43,8 @@ const menuItems: MobileMenuItem[] = [
 
 const sectionLabels = { main: "주요 기능", health: "건강·재활", management: "관리", system: "내 계정" };
 
+const localDateKey = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
 const roleLabel = (role: NovaUserRole) =>
   role === "director" ? "감독" :
   role === "coach" ? "코치" :
@@ -58,6 +59,7 @@ export default function MobileBetaPage() {
   const [booting, setBooting] = useState(true);
   const [noticeIndex, setNoticeIndex] = useState(0);
   const [liveNotices, setLiveNotices] = useState<MobileNotice[]>([]);
+  const [todayJumpRecord, setTodayJumpRecord] = useState<NovaJumpFatigueRecord | null>(null);
 
   useEffect(() => {
     const current = getCurrentUser();
@@ -82,10 +84,30 @@ export default function MobileBetaPage() {
     setBooting(false);
   }, []);
 
+  useEffect(() => {
+    const refreshTodayJumpRecord = () => {
+      const current = getCurrentUser();
+      if (current?.role !== "athlete") {
+        setTodayJumpRecord(null);
+        return;
+      }
+      const today = localDateKey(new Date());
+      const record = readNovaAthleteData().jumpFatigueRecords.find(
+        (item) => item.athleteId === current.id && item.date === today,
+      ) ?? null;
+      setTodayJumpRecord(record);
+    };
+    refreshTodayJumpRecord();
+    window.addEventListener("focus", refreshTodayJumpRecord);
+    window.addEventListener("pageshow", refreshTodayJumpRecord);
+    return () => {
+      window.removeEventListener("focus", refreshTodayJumpRecord);
+      window.removeEventListener("pageshow", refreshTodayJumpRecord);
+    };
+  }, []);
+
   const fallbackNotices = [
     { date: "2026. 8. 29.", title: "NOVA V3 AI 분석 시스템 업데이트 안내", body: "카메라 AI 분석과 선수 퍼포먼스 분석 기능이 업데이트되었습니다.", href: "/mobile/dashboard" },
-    { date: "2026. 8. 29.", title: "GPS 연동 가능 제품 안내", body: "스포츠 GPS 장비 연동을 준비하고 있습니다. 실제 지원 범위는 데이터/API 확인 후 적용됩니다.", href: "/mobile/gps-test" },
-    { date: "2026. 8. 29.", title: "GPS 데이터 · AI 분석 연계 안내", body: "GPS 이동거리·고속주행·최고속도·스프린트 데이터를 AI 분석과 함께 확인할 수 있도록 연동 범위를 확대합니다.", href: "/mobile/gps-test" },
   ];
 
   useEffect(() => {
@@ -97,7 +119,7 @@ export default function MobileBetaPage() {
         if (response.ok) {
           const data = await response.json();
           const notice = data?.notice;
-          if (notice?.title && notice?.body) notices.push({
+          if (notice?.title && notice?.body && !/gps/i.test(`${notice.title} ${notice.body}`)) notices.push({
             date: notice.createdAt ? new Date(notice.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "numeric", day: "numeric" }) : "",
             title: notice.title,
             body: notice.body,
@@ -110,7 +132,7 @@ export default function MobileBetaPage() {
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data?.notices)) {
-            notices.push(...data.notices.filter((item: { title?: string; body?: string }) => item?.title && item?.body).map((item: { title: string; body: string; createdAt?: string }) => ({
+            notices.push(...data.notices.filter((item: { title?: string; body?: string }) => item?.title && item?.body && !/gps/i.test(`${item.title} ${item.body}`)).map((item: { title: string; body: string; createdAt?: string }) => ({
               date: item.createdAt ? new Date(item.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "numeric", day: "numeric" }) : "",
               title: item.title,
               body: item.body,
@@ -166,6 +188,10 @@ export default function MobileBetaPage() {
   const performance = latest(dashboardRecords.performanceRecords);
   const recovery = latest(dashboardRecords.recoveryRecords);
   const fatigue = latest(dashboardRecords.fatigueRecords);
+  const todayKey = localDateKey(new Date());
+  const displayedJumpRecord = mobileRole === "parent"
+    ? parentChild?.data?.jumpFatigueRecords.find((item) => item.date === todayKey && item.athleteId === parentChild.child?.id) ?? null
+    : mobileRole === "athlete" && todayJumpRecord?.date === todayKey ? todayJumpRecord : null;
   const trend = [...dashboardRecords.performanceRecords].sort((a, b) => a.date.localeCompare(b.date)).slice(-7);
   const trendMax = Math.max(...trend.map((item) => item.score), 100);
   const trendMin = Math.min(...trend.map((item) => item.score), 0);
@@ -243,6 +269,16 @@ export default function MobileBetaPage() {
       </section>
 
       <section className="mobile-content-grid">
+        {(mobileRole === "athlete" || mobileRole === "parent") && (
+          <article className="mobile-content-card" aria-label="오늘 점프 피로도">
+            <div className="mobile-card-heading"><span>JUMP FATIGUE</span><strong>당일 점프 피로도</strong><button type="button" onClick={() => go("/mobile/camera-ai")}>점프 측정 ›</button></div>
+            <div className="mobile-profile-list">
+              <div><span>전일 대비 점프 높이 감소</span><strong>{displayedJumpRecord ? displayedJumpRecord.previousJumpCm > 0 ? `${displayedJumpRecord.fatiguePercent.toFixed(1)}%` : "기준 기록 필요" : "오늘 점프 측정 기록이 없습니다."}</strong></div>
+              {displayedJumpRecord && <div><span>오늘 측정 점프 높이</span><strong>{displayedJumpRecord.currentJumpCm.toFixed(1)} cm</strong></div>}
+            </div>
+            <p className="mobile-note">전일 측정 기록과 비교한 참고값입니다. 기준 기록이 없으면 전일 대비 변화를 계산하지 않습니다.</p>
+          </article>
+        )}
         <article className="mobile-content-card mobile-insight-card">
           <div className="mobile-card-heading"><span>AI INSIGHT</span><strong>오늘의 상태</strong></div>
           <div className="mobile-insight-status"><span className="mobile-status-dot" />{performance == null ? "측정 기록이 없습니다." : performance >= 80 ? "현재 퍼포먼스 상태가 좋습니다." : "최근 퍼포먼스 데이터를 확인하세요."}</div>

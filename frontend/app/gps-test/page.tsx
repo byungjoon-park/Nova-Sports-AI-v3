@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import NovaTopBar from "../../components/NovaTopBar";
+import { getCurrentUser } from "../../lib/nova-auth";
 
 type GpsStatus = "idle" | "requesting" | "tracking" | "error";
 
@@ -38,6 +40,8 @@ const formatNumber = (value: number | null, digits = 1) =>
   value == null || !Number.isFinite(value) ? "—" : value.toFixed(digits);
 
 export default function GpsTestPage() {
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
   const [status, setStatus] = useState<GpsStatus>("idle");
   const [error, setError] = useState("");
   const [sample, setSample] = useState<GpsSample | null>(null);
@@ -58,6 +62,13 @@ export default function GpsTestPage() {
     startTimeRef.current = null;
     setStatus("idle");
   }, []);
+
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (!user) { router.replace("/login"); return; }
+    if (user.role !== "admin") { router.replace("/dashboard"); return; }
+    setAuthorized(true);
+  }, [router]);
 
   const startTracking = useCallback(() => {
     setError("");
@@ -183,6 +194,10 @@ export default function GpsTestPage() {
     tracking: "tracking",
     error: "error",
   }[status];
+
+  if (!authorized) {
+    return <main className="gps-page"><p>관리자 권한을 확인하고 있습니다.</p></main>;
+  }
 
   return (
     <main className="gps-page">

@@ -16,7 +16,6 @@ const MENU: MenuItem[] = [
   { label: "대시보드", description: "퍼포먼스·회복·훈련 현황", href: "/mobile/dashboard" },
   { label: "카메라 AI", description: "동작 촬영과 AI 분석", href: "/mobile/camera-ai", roles: ["admin", "director", "coach", "athlete"] },
   { label: "AI 분석", description: "퍼포먼스·회복·피로도 분석", href: "/mobile/analysis" },
-  { label: "GPS", description: "GPS 데이터와 활동 분석", href: "/mobile/gps-test" },
   { label: "성장·체력", description: "신체와 체력 측정", href: "/mobile/growth-analysis" },
   { label: "측정 기록", description: "측정값과 변화 이력", href: "/mobile/measurements" },
   { label: "의료·재활", description: "부상·진료·재활 기록", href: "/mobile/medical" },
