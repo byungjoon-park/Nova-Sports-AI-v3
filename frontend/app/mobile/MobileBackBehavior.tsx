@@ -15,19 +15,7 @@ export default function MobileBackBehavior() {
 
       event.preventDefault();
       event.stopPropagation();
-      const fallback: Record<string, string> = {
-        "/mobile/player-profile": "/mobile/players",
-        "/mobile/team": "/mobile/players",
-        "/mobile/medical": "/mobile/players",
-        "/mobile/rehab": "/mobile/medical",
-        "/mobile/report": "/mobile/analysis",
-        "/mobile/measurements": "/mobile/growth-analysis",
-        "/mobile/growth-analysis": "/mobile/analysis",
-        "/mobile/inquiry": "/mobile/team",
-      };
-      const index = (window.history.state as { idx?: unknown } | null)?.idx;
-      if (typeof index === "number" && index > 0) window.history.back();
-      else window.location.assign(fallback[pathname] || "/mobile");
+      window.location.assign(pathname.startsWith("/mobile") ? "/mobile" : "/dashboard");
     };
 
     document.addEventListener("click", handleClick, true);
