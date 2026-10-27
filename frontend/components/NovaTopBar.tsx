@@ -17,10 +17,27 @@ export default function NovaTopBar({ statusText = "AI 시스템 준비" }: Props
 
   const goBack = () => {
     if (isMobilePage) {
-      window.location.replace("/mobile");
+      const fallback: Record<string, string> = {
+        "/mobile/player-profile": "/mobile/players",
+        "/mobile/players": "/mobile",
+        "/mobile/analysis": "/mobile",
+        "/mobile/growth-analysis": "/mobile/analysis",
+        "/mobile/measurements": "/mobile/growth-analysis",
+        "/mobile/medical": "/mobile/players",
+        "/mobile/report": "/mobile/analysis",
+        "/mobile/team": "/mobile/players",
+        "/mobile/inquiry": "/mobile/team",
+        "/mobile/feedback": "/mobile",
+        "/mobile/rehab": "/mobile/medical",
+        "/mobile/training": "/mobile/team",
+      };
+      const index = (window.history.state as { idx?: unknown } | null)?.idx;
+      if (typeof index === "number" && index > 0) router.back();
+      else router.replace(fallback[pathname] || "/mobile");
       return;
     }
-    if (window.history.length > 1) window.history.back();
+    const index = (window.history.state as { idx?: unknown } | null)?.idx;
+    if (typeof index === "number" && index > 0) router.back();
     else router.push("/dashboard");
   };
 

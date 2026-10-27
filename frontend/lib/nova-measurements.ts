@@ -1,5 +1,6 @@
 import {
   readNovaAthleteData,
+  readNovaAthleteDataFor,
   writeNovaAthleteData,
   type NovaBodyRecord,
   type NovaFatigueRecord,
@@ -78,8 +79,8 @@ export function saveDailyMeasurement(input: DailyMeasurementInput) {
   return data;
 }
 
-export function getMeasurementRange(startDate: string, endDate: string) {
-  const data = readNovaAthleteData();
+export function getMeasurementRange(startDate: string, endDate: string, athleteId?: string, athleteName = "") {
+  const data = athleteId ? readNovaAthleteDataFor(athleteId, athleteName) : readNovaAthleteData();
   const inRange = (date: string) => date >= startDate && date <= endDate;
   return {
     bodyRecords: data.bodyRecords.filter((x) => inRange(x.date)),

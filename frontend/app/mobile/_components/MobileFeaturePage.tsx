@@ -2,11 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { FilesetResolver, PoseLandmarker, type PoseLandmarkerResult } from "@mediapipe/tasks-vision";
 import { getCurrentUser, type NovaUserRole } from "../../../lib/nova-auth";
-import { readNovaAthleteData, writeNovaAthleteData, type NovaAthleteData } from "../../../lib/nova-data";
+import { readNovaAthleteData, readNovaAthleteDataFor, writeNovaAthleteData, type NovaAthleteData } from "../../../lib/nova-data";
+import MobileAthletePicker, { isMobileManagerRole, type MobileSelectableAthlete } from "../../../components/MobileAthletePicker";
 import { useNovaSettings } from "../../settings-context";
 import NovaTopBar from "../../../components/NovaTopBar";
 
@@ -55,6 +56,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
   const { theme } = useNovaSettings();
   const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null);
   const [data, setData] = useState<NovaAthleteData | null>(null);
+  const [selectedAthlete, setSelectedAthlete] = useState<MobileSelectableAthlete | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [gpsConnected, setGpsConnected] = useState(false);
   const [gpsMetrics, setGpsMetrics] = useState({ distance: "-- km", highSpeed: "-- km", maxSpeed: "-- km/h", sprints: "--" });
@@ -63,8 +65,13 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
     const current = getCurrentUser();
     if (!current) { router.replace("/mobile/login"); return; }
     setUser(current);
-    setData(readNovaAthleteData());
+    if (!isMobileManagerRole(current.role)) setData(readNovaAthleteData());
   }, [router]);
+
+  const handleAthleteSelect = useCallback((athlete: MobileSelectableAthlete | null) => {
+    setSelectedAthlete(athlete);
+    setData(athlete ? readNovaAthleteDataFor(athlete.id, athlete.name) : null);
+  }, []);
 
   useEffect(() => {
     const connect = () => {
@@ -162,6 +169,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
       </aside>
 
       <MobileShell title={config.title} subtitle={config.subtitle} active={section === "dashboard" ? "dashboard" : section}>
+      {isMobileManagerRole(user.role) && ["players", "analysis", "growth-analysis", "measurements", "medical", "report", "player-profile"].includes(section) && <MobileAthletePicker onSelect={handleAthleteSelect} />}
       {section === "dashboard" && (
         <>
           <StatusCard user={user} />
@@ -182,10 +190,18 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
       )}
 
       {section === "players" && (
-        <TwoColumnCards>
-          <SectionCard eyebrow="TEAM" title="선수 목록"><p>담당 선수의 프로필과 기록을 모바일 카드로 확인합니다.</p><Link href="/mobile/players">선수 관리 ›</Link></SectionCard>
-          <SectionCard eyebrow="PROFILE" title="선수 프로필"><p>선수 상세 정보와 최근 상태를 확인합니다.</p><Link href="/mobile/player-profile">프로필 보기 ›</Link></SectionCard>
-        </TwoColumnCards>
+        <SectionCard eyebrow="TEAM" title={selectedAthlete ? `${selectedAthlete.name} 선수 정보` : "선수 선택"}>
+          {selectedAthlete ? <>
+            <div className="mobile-analysis-list">
+              <Row label="종목" value={data?.athlete.sport || "미등록"} />
+              <Row label="포지션" value={data?.athlete.position || "미등록"} />
+              <Row label="신장" value={data?.athlete.heightCm ? `${data.athlete.heightCm} cm` : "기록 없음"} />
+              <Row label="체중" value={data?.athlete.weightKg ? `${data.athlete.weightKg} kg` : "기록 없음"} />
+            </div>
+            <Link href={`/mobile/player-profile?athleteId=${encodeURIComponent(selectedAthlete.id)}`}>선수 프로필 보기 ›</Link>
+            <p>{data?.cameraAIResults.length || data?.performanceRecords.length || data?.bodyRecords.length ? "선택한 선수에게 연결된 기록을 확인할 수 있습니다." : "이 선수에게 연결된 측정 기록이 아직 없습니다."}</p>
+          </> : <div className="mobile-empty-card">검색창에서 선수를 선택해 주세요.</div>}
+        </SectionCard>
       )}
 
       {section === "analysis" && (
@@ -196,6 +212,8 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
               <Row label="퍼포먼스" value={latest.performance ? `${latest.performance.score}/100` : "기록 없음"} />
               <Row label="회복" value={latest.recovery ? `${latest.recovery.score}/100` : "기록 없음"} />
               <Row label="피로도" value={latest.fatigue ? `${latest.fatigue.score}/100` : "기록 없음"} />
+              {data?.cameraAIResults.length ? <Row label="카메라 AI 분석" value={`${data.cameraAIResults.length}건`} /> : null}
+              {isMobileManagerRole(user.role) && !data?.cameraAIResults.length && !data?.performanceRecords.length && <p className="mobile-note">{selectedAthlete?.name ?? "선수"} 선수에게 연결된 분석 기록이 없습니다. 코치 계정 데이터는 표시하지 않습니다.</p>}
             </div>
           </SectionCard>
         </>
@@ -204,9 +222,9 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
       {section === "growth-analysis" && (
         <SectionCard eyebrow="BODY" title="성장·체력">
           <div className="mobile-analysis-list">
-            <Row label="키" value={latest.body?.heightCm ? `${latest.body.heightCm} cm` : "기록 없음"} />
-            <Row label="체중" value={latest.body?.weightKg ? `${latest.body.weightKg} kg` : "기록 없음"} />
-            <Row label="체지방" value="기록 없음" />
+            <Row label="키" value={latest.body?.heightCm || data?.athlete.heightCm ? `${latest.body?.heightCm ?? data?.athlete.heightCm} cm` : "기록 없음"} />
+            <Row label="체중" value={latest.body?.weightKg || data?.athlete.weightKg ? `${latest.body?.weightKg ?? data?.athlete.weightKg} kg` : "기록 없음"} />
+            <Row label="체지방" value={isMobileManagerRole(user.role) && !latest.body ? "선수 기록 없음" : "기록 없음"} />
           </div>
           <Link href="/mobile/measurements">측정 기록 보기 ›</Link>
         </SectionCard>
@@ -215,6 +233,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
       {section === "measurements" && (
         <SectionCard eyebrow="MEASUREMENTS" title="측정 기록">
           <RecordSummary data={data} />
+          {isMobileManagerRole(user.role) && !data?.bodyRecords.length && !data?.fatigueRecords.length && <p className="mobile-note">{selectedAthlete?.name ?? "선수"} 선수에게 연결된 측정 기록이 없습니다. 코치 계정 기록은 표시하지 않습니다.</p>}
           <Link href="/mobile/growth-analysis">성장·체력 분석 ›</Link>
         </SectionCard>
       )}
@@ -222,7 +241,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
       {section === "medical" && (
         <>
           <SectionCard eyebrow="HEALTH" title="의료·재활 상태">
-            <p>{data?.rehabRecords.length ? `저장된 재활 기록 ${data.rehabRecords.length}건` : "저장된 재활 기록이 없습니다."}</p>
+            <p>{data?.rehabRecords.length ? `저장된 재활 기록 ${data.rehabRecords.length}건` : isMobileManagerRole(user.role) ? `${selectedAthlete?.name ?? "선수"} 선수의 연결된 재활 기록이 없습니다.` : "저장된 재활 기록이 없습니다."}</p>
             <Link href="/mobile/rehab">재활 기록 보기 ›</Link>
           </SectionCard>
           <RecordList title="최근 재활 기록" records={latest.rehab.map(r => ({ title: `${r.date} · ${r.area}`, text: `${r.exercise}${r.note ? ` · ${r.note}` : ""}`, status: r.completed ? "완료" : "진행" }))} />
@@ -251,7 +270,7 @@ export default function MobileFeaturePage({ section }: { section: MobileSection 
       {section === "player-profile" && (
         <SectionCard eyebrow="PROFILE" title={data?.athlete?.name || user.name}>
           <div className="mobile-analysis-list">
-            <Row label="역할" value={roleLabel(user.role)} />
+            <Row label="역할" value={selectedAthlete ? "선수" : roleLabel(user.role)} />
             <Row label="종목" value={data?.athlete?.sport || "미등록"} />
             <Row label="포지션" value={data?.athlete?.position || "미등록"} />
             <Row label="생년" value={data?.athlete?.birthDate || "미등록"} />

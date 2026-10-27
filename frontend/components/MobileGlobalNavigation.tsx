@@ -22,7 +22,7 @@ const MENU: MenuItem[] = [
   { label: "리포트", description: "선수 데이터 요약과 보고서", href: "/mobile/report" },
   { label: "선수 관리", description: "선수 프로필과 선수 목록", href: "/mobile/players", roles: ["admin", "director", "coach"] },
   { label: "감독·코치", description: "선수와 훈련 관리", href: "/mobile/team", roles: ["admin", "director", "coach"] },
-  { label: "팀", description: "팀 구성과 단체 운영 문의", href: "/mobile/inquiry", roles: ["admin", "director", "coach"] },
+  { label: "팀", description: "팀 구성과 단체 운영", href: "/mobile/team", roles: ["admin", "director", "coach"] },
   { label: "프로필", description: "내 계정과 선수 정보", href: "/mobile/profile" },
   { label: "결제", description: "개인 Premium 구독 및 결제", href: "/mobile/billing", roles: ["athlete"] },
   { label: "1:1 문의", description: "NOVA 고객지원 문의", href: "/mobile/inquiry" },
