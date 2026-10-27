@@ -2,13 +2,14 @@
  "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import "./report.css";
 import NovaTopBar from "../../components/NovaTopBar";
 import { calculateAge, getBodyRecordsWithBmi, getLatestBodyRecord, playerProfile } from "../../lib/player-profile";
-import { readNovaAthleteData } from "../../lib/nova-data";
+import { readNovaAthleteData, readNovaAthleteDataFor, type NovaCameraAIResult } from "../../lib/nova-data";
 import { getMeasurementRange } from "../../lib/nova-measurements";
-import { getCameraAIResultsInRange, type NovaCameraAIResult } from "../../lib/nova-data";
+import { getCurrentUser } from "../../lib/nova-auth";
+import MobileAthletePicker, { isMobileManagerRole, type MobileSelectableAthlete } from "../../components/MobileAthletePicker";
 import { calculateNovaPerformanceScore, hasCompleteNovaPerformanceScoreInputs } from "../../lib/nova-performance-score";
 
 const printRequester = "John Kim";
@@ -70,19 +71,6 @@ function makePolyline(values: number[]) {
   }).join(" ");
 }
 
-type CameraReportResult = NovaCameraAIResult;
-
-const CAMERA_AI_DEFAULTS: CameraReportResult[] = [];
-
-function loadCameraAIResults(startDate?: string, endDate?: string): CameraReportResult[] {
-  try {
-    if (startDate && endDate && startDate > endDate) return [];
-    return getCameraAIResultsInRange(startDate, endDate);
-  } catch {
-    return [];
-  }
-}
-
 
 function PrintResultFooter({ page, showLogo }: { page: string; showLogo: boolean }) {
   return (
@@ -103,10 +91,17 @@ export default function ReportPage() {
   const router = useRouter();
   const [startDate, setStartDate] = useState("2025-05-14");
   const [endDate, setEndDate] = useState("2025-05-20");
-  const [cameraAIResults, setCameraAIResults] = useState<CameraReportResult[]>([]);
+  const [cameraAIResults, setCameraAIResults] = useState<NovaCameraAIResult[]>([]);
   const [rehabRecords, setRehabRecords] = useState<ReturnType<typeof readNovaAthleteData>["rehabRecords"]>([]);
   const [profile, setProfile] = useState(playerProfile);
   const [bodyRecords, setBodyRecords] = useState(playerProfile.bodyRecords);
+  const [managerView, setManagerView] = useState(false);
+  const [reportAthleteId, setReportAthleteId] = useState("");
+  const [reportAthleteName, setReportAthleteName] = useState("");
+  const handleAthleteSelect = useCallback((athlete: MobileSelectableAthlete | null) => {
+    setReportAthleteId(athlete?.id ?? "");
+    setReportAthleteName(athlete?.name ?? "");
+  }, []);
   const [measurementHistory, setMeasurementHistory] = useState<ReturnType<typeof getMeasurementRange>>({
     bodyRecords: [],
     fatigueRecords: [],
@@ -115,37 +110,55 @@ export default function ReportPage() {
   });
 
   useEffect(() => {
-    try {
-      const data = readNovaAthleteData();
-      const athlete = data.athlete;
-      setProfile({
-        ...playerProfile,
-        id: athlete.id || playerProfile.id,
-        name: athlete.name || playerProfile.name,
-        position: athlete.position || playerProfile.position,
-        team: athlete.affiliation || playerProfile.team,
-        birthDate: athlete.birthDate || playerProfile.birthDate,
-      });
-      if (data.bodyRecords.length) setBodyRecords(data.bodyRecords);
-      setRehabRecords(data.rehabRecords ?? []);
-    } catch {
-      // Keep the safe fallback profile.
+    const current = getCurrentUser();
+    const manager = isMobileManagerRole(current?.role);
+    setManagerView(manager);
+    if (!manager && current) {
+      setReportAthleteId(current.id);
+      setReportAthleteName(current.name);
     }
   }, []);
 
   useEffect(() => {
-    setCameraAIResults(loadCameraAIResults(startDate, endDate));
     try {
-      setMeasurementHistory(getMeasurementRange(startDate, endDate));
-    } catch {
-      setMeasurementHistory({
-        bodyRecords: [],
-        fatigueRecords: [],
-        performanceRecords: [],
-        recoveryRecords: [],
+      const current = getCurrentUser();
+      if (isMobileManagerRole(current?.role) && !reportAthleteId) {
+        setProfile(playerProfile);
+        setBodyRecords([]);
+        setRehabRecords([]);
+        setCameraAIResults([]);
+        setMeasurementHistory({ bodyRecords: [], fatigueRecords: [], performanceRecords: [], recoveryRecords: [] });
+        return;
+      }
+      const targetId = reportAthleteId || current?.id || "";
+      const data = targetId ? readNovaAthleteDataFor(targetId, reportAthleteName) : readNovaAthleteData();
+      const athlete = data.athlete;
+      setProfile({
+        ...playerProfile,
+        id: athlete.id || playerProfile.id,
+        name: athlete.name || reportAthleteName || current?.name || playerProfile.name,
+        position: athlete.position || playerProfile.position,
+        team: athlete.affiliation || playerProfile.team,
+        birthDate: athlete.birthDate || playerProfile.birthDate,
       });
+      setBodyRecords(data.bodyRecords);
+      setRehabRecords(data.rehabRecords ?? []);
+      const inRange = (date: string) => date >= startDate && date <= endDate;
+      setCameraAIResults((data.cameraAIResults ?? []).filter((item) => {
+        const date = item.completedAt.slice(0, 10);
+        return inRange(date) && (!reportAthleteId || item.athleteId === reportAthleteId);
+      }));
+      setMeasurementHistory({
+        bodyRecords: data.bodyRecords.filter((item) => inRange(item.date)),
+        fatigueRecords: data.fatigueRecords.filter((item) => inRange(item.date)),
+        performanceRecords: data.performanceRecords.filter((item) => inRange(item.date)),
+        recoveryRecords: data.recoveryRecords.filter((item) => inRange(item.date)),
+      });
+    } catch {
+      setMeasurementHistory({ bodyRecords: [], fatigueRecords: [], performanceRecords: [], recoveryRecords: [] });
+      setCameraAIResults([]);
     }
-  }, [startDate, endDate]);
+  }, [startDate, endDate, reportAthleteId, reportAthleteName]);
 
   const reportPeriod = `${startDate} ~ ${endDate}`;
   const cameraCount = cameraAIResults.length;
@@ -290,7 +303,14 @@ export default function ReportPage() {
   const age = calculateAge(profile.birthDate, new Date(`${endDate}T00:00:00`));
 
   const goBack = () => {
-    if (window.history.length > 1) router.back();
+    if (window.location.pathname.startsWith("/mobile")) {
+      const index = (window.history.state as { idx?: unknown } | null)?.idx;
+      if (typeof index === "number" && index > 0) router.back();
+      else router.replace("/mobile/analysis");
+      return;
+    }
+    const index = (window.history.state as { idx?: unknown } | null)?.idx;
+    if (typeof index === "number" && index > 0) router.back();
     else router.push("/dashboard");
   };
 
@@ -299,6 +319,7 @@ export default function ReportPage() {
   return (
     <main className="nova-report">
       <NovaTopBar />
+      {managerView && <MobileAthletePicker onSelect={handleAthleteSelect} />}
 
       <section className="report-content">
         <div className="report-actions">

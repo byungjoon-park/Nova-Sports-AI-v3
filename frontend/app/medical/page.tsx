@@ -1,13 +1,14 @@
 "use client";
 /* eslint-disable react-hooks/set-state-in-effect */
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useNovaSettings } from "../settings-context";
 import "./medical.css";
 import NovaTopBar from "../../components/NovaTopBar";
 import { getAuthStore, getCurrentUser, getUserTeams } from "../../lib/nova-auth";
 import { readNovaAthleteData, writeNovaAthleteData, type NovaAthleteData } from "../../lib/nova-data";
+import MobileAthletePicker, { type MobileSelectableAthlete } from "../../components/MobileAthletePicker";
 
 type Injury = {
   id: number;
@@ -38,6 +39,7 @@ export default function MedicalPage() {
   const [currentUser, setCurrentUser] = useState<ReturnType<typeof getCurrentUser>>(null);
   const [authStore, setAuthStore] = useState<ReturnType<typeof getAuthStore> | null>(null);
   const [patternOpen, setPatternOpen] = useState(true);
+  const [selectedAthlete, setSelectedAthlete] = useState<MobileSelectableAthlete | null>(null);
 
   useEffect(() => {
     const user = getCurrentUser();
@@ -76,6 +78,7 @@ export default function MedicalPage() {
   }, [currentUser, authStore]);
 
   const visibleAthleteIds = useMemo(() => new Set(visibleAthletes.map((athlete) => athlete.id)), [visibleAthletes]);
+  const handleAthleteSelect = useCallback((athlete: MobileSelectableAthlete | null) => setSelectedAthlete(athlete), []);
 
   const resolveLegacyAthleteUserId = (name: string) => {
     if (!authStore) return undefined;
@@ -98,8 +101,12 @@ export default function MedicalPage() {
       if (record.athleteUserId) return visibleAthleteIds.has(record.athleteUserId);
       const resolvedId = resolveLegacyAthleteUserId(record.athlete);
       return Boolean(resolvedId && visibleAthleteIds.has(resolvedId));
+    }).filter((record) => {
+      if (!selectedAthlete) return true;
+      const ownerId = record.athleteUserId ?? resolveLegacyAthleteUserId(record.athlete);
+      return ownerId === selectedAthlete.id;
     }),
-    [records, visibleAthleteIds, authStore, currentUser],
+    [records, visibleAthleteIds, authStore, currentUser, selectedAthlete],
   );
 
   const canManageMedical = currentUser?.role === "admin" || currentUser?.role === "director" || currentUser?.role === "coach";
@@ -427,6 +434,8 @@ export default function MedicalPage() {
           )}
         </div>
       </header>
+
+      {(currentUser?.role === "admin" || currentUser?.role === "director" || currentUser?.role === "coach") && <MobileAthletePicker onSelect={handleAthleteSelect} />}
 
       <section className="medical-kpis">
         <article><span>{localizedLabels.total}</span><strong>{yearRows.length}</strong><small>{localizedLabels.cases}</small></article>

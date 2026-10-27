@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useNovaSettings } from "../../settings-context";
 import NovaTopBar from "../../../components/NovaTopBar";
 import { getMeasurementRange } from "../../../lib/nova-measurements";
+import { getCurrentUser } from "../../../lib/nova-auth";
+import MobileAthletePicker, { isMobileManagerRole, type MobileSelectableAthlete } from "../../../components/MobileAthletePicker";
 import "./analysis.css";
 
 type MetricKey = "performance" | "recovery" | "fatigue";
@@ -20,6 +22,8 @@ export default function MobileAnalysisPage() {
   const router = useRouter();
   const { theme, language } = useNovaSettings();
   const [mounted, setMounted] = useState(false);
+  const [managerView, setManagerView] = useState(false);
+  const [selectedAthlete, setSelectedAthlete] = useState<MobileSelectableAthlete | null>(null);
   const [records, setRecords] = useState({
     performance: [] as Array<{ date: string; score: number }>,
     recovery: [] as Array<{ date: string; score: number }>,
@@ -31,7 +35,25 @@ export default function MobileAnalysisPage() {
 
   useEffect(() => {
     setMounted(true);
+    const current = getCurrentUser();
+    const managed = isMobileManagerRole(current?.role);
+    setManagerView(managed);
+    if (managed) {
+      setRecords({ performance: [], recovery: [], fatigue: [] });
+      return;
+    }
     const range = getMeasurementRange("2000-01-01", "2100-12-31");
+    setRecords({
+      performance: range.performanceRecords.map((item) => ({ date: item.date, score: item.score })),
+      recovery: range.recoveryRecords.map((item) => ({ date: item.date, score: item.score })),
+      fatigue: range.fatigueRecords.map((item) => ({ date: item.date, score: item.score })),
+    });
+  }, []);
+
+  const handleAthleteSelect = useCallback((athlete: MobileSelectableAthlete | null) => {
+    setSelectedAthlete(athlete);
+    if (!athlete) { setRecords({ performance: [], recovery: [], fatigue: [] }); return; }
+    const range = getMeasurementRange("2000-01-01", "2100-12-31", athlete.id, athlete.name);
     setRecords({
       performance: range.performanceRecords.map((item) => ({ date: item.date, score: item.score })),
       recovery: range.recoveryRecords.map((item) => ({ date: item.date, score: item.score })),
@@ -71,13 +93,18 @@ export default function MobileAnalysisPage() {
       <NovaTopBar statusText={isEnglish ? "AI System Ready" : "AI 시스템 준비"} />
 
       <div className="mobile-analysis-shell">
+        {managerView && <MobileAthletePicker onSelect={handleAthleteSelect} />}
         <header className="mobile-analysis-header">
           <div>
             <span className="mobile-analysis-eyebrow">AI ANALYTICS</span>
             <h1>{isEnglish ? "AI Analysis" : "AI 분석"}</h1>
             <p>{isEnglish ? "Review performance, recovery and fatigue from saved records." : "저장된 측정 기록을 기준으로 퍼포먼스·회복·피로도를 확인합니다."}</p>
           </div>
-          <button type="button" className="mobile-analysis-back" onClick={() => router.push("/mobile/dashboard")}>대시보드</button>
+          <button type="button" className="mobile-analysis-back" onClick={() => {
+            const index = (window.history.state as { idx?: unknown } | null)?.idx;
+            if (typeof index === "number" && index > 0) router.back();
+            else router.replace("/mobile");
+          }}>뒤로</button>
         </header>
 
         <section className="mobile-analysis-status">
@@ -85,7 +112,7 @@ export default function MobileAnalysisPage() {
             <span>종합 상태</span>
             <strong>{mounted ? overall : "—"}</strong>
           </div>
-          <p>{hasData ? "저장된 실제 측정 기록을 기준으로 현재 상태를 요약합니다." : "측정 기록을 저장하면 AI 분석 결과가 이 영역에 표시됩니다."}</p>
+          <p>{hasData ? "저장된 실제 측정 기록을 기준으로 현재 상태를 요약합니다." : managerView && selectedAthlete ? `${selectedAthlete.name} 선수에게 연결된 측정 기록이 없습니다. 감독·코치 계정의 데이터는 표시하지 않습니다.` : "측정 기록을 저장하면 분석 결과가 이 영역에 표시됩니다."}</p>
         </section>
 
         <section className="mobile-analysis-metrics" aria-label="AI 분석 주요 지표">

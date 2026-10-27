@@ -16,6 +16,7 @@ type FeedbackMessage = {
   toRole: NovaUserRole;
   body: string;
   createdAt: string;
+  readAt?: string;
 };
 
 const FEEDBACK_KEY = "nova-feedback-messages";
@@ -97,7 +98,13 @@ export default function MobileFeedbackPage() {
     const allowed = allowedTargets(current);
     setTargets(allowed);
     setTargetId(allowed[0]?.id || "");
-    setMessages(readMessages());
+    const storedMessages = readMessages();
+    const readTime = new Date().toISOString();
+    const updatedMessages = storedMessages.map((item) => item.toId === current.id && !item.readAt ? { ...item, readAt: readTime } : item);
+    if (updatedMessages.some((item, index) => item !== storedMessages[index])) {
+      try { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(updatedMessages)); } catch {}
+    }
+    setMessages(updatedMessages);
   }, [router]);
 
   const visibleMessages = useMemo(() => {
@@ -174,6 +181,9 @@ export default function MobileFeedbackPage() {
                     <span>{item.fromId === user.id ? `${roleLabel(item.fromRole)} → ${roleLabel(item.toRole)} · ${item.toName}` : `${roleLabel(item.fromRole)} → 나`}</span>
                   </div>
                   <time dateTime={item.createdAt}>{created.toLocaleString("ko-KR", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}</time>
+                  <span className={item.fromId === user.id ? (item.readAt ? "feedback-read-state is-read" : "feedback-read-state") : "feedback-read-state is-read"} style={{ display: "inline-block", marginTop: 6, color: item.readAt ? "#26734d" : "#8a5a24", fontSize: 11, fontWeight: 650 }}>
+                    {item.fromId === user.id ? (item.readAt ? "읽음" : "미확인") : (item.readAt ? "확인함" : "확인 전")}
+                  </span>
                   <p>{item.body}</p>
                 </article>
               );

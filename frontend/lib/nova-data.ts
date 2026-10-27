@@ -196,8 +196,77 @@ function readRaw(): NovaAthleteData | null {
   return null;
 }
 
+const authStoreKey = "nova-auth-store-v1";
+const athleteStorageKey = (athleteId: string) => `${NOVA_STORAGE_KEY}:${athleteId}`;
+const athleteBackupKey = (athleteId: string) => `${NOVA_BACKUP_KEY}:${athleteId}`;
+
+function getSignedInDataOwner(): { id: string; name: string } | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const store = JSON.parse(window.localStorage.getItem(authStoreKey) || "{}");
+    const id = typeof store.currentUserId === "string" ? store.currentUserId : "";
+    const user = Array.isArray(store.users) ? store.users.find((entry: { id?: string }) => entry?.id === id) : null;
+    return id ? { id, name: typeof user?.name === "string" ? user.name : "" } : null;
+  } catch { return null; }
+}
+
+function emptyDataForOwner(ownerId: string, ownerName = ""): NovaAthleteData {
+  const empty = createEmptyNovaAthleteData(ownerName, ownerId);
+  if (typeof window === "undefined") return empty;
+  try {
+    const store = JSON.parse(window.localStorage.getItem(authStoreKey) || "{}");
+    const profile = Array.isArray(store.athleteProfiles) ? store.athleteProfiles.find((item: { userId?: string }) => item?.userId === ownerId) : null;
+    if (profile) {
+      empty.athlete = {
+        ...empty.athlete,
+        heightCm: typeof profile.height === "number" ? profile.height : undefined,
+        weightKg: typeof profile.weight === "number" ? profile.weight : undefined,
+        sport: typeof profile.sport === "string" ? profile.sport : undefined,
+        position: typeof profile.position === "string" ? profile.position : undefined,
+        gender: typeof profile.gender === "string" ? profile.gender : undefined,
+        age: typeof profile.birthYear === "number" ? new Date().getFullYear() - profile.birthYear : undefined,
+        name: ownerName,
+      };
+    }
+  } catch {}
+  return empty;
+}
+
+function parseDataForOwner(ownerId: string, ownerName = ""): NovaAthleteData {
+  if (typeof window === "undefined") return emptyDataForOwner(ownerId, ownerName);
+  try {
+    const scoped = safeParse(window.localStorage.getItem(athleteStorageKey(ownerId)))
+      ?? safeParse(window.localStorage.getItem(athleteBackupKey(ownerId)));
+    if (scoped) return scoped;
+    const legacy = readRaw();
+    if (legacy) {
+      const matchesId = legacy.athlete.id === ownerId;
+      let nameIsUnique = false;
+      try {
+        const auth = JSON.parse(window.localStorage.getItem(authStoreKey) || "{}");
+        const matches = Array.isArray(auth.users) ? auth.users.filter((item: { id?: string; role?: string; name?: string }) => item?.role === "athlete" && item.name?.trim().toLocaleLowerCase() === ownerName.trim().toLocaleLowerCase()) : [];
+        nameIsUnique = matches.length === 1 && matches[0].id === ownerId;
+      } catch {}
+      const matchesName = Boolean(nameIsUnique && ownerName.trim() && legacy.athlete.name.trim() && legacy.athlete.name.trim().toLocaleLowerCase() === ownerName.trim().toLocaleLowerCase());
+      if (matchesId || matchesName) return legacy;
+      const isolated = createEmptyNovaAthleteData(ownerName, ownerId);
+      isolated.cameraAIResults = legacy.cameraAIResults.filter((item) => item.athleteId === ownerId);
+      isolated.jumpFatigueRecords = legacy.jumpFatigueRecords.filter((item) => item.athleteId === ownerId);
+      return isolated;
+    }
+  } catch {}
+  return emptyDataForOwner(ownerId, ownerName);
+}
+
+export function readNovaAthleteDataFor(athleteId: string, athleteName = ""): NovaAthleteData {
+  return athleteId ? parseDataForOwner(athleteId, athleteName) : createEmptyNovaAthleteData(athleteName);
+}
+
 export function readNovaAthleteData(): NovaAthleteData {
-  return readRaw() ?? createEmptyNovaAthleteData();
+  const owner = getSignedInDataOwner();
+  if (owner) return readNovaAthleteDataFor(owner.id, owner.name);
+  const explicitId = getCurrentAthleteId();
+  return explicitId !== "default-athlete" ? readNovaAthleteDataFor(explicitId) : readRaw() ?? createEmptyNovaAthleteData();
 }
 
 export function writeNovaAthleteData(data: NovaAthleteData): boolean {
@@ -205,12 +274,14 @@ export function writeNovaAthleteData(data: NovaAthleteData): boolean {
   try {
     const normalized = normalizeData(data);
     normalized.athlete.updatedAt = new Date().toISOString();
+    const owner = getSignedInDataOwner();
+    const key = owner ? athleteStorageKey(owner.id) : NOVA_STORAGE_KEY;
+    const backupKey = owner ? athleteBackupKey(owner.id) : NOVA_BACKUP_KEY;
     const payload = JSON.stringify(normalized);
-    // Keep the last known-good copy before replacing the active copy.
-    const existing = window.localStorage.getItem(NOVA_STORAGE_KEY);
-    if (existing) window.localStorage.setItem(NOVA_BACKUP_KEY, existing);
-    window.localStorage.setItem(NOVA_STORAGE_KEY, payload);
-    return window.localStorage.getItem(NOVA_STORAGE_KEY) === payload;
+    const existing = window.localStorage.getItem(key);
+    if (existing) window.localStorage.setItem(backupKey, existing);
+    window.localStorage.setItem(key, payload);
+    return window.localStorage.getItem(key) === payload;
   } catch {
     return false;
   }
@@ -254,8 +325,9 @@ export function upsertCameraAIResult(result: NovaCameraAIResult): NovaAthleteDat
   return data;
 }
 
-export function getCameraAIResultsInRange(startDate?: string, endDate?: string): NovaCameraAIResult[] {
-  return readNovaAthleteData().cameraAIResults.filter((result) => {
+export function getCameraAIResultsInRange(startDate?: string, endDate?: string, athleteId?: string): NovaCameraAIResult[] {
+  const source = athleteId ? readNovaAthleteDataFor(athleteId) : readNovaAthleteData();
+  return source.cameraAIResults.filter((result) => {
     const date = result.completedAt.slice(0, 10);
     return (!startDate || date >= startDate) && (!endDate || date <= endDate);
   });
@@ -264,8 +336,14 @@ export function getCameraAIResultsInRange(startDate?: string, endDate?: string):
 export function clearNovaAthleteData(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    window.localStorage.removeItem(NOVA_STORAGE_KEY);
-    window.localStorage.removeItem(NOVA_BACKUP_KEY);
+    const owner = getSignedInDataOwner();
+    if (owner) {
+      window.localStorage.removeItem(athleteStorageKey(owner.id));
+      window.localStorage.removeItem(athleteBackupKey(owner.id));
+    } else {
+      window.localStorage.removeItem(NOVA_STORAGE_KEY);
+      window.localStorage.removeItem(NOVA_BACKUP_KEY);
+    }
     return true;
   } catch {
     return false;
