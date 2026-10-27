@@ -26,14 +26,6 @@ type Injury = {
   nextEvaluation: string;
 };
 
-const injuries: Injury[] = [
-  { id: 1, athlete: "John Kim", injuryDate: "2026-01-18", returnDate: "2026-02-22", diagnosis: "Hamstring strain", surgery: "No", bodyPart: "Hamstring", injurySeverity: "Moderate", status: "Returned", rehabStage: "Return", lastEvaluation: "2026-02-15", nextEvaluation: "" },
-  { id: 2, athlete: "John Kim", injuryDate: "2026-03-07", returnDate: "2026-04-11", diagnosis: "Ankle sprain", surgery: "No", bodyPart: "Ankle", injurySeverity: "Mild", status: "Returned", rehabStage: "Return", lastEvaluation: "2026-04-04", nextEvaluation: "" },
-  { id: 3, athlete: "John Kim", injuryDate: "2026-05-14", returnDate: "2026-06-28", diagnosis: "Knee pain", surgery: "No", bodyPart: "Knee", injurySeverity: "Moderate", status: "Rehab", rehabStage: "Progress", lastEvaluation: "2026-08-10", nextEvaluation: "2026-08-18" },
-  { id: 4, athlete: "Alex Lee", injuryDate: "2026-05-21", returnDate: "2026-07-02", diagnosis: "Shoulder impingement", surgery: "No", bodyPart: "Shoulder", injurySeverity: "Moderate", status: "Rehab", rehabStage: "Progress", lastEvaluation: "2026-08-10", nextEvaluation: "2026-08-18" },
-  { id: 5, athlete: "Min Park", injuryDate: "2026-07-09", returnDate: "2026-08-20", diagnosis: "ACL injury", surgery: "Yes", bodyPart: "Knee", injurySeverity: "Moderate", status: "Scheduled", rehabStage: "Return", lastEvaluation: "2026-08-12", nextEvaluation: "2026-08-19" },
-];
-
 const monthNames = {
   ko: ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
   en: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
@@ -92,7 +84,7 @@ export default function MedicalPage() {
   };
 
   const [year, setYear] = useState(2026);
-  const [records, setRecords] = useState<Injury[]>(injuries);
+  const [records, setRecords] = useState<Injury[]>([]);
 
   const visibleRecords = useMemo(
     () => records.filter((record) => {
@@ -412,6 +404,7 @@ export default function MedicalPage() {
         return normalized === part;
       }).length,
     }))
+    .filter(({ count }) => count > 0)
     .sort((a, b) => b.count - a.count || a.index - b.index);
 
   return (
@@ -441,6 +434,19 @@ export default function MedicalPage() {
         <article><span>{localizedLabels.returned}</span><strong>{yearRows.filter(x => x.status === "Returned").length}</strong><small>{localizedLabels.completed}</small></article>
         <article><span>{localizedLabels.surgery}</span><strong>{yearRows.filter(x => x.surgery === "Yes").length}</strong><small>{localizedLabels.cases}</small></article>
       </section>
+
+      {currentUser?.role === "athlete" && rehabData && (
+        <section className="panel rehab-record-panel">
+          <div className="panel-head"><div><span className="eyebrow">REHABILITATION</span><h2>재활 기록 등록</h2></div><span>{rehabData.rehabRecords.length}건 저장</span></div>
+          <div className="rehab-form-grid">
+            <label>부위<input value={rehabArea} onChange={(e) => setRehabArea(e.target.value)} placeholder="예: 무릎" /></label>
+            <label>운동/치료 내용<input value={rehabExercise} onChange={(e) => setRehabExercise(e.target.value)} placeholder="예: 하체 안정화 운동" /></label>
+            <label className="rehab-form-wide">메모<input value={rehabNote} onChange={(e) => setRehabNote(e.target.value)} placeholder="진행 내용을 입력하세요." /></label>
+            <label className="rehab-check"><input type="checkbox" checked={rehabCompleted} onChange={(e) => setRehabCompleted(e.target.checked)} /> 완료된 재활</label>
+            <button type="button" className="primary rehab-save-button" onClick={saveRehabRecord}>재활 기록 저장</button>
+          </div>
+        </section>
+      )}
 
       <section className="medical-grid">
         <article className="panel">
@@ -491,15 +497,19 @@ export default function MedicalPage() {
 
         {patternOpen && (
           <>
-            <div className="pattern-grid">
-              {patternRanked.map(({ part, count }) => (
-                <div className="pattern-card" key={part}>
-                  <span>{bodyPartLabels[part as keyof typeof bodyPartLabels]}</span>
-                  <strong>{count}</strong>
-                  <small>{year}</small>
-                </div>
-              ))}
-            </div>
+            {patternRanked.length ? (
+              <div className="pattern-grid">
+                {patternRanked.map(({ part, count }) => (
+                  <div className="pattern-card" key={part}>
+                    <span>{bodyPartLabels[part as keyof typeof bodyPartLabels]}</span>
+                    <strong>{count}</strong>
+                    <small>{year}</small>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="pattern-empty">{currentLang === "en" ? "No saved injury body parts for this year." : "올해 저장된 부상 부위 기록이 없습니다."}</p>
+            )}
 
             <div>
               <span className="eyebrow">{localizedLabels.severityPattern}</span>
@@ -524,19 +534,6 @@ export default function MedicalPage() {
           </>
         )}
       </section>
-
-      {currentUser?.role === "athlete" && rehabData && (
-        <section className="panel rehab-record-panel">
-          <div className="panel-head"><div><span className="eyebrow">REHABILITATION</span><h2>재활 기록 등록</h2></div><span>{rehabData.rehabRecords.length}건 저장</span></div>
-          <div className="rehab-form-grid">
-            <label>부위<input value={rehabArea} onChange={(e) => setRehabArea(e.target.value)} placeholder="예: 무릎" /></label>
-            <label>운동/치료 내용<input value={rehabExercise} onChange={(e) => setRehabExercise(e.target.value)} placeholder="예: 하체 안정화 운동" /></label>
-            <label className="rehab-form-wide">메모<input value={rehabNote} onChange={(e) => setRehabNote(e.target.value)} placeholder="진행 내용을 입력하세요." /></label>
-            <label className="rehab-check"><input type="checkbox" checked={rehabCompleted} onChange={(e) => setRehabCompleted(e.target.checked)} /> 완료된 재활</label>
-            <button type="button" className="primary rehab-save-button" onClick={saveRehabRecord}>재활 기록 저장</button>
-          </div>
-        </section>
-      )}
 
       <section className="panel records">
         <div className="panel-head">
