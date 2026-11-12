@@ -19,12 +19,12 @@ export default function StartPage() {
   }, [router]);
 
   return (
-    <main className="nova-splash" aria-label="NOVA startup splash">
+    <main className="nova-splash" aria-label="KINOX startup splash">
       <div className="nova-splash-grid" aria-hidden="true" />
       <div className="nova-splash-glow" aria-hidden="true" />
 
       <section className="nova-splash-content">
-        <div className="nova-splash-logo">NOVA</div>
+        <div className="nova-splash-logo">KINOX</div>
         <div className="nova-splash-kicker">AI SPORTS PERFORMANCE PLATFORM</div>
 
         <h1>AI Sports Performance Platform</h1>
@@ -33,7 +33,7 @@ export default function StartPage() {
         <div className="nova-splash-loader" aria-hidden="true">
           <span />
         </div>
-        <small>INITIALIZING NOVA V2</small>
+        <small>INITIALIZING KINOX</small>
       </section>
     </main>
   );
