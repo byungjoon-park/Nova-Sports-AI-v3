@@ -94,7 +94,7 @@ export default function MobileLoginPage() {
   return (
     <main className={`mobile-login-page theme-${activeTheme}`}>
       <section className="mobile-login-card">
-        <span className="mobile-eyebrow">NOVA AI SPORTS PLATFORM</span>
+        <span className="mobile-eyebrow">KINOX AI SPORTS PLATFORM</span>
         <h1>로그인</h1>
         <p className="mobile-login-subtitle">
           등록된 계정은 자동으로 로그인 상태를 유지합니다.
@@ -107,7 +107,7 @@ export default function MobileLoginPage() {
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="email@nova.ai"
+              placeholder="email@kinox.ai"
               autoComplete="email"
               required
             />
