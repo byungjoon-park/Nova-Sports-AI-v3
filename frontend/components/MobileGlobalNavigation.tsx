@@ -38,7 +38,7 @@ const roleLabel = (role: NovaUserRole) =>
 export default function MobileGlobalNavigation() {
   const router = useRouter();
   const pathname = usePathname();
-  const [role, setRole] = useState<NovaUserRole | null>(() => getCurrentUser()?.role ?? null);
+  const [role, setRole] = useState<NovaUserRole | null>(null);
   const [open, setOpen] = useState(false);
   const [autoLogin, setAutoLogin] = useState(true);
 
