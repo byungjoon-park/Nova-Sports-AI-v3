@@ -8,10 +8,12 @@ export default function StartPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Root is always the NOVA startup screen.
+    // Root is always the KINOX startup screen.
     // After the splash, continue to the login screen.
     const timer = window.setTimeout(() => {
-      try { sessionStorage.setItem("nova-splash-seen", "1"); } catch {}
+      try {
+        sessionStorage.setItem("nova-splash-seen", "1");
+      } catch {}
       router.replace("/login");
     }, 2200);
 
@@ -25,7 +27,9 @@ export default function StartPage() {
 
       <section className="nova-splash-content">
         <div className="nova-splash-logo">KINOX</div>
-        <div className="nova-splash-kicker">AI SPORTS PERFORMANCE PLATFORM</div>
+        <div className="nova-splash-kicker">
+          AI SPORTS PERFORMANCE PLATFORM
+        </div>
 
         <h1>AI Sports Performance Platform</h1>
         <p>Smarter Training. Better Performance.</p>
@@ -33,6 +37,7 @@ export default function StartPage() {
         <div className="nova-splash-loader" aria-hidden="true">
           <span />
         </div>
+
         <small>INITIALIZING KINOX</small>
       </section>
     </main>
